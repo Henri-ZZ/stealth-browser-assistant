@@ -1,0 +1,125 @@
+{
+  "extName": {
+    "message": "Stealth Tabs"
+  },
+  "extShortName": {
+    "message": "Stealth Tabs"
+  },
+  "extDescription": {
+    "message": "Silencia, oculta y gestiona pestañas privadas al instante con atajos de teclado."
+  },
+  "subtitle": {
+    "message": "Asistente de navegación privada para pestañas sensibles"
+  },
+  "cmdToggleMute": {
+    "message": "Alternar silencio para pestañas que coincidan con palabras clave"
+  },
+  "cmdToggleHide": {
+    "message": "Alternar ocultación para pestañas que coincidan con palabras clave"
+  },
+  "cmdToggleEmergency": {
+    "message": "Modo de emergencia — silenciar y ocultar ahora"
+  },
+  "popupTitle": {
+    "message": "Stealth Tabs"
+  },
+  "actionToggleMute": {
+    "message": "Silenciar"
+  },
+  "actionToggleHide": {
+    "message": "Ocultar"
+  },
+  "muteSection": {
+    "message": "Silenciar"
+  },
+  "muteAll": {
+    "message": "Silenciar todo"
+  },
+  "unmuteAll": {
+    "message": "Reactivar sonido"
+  },
+  "hideSection": {
+    "message": "Ocultar"
+  },
+  "stateOn": {
+    "message": "ON"
+  },
+  "stateOff": {
+    "message": "OFF"
+  },
+  "keywordsSection": {
+    "message": "Palabras clave"
+  },
+  "addKeyword": {
+    "message": "Añadir"
+  },
+  "keywordPlaceholder": {
+    "message": "dominio o palabra, luego Enter"
+  },
+  "remove": {
+    "message": "Eliminar"
+  },
+  "noKeywords": {
+    "message": "Aún no hay palabras clave. Añade un dominio o palabra para empezar."
+  },
+  "statusMatching": {
+    "message": "$N$ pestaña(s) coinciden con tus palabras clave.",
+    "placeholders": {
+      "n": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "statusHiddenZero": {
+    "message": "El modo ocultar está desactivado."
+  },
+  "statusHidden": {
+    "message": "$N$ pestaña(s) actualmente ocultas.",
+    "placeholders": {
+      "n": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "statusHideOff": {
+    "message": "El modo ocultar está desactivado."
+  },
+  "openOptions": {
+    "message": "Configuración"
+  },
+  "langSection": {
+    "message": "Idioma"
+  },
+  "langHelp": {
+    "message": "Elige el idioma de la interfaz o sigue el del navegador."
+  },
+  "langFollowBrowser": {
+    "message": "Seguir navegador"
+  },
+  "optionsTitle": {
+    "message": "Atajos de teclado"
+  },
+  "optionsPageTitle": {
+    "message": "Stealth Tabs — Configuración"
+  },
+  "optionsKeywordsHelp": {
+    "message": "Cada palabra clave coincide si aparece en la URL o título de la pestaña (sin distinción de mayúsculas). Usa un dominio (ej. bank.com) o cualquier palabra (ej. nómina)."
+  },
+  "optionsShortcutsHelp": {
+    "message": "Los atajos de teclado se pueden personalizar en "
+  },
+  "openShortcutsPage": {
+    "message": "chrome://extensions/shortcuts"
+  },
+  "save": {
+    "message": "Guardar"
+  },
+  "saved": {
+    "message": "Guardado"
+  },
+  "emptyInputWarn": {
+    "message": "Introduce primero una palabra clave."
+  }
+}

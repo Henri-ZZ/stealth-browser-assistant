@@ -1,0 +1,125 @@
+{
+  "extName": {
+    "message": "Stealth Tabs"
+  },
+  "extShortName": {
+    "message": "Stealth Tabs"
+  },
+  "extDescription": {
+    "message": "Sofortiges Stummschalten, Ausblenden und Verwalten privater Browser-Tabs mit Tastenkombinationen."
+  },
+  "subtitle": {
+    "message": "Privater Browser-Assistent für sensible Tabs"
+  },
+  "cmdToggleMute": {
+    "message": "Stummschaltung für Tabs mit passenden Schlüsselwörtern umschalten"
+  },
+  "cmdToggleHide": {
+    "message": "Ausblenden für Tabs mit passenden Schlüsselwörtern umschalten"
+  },
+  "cmdToggleEmergency": {
+    "message": "Notfallmodus — jetzt stummschalten und ausblenden"
+  },
+  "popupTitle": {
+    "message": "Stealth Tabs"
+  },
+  "actionToggleMute": {
+    "message": "Stumm"
+  },
+  "actionToggleHide": {
+    "message": "Ausblenden"
+  },
+  "muteSection": {
+    "message": "Stumm"
+  },
+  "muteAll": {
+    "message": "Alle stummschalten"
+  },
+  "unmuteAll": {
+    "message": "Stummschaltung aufheben"
+  },
+  "hideSection": {
+    "message": "Ausblenden"
+  },
+  "stateOn": {
+    "message": "EIN"
+  },
+  "stateOff": {
+    "message": "AUS"
+  },
+  "keywordsSection": {
+    "message": "Schlüsselwörter"
+  },
+  "addKeyword": {
+    "message": "Hinzufügen"
+  },
+  "keywordPlaceholder": {
+    "message": "Domain oder Wort, dann Enter"
+  },
+  "remove": {
+    "message": "Entfernen"
+  },
+  "noKeywords": {
+    "message": "Noch keine Schlüsselwörter. Füge eine Domain oder ein Wort hinzu."
+  },
+  "statusMatching": {
+    "message": "$N$ Tab(s) stimmen mit deinen Schlüsselwörtern überein.",
+    "placeholders": {
+      "n": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "statusHiddenZero": {
+    "message": "Ausblendmodus ist deaktiviert."
+  },
+  "statusHidden": {
+    "message": "$N$ Tab(s) derzeit ausgeblendet.",
+    "placeholders": {
+      "n": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "statusHideOff": {
+    "message": "Ausblendmodus ist deaktiviert."
+  },
+  "openOptions": {
+    "message": "Einstellungen"
+  },
+  "langSection": {
+    "message": "Sprache"
+  },
+  "langHelp": {
+    "message": "Wähle die Sprache der Benutzeroberfläche oder folge dem Browser."
+  },
+  "langFollowBrowser": {
+    "message": "Browser folgen"
+  },
+  "optionsTitle": {
+    "message": "Tastenkombinationen"
+  },
+  "optionsPageTitle": {
+    "message": "Stealth Tabs — Einstellungen"
+  },
+  "optionsKeywordsHelp": {
+    "message": "Jedes Schlüsselwort passt, wenn es in der URL oder im Titel des Tabs vorkommt (Groß-/Kleinschreibung wird ignoriert). Verwende eine Domain (z.B. bank.com) oder ein beliebiges Wort (z.B. Gehaltsabrechnung)."
+  },
+  "optionsShortcutsHelp": {
+    "message": "Tastenkombinationen können angepasst werden unter "
+  },
+  "openShortcutsPage": {
+    "message": "chrome://extensions/shortcuts"
+  },
+  "save": {
+    "message": "Speichern"
+  },
+  "saved": {
+    "message": "Gespeichert"
+  },
+  "emptyInputWarn": {
+    "message": "Bitte zuerst ein Schlüsselwort eingeben."
+  }
+}

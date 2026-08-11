@@ -39,13 +39,25 @@ const DEFAULTS = {
 // because Chrome's manifest i18n (`__MSG_xxx__`) reads them directly.
 import enMessages from './_locales/en/messages.js';
 import zhCNMessages from './_locales/zh_CN/messages.js';
+import esMessages from './_locales/es/messages.js';
+import deMessages from './_locales/de/messages.js';
+import jaMessages from './_locales/ja/messages.js';
+import frMessages from './_locales/fr/messages.js';
+import ptMessages from './_locales/pt/messages.js';
+import koMessages from './_locales/ko/messages.js';
 
 export const MESSAGES = {
   en: enMessages,
   zh_CN: zhCNMessages,
+  es: esMessages,
+  de: deMessages,
+  ja: jaMessages,
+  fr: frMessages,
+  pt: ptMessages,
+  ko: koMessages,
 };
 
-export const SUPPORTED_LOCALES = ['en', 'zh_CN'];
+export const SUPPORTED_LOCALES = ['en', 'zh_CN', 'es', 'de', 'ja', 'fr', 'pt', 'ko'];
 
 export async function getState(key = null) {
   if (key === null) {
@@ -106,8 +118,12 @@ export async function resolveLocale() {
   const pref = await getLangPref();
   if (SUPPORTED_LOCALES.includes(pref)) return pref;
   const ui = chrome.i18n.getUILanguage();
-  const uiMapped = ui.startsWith('zh') ? 'zh_CN' : 'en';
-  return SUPPORTED_LOCALES.includes(uiMapped) ? uiMapped : 'en';
+  // Try exact match first, then fall back to language prefix (e.g. 'pt-BR' → 'pt')
+  if (SUPPORTED_LOCALES.includes(ui)) return ui;
+  const prefix = ui.split('-')[0];
+  const map = { zh: 'zh_CN' };  // map language prefixes to our locale codes
+  const mapped = map[prefix] || prefix;
+  return SUPPORTED_LOCALES.includes(mapped) ? mapped : 'en';
 }
 
 /**
