@@ -1,0 +1,116 @@
+{
+  "extName": {
+    "message": "Stealth Tabs"
+  },
+  "extShortName": {
+    "message": "Stealth Tabs"
+  },
+  "extDescription": {
+    "message": "Instantly mute, hide and manage private browser tabs with keyboard shortcuts."
+  },
+  "subtitle": {
+    "message": "Private browsing assistant for sensitive tabs"
+  },
+  "cmdToggleMute": {
+    "message": "Toggle mute for tabs matching keywords"
+  },
+  "cmdToggleHide": {
+    "message": "Toggle hiding tabs matching keywords"
+  },
+  "cmdToggleEmergency": {
+    "message": "Emergency mode — mute and hide now"
+  },
+  "popupTitle": {
+    "message": "Stealth Tabs"
+  },
+  "actionToggleMute": {
+    "message": "Mute"
+  },
+  "muteSection": {
+    "message": "Mute"
+  },
+  "muteAll": {
+    "message": "Mute All"
+  },
+  "unmuteAll": {
+    "message": "Unmute All"
+  },
+  "hideSection": {
+    "message": "Hide"
+  },
+
+  "actionToggleHide": {
+    "message": "Hide"
+  },
+  "stateOn": {
+    "message": "ON"
+  },
+  "stateOff": {
+    "message": "OFF"
+  },
+  "keywordsSection": {
+    "message": "Keywords"
+  },
+  "addKeyword": {
+    "message": "Add"
+  },
+  "keywordPlaceholder": {
+    "message": "domain or word, then Enter"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "noKeywords": {
+    "message": "No keywords yet. Add a domain or word to start matching tabs."
+  },
+  "statusMatching": {
+    "message": "$N$ tab(s) currently match your keywords.",
+    "placeholders": { "n": { "content": "$1", "example": "3" } }
+  },
+  "statusHiddenZero": {
+    "message": "Hide mode is off."
+  },
+  "statusHidden": {
+    "message": "$N$ tab(s) currently hidden.",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
+  "statusHideOff": {
+    "message": "Hide mode is off."
+  },
+  "openOptions": {
+    "message": "Settings"
+  },
+  "langSection": {
+    "message": "Language"
+  },
+  "langHelp": {
+    "message": "Choose the interface language, or follow your browser."
+  },
+  "langFollowBrowser": {
+    "message": "Follow browser"
+  },
+  "optionsTitle": {
+    "message": "Shortcuts"
+  },
+  "optionsPageTitle": {
+    "message": "Stealth Tabs — Options"
+  },
+  "optionsKeywordsHelp": {
+    "message": "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub)."
+  },
+  "optionsShortcutsHelp": {
+    "message": "Keyboard shortcuts can be customized at "
+  },
+  "openShortcutsPage": {
+    "message": "chrome://extensions/shortcuts"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "emptyInputWarn": {
+    "message": "Please enter a keyword first."
+  }
+}

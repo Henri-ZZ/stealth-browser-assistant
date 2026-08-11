@@ -1,0 +1,9 @@
+.workbuddy/
+assets/
+icon.png
+*.pyc
+__pycache__/
+.DS_Store
+icons/.DS_Store
+icon_bak.png
+.claude/

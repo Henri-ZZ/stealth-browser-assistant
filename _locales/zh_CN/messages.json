@@ -1,0 +1,116 @@
+{
+  "extName": {
+    "message": "隐私标签页助手"
+  },
+  "extShortName": {
+    "message": "Stealth Tabs"
+  },
+  "extDescription": {
+    "message": "通过键盘快捷键即时静音、隐藏和管理私密浏览器标签页。"
+  },
+  "subtitle": {
+    "message": "敏感标签页的私密浏览助手"
+  },
+  "cmdToggleMute": {
+    "message": "切换静音匹配关键词的标签页"
+  },
+  "cmdToggleHide": {
+    "message": "切换隐藏匹配关键词的标签页"
+  },
+  "cmdToggleEmergency": {
+    "message": "紧急模式 — 同时静音和隐藏"
+  },
+  "popupTitle": {
+    "message": "隐私标签页助手"
+  },
+  "actionToggleMute": {
+    "message": "静音"
+  },
+  "muteSection": {
+    "message": "静音"
+  },
+  "muteAll": {
+    "message": "全部静音"
+  },
+  "unmuteAll": {
+    "message": "全部解除静音"
+  },
+  "hideSection": {
+    "message": "隐藏"
+  },
+
+  "actionToggleHide": {
+    "message": "隐藏"
+  },
+  "stateOn": {
+    "message": "已开启"
+  },
+  "stateOff": {
+    "message": "已关闭"
+  },
+  "keywordsSection": {
+    "message": "关键词列表"
+  },
+  "addKeyword": {
+    "message": "添加"
+  },
+  "keywordPlaceholder": {
+    "message": "输入域名或关键词后回车"
+  },
+  "remove": {
+    "message": "移除"
+  },
+  "noKeywords": {
+    "message": "暂无关键词。添加一个域名或词即可开始匹配标签页。"
+  },
+  "statusMatching": {
+    "message": "当前有 $N$ 个标签页匹配你的关键词。",
+    "placeholders": { "n": { "content": "$1", "example": "3" } }
+  },
+  "statusHiddenZero": {
+    "message": "隐藏模式已关闭。"
+  },
+  "statusHidden": {
+    "message": "当前有 $N$ 个标签页已隐藏。",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
+  "statusHideOff": {
+    "message": "隐藏模式已关闭。"
+  },
+  "openOptions": {
+    "message": "设置"
+  },
+  "langSection": {
+    "message": "语言"
+  },
+  "langHelp": {
+    "message": "选择界面语言,或跟随浏览器。"
+  },
+  "langFollowBrowser": {
+    "message": "跟随浏览器"
+  },
+  "optionsTitle": {
+    "message": "快捷键"
+  },
+  "optionsPageTitle": {
+    "message": "隐私标签页助手 — 选项"
+  },
+  "optionsKeywordsHelp": {
+    "message": "只要标签页的网址或标题中包含该关键词即视为匹配(不区分大小写)。可用域名(如 bank.com)或任意词(如 paystub)。"
+  },
+  "optionsShortcutsHelp": {
+    "message": "可在快捷键设置页面自定义键盘快捷键，"
+  },
+  "openShortcutsPage": {
+    "message": "chrome://extensions/shortcuts"
+  },
+  "save": {
+    "message": "保存"
+  },
+  "saved": {
+    "message": "已保存"
+  },
+  "emptyInputWarn": {
+    "message": "请先输入一个关键词。"
+  }
+}

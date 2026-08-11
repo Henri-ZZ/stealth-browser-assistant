@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stealth Tabs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <img class="header-icon" src="icons/icon-48.png" alt="Stealth Tabs" width="32" height="32" />
+    <div class="header-text">
+      <h1 class="title" data-i18n="popupTitle">Stealth Tabs</h1>
+      <p class="subtitle" data-i18n="subtitle">Private browsing assistant for sensitive tabs</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <button id="muteToggle" class="toggle" aria-pressed="false">
+      <span class="toggle-label" data-i18n="actionToggleMute">Mute</span>
+      <span class="toggle-state" data-state>OFF</span>
+    </button>
+    <p id="matchStatus" class="hint"></p>
+  </section>
+
+  <section class="card">
+    <button id="hideToggle" class="toggle" aria-pressed="false">
+      <span class="toggle-label" data-i18n="actionToggleHide">Hide</span>
+      <span class="toggle-state" data-state>OFF</span>
+    </button>
+    <p id="hiddenStatus" class="hint"></p>
+  </section>
+
+  <footer class="popup-footer">
+    <a id="optionsLink" href="#" data-i18n="openOptions">Options</a>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

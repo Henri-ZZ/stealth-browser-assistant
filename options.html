@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title data-i18n="optionsPageTitle">Stealth Tabs — Options</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="options-page">
+  <main class="options-main">
+    <header class="options-header">
+      <img class="header-icon" src="icons/icon-48.png" alt="Stealth Tabs" width="40" height="40" />
+      <div class="header-text">
+        <h1 data-i18n="extName">Stealth Tabs</h1>
+        <p class="subtitle" data-i18n="subtitle">Private browsing assistant for sensitive tabs</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2 data-i18n="keywordsSection">Keywords</h2>
+      <p class="help" data-i18n="optionsKeywordsHelp">Each keyword matches a tab…</p>
+
+      <ul id="keywordList" class="keyword-list"></ul>
+      <form id="addForm" class="add-form">
+        <input id="newKeyword" type="text" data-i18n-placeholder="keywordPlaceholder" placeholder="domain or word, then Enter" autocomplete="off" />
+        <button type="submit" class="btn btn-small" data-i18n="addKeyword">Add</button>
+      </form>
+      <p id="hint" class="hint" data-i18n="noKeywords">No keywords yet.</p>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="langSection">Language</h2>
+      <p class="help" data-i18n="langHelp">Choose the interface language, or follow your browser.</p>
+      <select id="langSelect" class="lang-select">
+        <option value="" data-i18n="langFollowBrowser">Follow browser</option>
+        <option value="en">English</option>
+        <option value="zh_CN">简体中文</option>
+      </select>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="optionsTitle">Shortcuts</h2>
+      <ul class="shortcut-list">
+        <li><kbd>Alt+Shift+M</kbd> — <span data-i18n="cmdToggleMute"></span></li>
+        <li><kbd>Alt+Shift+H</kbd> — <span data-i18n="cmdToggleHide"></span></li>
+        <li><kbd>Alt+Shift+Space</kbd> — <span data-i18n="cmdToggleEmergency"></span></li>
+      </ul>
+      <p class="help">
+        <span data-i18n="optionsShortcutsHelp"></span>
+        <a href="#" id="openShortcutsLink" class="shortcut-link" data-i18n="openShortcutsPage"></a>
+      </p>
+    </section>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>
