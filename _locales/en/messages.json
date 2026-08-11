@@ -18,7 +18,7 @@
     "message": "Toggle hiding tabs matching keywords"
   },
   "cmdToggleEmergency": {
-    "message": "Emergency mode — mute and hide now"
+    "message": "Emergency action — as configured above"
   },
   "popupTitle": {
     "message": "Stealth Tabs"
@@ -93,7 +93,7 @@
     "message": "Shortcuts"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — Options"
+    "message": "Stealth Tabs — Settings"
   },
   "optionsKeywordsHelp": {
     "message": "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub)."
@@ -112,5 +112,29 @@
   },
   "emptyInputWarn": {
     "message": "Please enter a keyword first."
+  },
+  "shortcutDisabled": {
+    "message": "Disabled"
+  },
+  "emergencySection": {
+    "message": "Emergency action"
+  },
+  "emergencyHelp": {
+    "message": "Choose what happens when you press the emergency shortcut."
+  },
+  "emergencyActionMuteHide": {
+    "message": "Mute and hide matching tabs"
+  },
+  "emergencyActionClose": {
+    "message": "Close matching tabs"
+  },
+  "mediaPauseSection": {
+    "message": "When mute or hide tabs"
+  },
+  "mediaPauseHelp": {
+    "message": "Choose whether to also stop media playback in matching tabs when they get muted or hidden."
+  },
+  "mediaPauseLabel": {
+    "message": "Pause the videos and audio in them"
   }
 }

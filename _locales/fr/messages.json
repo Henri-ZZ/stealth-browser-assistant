@@ -18,7 +18,7 @@
     "message": "Activer/désactiver le masquage des onglets correspondant aux mots-clés"
   },
   "cmdToggleEmergency": {
-    "message": "Mode urgence — désactiver le son et masquer maintenant"
+    "message": "Action d'urgence — selon la configuration ci-dessus"
   },
   "popupTitle": {
     "message": "Stealth Tabs"
@@ -121,5 +121,29 @@
   },
   "emptyInputWarn": {
     "message": "Veuillez d'abord entrer un mot-clé."
+  },
+  "shortcutDisabled": {
+    "message": "Désactivé"
+  },
+  "emergencySection": {
+    "message": "Action d'urgence"
+  },
+  "emergencyHelp": {
+    "message": "Choisissez ce qui se passe lorsque vous appuyez sur le raccourci d'urgence."
+  },
+  "emergencyActionMuteHide": {
+    "message": "Mettre en sourdine et masquer les onglets correspondants"
+  },
+  "emergencyActionClose": {
+    "message": "Fermer les onglets correspondants"
+  },
+  "mediaPauseSection": {
+    "message": "Lors de la mise en sourdine ou du masquage des onglets"
+  },
+  "mediaPauseHelp": {
+    "message": "Choisissez s'il faut aussi arrêter la lecture multimédia dans les onglets correspondants lorsqu'ils sont mis en sourdine ou masqués."
+  },
+  "mediaPauseLabel": {
+    "message": "Mettre en pause les vidéos et l'audio qu'ils contiennent"
   }
 }

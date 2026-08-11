@@ -18,7 +18,7 @@
     "message": "切换隐藏匹配关键词的标签页"
   },
   "cmdToggleEmergency": {
-    "message": "紧急模式 — 同时静音和隐藏"
+    "message": "紧急动作 — 按上面的配置执行"
   },
   "popupTitle": {
     "message": "隐私标签页助手"
@@ -93,7 +93,7 @@
     "message": "快捷键"
   },
   "optionsPageTitle": {
-    "message": "隐私标签页助手 — 选项"
+    "message": "隐私标签页助手 — 设置"
   },
   "optionsKeywordsHelp": {
     "message": "只要标签页的网址或标题中包含该关键词即视为匹配(不区分大小写)。可用域名(如 bank.com)或任意词(如 paystub)。"
@@ -112,5 +112,29 @@
   },
   "emptyInputWarn": {
     "message": "请先输入一个关键词。"
+  },
+  "shortcutDisabled": {
+    "message": "已禁用"
+  },
+  "emergencySection": {
+    "message": "紧急动作"
+  },
+  "emergencyHelp": {
+    "message": "选择按下紧急快捷键时执行的动作。"
+  },
+  "emergencyActionMuteHide": {
+    "message": "静音并隐藏匹配的标签页"
+  },
+  "emergencyActionClose": {
+    "message": "关闭匹配的标签页"
+  },
+  "mediaPauseSection": {
+    "message": "静音或隐藏标签页时"
+  },
+  "mediaPauseHelp": {
+    "message": "选择是否在匹配的标签页被静音或隐藏时,顺便停止其中的视频和音频播放。"
+  },
+  "mediaPauseLabel": {
+    "message": "暂停其中的视频和音频"
   }
 }

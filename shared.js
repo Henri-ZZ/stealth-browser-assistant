@@ -7,6 +7,8 @@ export const STORAGE_KEYS = {
   SCRIPT_MUTE: 'scriptMute', // boolean: user toggled mute via popup (script-level, not Chrome API)
   HIDE_MODE: 'hideMode', // boolean: auto-hide matching tabs while on
   LANG_PREF: 'langPref', // '' | 'en' | 'zh_CN' ('' => follow browser UI language)
+  EMERGENCY_ACTION: 'emergencyAction', // 'muteHide' | 'closeMatchTabs' — what Alt+Shift+Space does
+  PAUSE_ON_MUTE_HIDE: 'pauseOnMuteHide', // boolean: also pause media when mute/hide is applied
 };
 
 /**
@@ -26,7 +28,11 @@ const DEFAULTS = {
   [STORAGE_KEYS.SCRIPT_MUTE]: false,
   [STORAGE_KEYS.HIDE_MODE]: false,
   [STORAGE_KEYS.LANG_PREF]: '',
+  [STORAGE_KEYS.EMERGENCY_ACTION]: 'muteHide',
+  [STORAGE_KEYS.PAUSE_ON_MUTE_HIDE]: false,
 };
+
+export const EMERGENCY_ACTIONS = ['muteHide', 'closeMatchTabs'];
 
 // Supported locales. Messages are bundled at build time so the UI can switch
 // language instantly (chrome.i18n.getMessage only ever reads the browser UI
@@ -86,6 +92,24 @@ export async function getScriptMute() {
 }
 export async function getHideMode() {
   return !!(await getState(STORAGE_KEYS.HIDE_MODE));
+}
+
+/**
+ * True when the user wants media playback to be paused as a side-effect of
+ * script-mute or hide being applied. One-way: unmuting / unhiding does NOT
+ * auto-resume — the user clicks play themselves.
+ */
+export async function getPauseOnMuteHide() {
+  return !!(await getState(STORAGE_KEYS.PAUSE_ON_MUTE_HIDE));
+}
+
+/**
+ * What the emergency-mode shortcut does: 'muteHide' (script-mute + hide tabs in stash)
+ * or 'closeMatchTabs' (close every matching tab).
+ */
+export async function getEmergencyAction() {
+  const v = await getState(STORAGE_KEYS.EMERGENCY_ACTION);
+  return EMERGENCY_ACTIONS.includes(v) ? v : 'muteHide';
 }
 
 /**

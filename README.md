@@ -15,13 +15,13 @@
 
 一键同时开启静音和隐藏，适用于"赶紧遮住"的突发场景：
 
-| 操作 | 默认快捷键 | 命令 |
-|---|---|---|
-| 切换静音模式 | `Alt+Shift+M` | `toggle-mute` |
-| 切换隐藏模式 | `Alt+Shift+H` | `toggle-hide` |
-| 紧急模式 | `Alt+Shift+Space` | `emergency-mode` |
+| 操作         | 默认快捷键    | 命令             |
+| ------------ | ------------- | ---------------- |
+| 切换静音模式 | `Alt+Shift+M` | `toggle-mute`    |
+| 切换隐藏模式 | `Alt+Shift+H` | `toggle-hide`    |
+| 紧急动作     | `Alt+Shift+E` | `emergency-mode` |
 
-快捷键可在 `chrome://extensions/shortcuts` 中自定义（扩展选项页也有直达链接）。
+快捷键可在 `chrome://extensions/shortcuts` 中自定义（扩展设置页也有直达链接）。
 
 ## 关于"隐藏标签页"
 
@@ -45,7 +45,7 @@ manifest.json                 MV3 清单
 background.js                 Service worker：命令处理 + 暂存窗口管理 + 脚本注入
 shared.js                     共享：存储键 / 关键词匹配 / 国际化
 popup.html / popup.js         工具栏弹窗（静音 & 隐藏开关）
-options.html / options.js     选项页（关键词管理、快捷说明、语言切换）
+options.html / options.js     设置页（关键词管理、快捷说明、语言切换）
 styles.css                    共享样式（含深色模式）
 _locales/
   en/messages.json            英文文案（Chrome 原生 i18n）
@@ -60,7 +60,7 @@ icons/
 
 ## 本地化
 
-界面根据浏览器语言自动在英文与简体中文之间切换，可在选项页手动选择。新增语言：在 `_locales/<lang>/` 目录下同时创建 `messages.json`（Chrome 原生 i18n）和 `messages.js`（ES module 镜像）即可。注意两个文件需保持同步。
+界面根据浏览器语言自动在英文与简体中文之间切换，可在设置页手动选择。新增语言：在 `_locales/<lang>/` 目录下同时创建 `messages.json`（Chrome 原生 i18n）和 `messages.js`（ES module 镜像）即可。注意两个文件需保持同步。
 
 ## License
 

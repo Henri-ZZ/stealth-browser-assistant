@@ -18,7 +18,7 @@
     "message": "Ausblenden für Tabs mit passenden Schlüsselwörtern umschalten"
   },
   "cmdToggleEmergency": {
-    "message": "Notfallmodus — jetzt stummschalten und ausblenden"
+    "message": "Notfallaktion — wie oben konfiguriert"
   },
   "popupTitle": {
     "message": "Stealth Tabs"
@@ -121,5 +121,29 @@
   },
   "emptyInputWarn": {
     "message": "Bitte zuerst ein Schlüsselwort eingeben."
+  },
+  "shortcutDisabled": {
+    "message": "Deaktiviert"
+  },
+  "emergencySection": {
+    "message": "Notfallaktion"
+  },
+  "emergencyHelp": {
+    "message": "Wähle, was beim Drücken des Notfall-Shortcuts passiert."
+  },
+  "emergencyActionMuteHide": {
+    "message": "Passende Tabs stummschalten und ausblenden"
+  },
+  "emergencyActionClose": {
+    "message": "Passende Tabs schließen"
+  },
+  "mediaPauseSection": {
+    "message": "Beim Stummschalten oder Ausblenden von Tabs"
+  },
+  "mediaPauseHelp": {
+    "message": "Wähle, ob die Wiedergabe in passenden Tabs zusätzlich gestoppt wird, wenn sie stummgeschaltet oder ausgeblendet werden."
+  },
+  "mediaPauseLabel": {
+    "message": "Videos und Audio darin anhalten"
   }
 }

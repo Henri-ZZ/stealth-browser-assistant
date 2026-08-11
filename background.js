@@ -16,7 +16,8 @@
 
 import {
   STORAGE_KEYS, getState, setState, getKeywords,
-  getScriptMute, getHideMode, tabMatchesKeywords,
+  getScriptMute, getHideMode, getEmergencyAction, getPauseOnMuteHide,
+  tabMatchesKeywords,
 } from './shared.js';
 
 const STASH_WINDOW_STATE = 'minimized';
@@ -49,13 +50,16 @@ async function injectScript(tabId, func) {
 
 function MUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { el.muted = true; }); }
 function UNMUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { el.muted = false; }); }
+function PAUSE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { if (!el.paused) el.pause(); }); }
 
 async function setScriptMute(on) {
   await setState(STORAGE_KEYS.SCRIPT_MUTE, on);
   const tabs = await findMatchingTabs();
   const func = on ? MUTE_SCRIPT : UNMUTE_SCRIPT;
+  const shouldPause = on && await getPauseOnMuteHide();
   for (const t of tabs) {
     await injectScript(t.id, func);
+    if (shouldPause) await injectScript(t.id, PAUSE_SCRIPT);
   }
   await updateBadge();
 }
@@ -68,6 +72,7 @@ async function enforceScriptMuteOnTab(tab) {
   const keywords = await getKeywords();
   if (!tabMatchesKeywords(tab, keywords)) return;
   await injectScript(tab.id, MUTE_SCRIPT);
+  if (await getPauseOnMuteHide()) await injectScript(tab.id, PAUSE_SCRIPT);
 }
 
 // ───────────────────────── hide mode ─────────────────────────
@@ -79,6 +84,7 @@ async function enforceHideOnTab(tab) {
   if (!(await getHideMode())) return;
   const keywords = await getKeywords();
   if (!tabMatchesKeywords(tab, keywords)) return;
+  if (await getPauseOnMuteHide()) await injectScript(tab.id, PAUSE_SCRIPT);
   await hideTab(tab);
 }
 
@@ -86,9 +92,11 @@ async function setHideMode(on) {
   await setState(STORAGE_KEYS.HIDE_MODE, on);
   if (on) {
     const tabs = await findMatchingTabs();
+    const shouldPause = await getPauseOnMuteHide();
     for (const tab of tabs) {
       // Also mute hidden tabs so the stash window stays silent.
       try { await chrome.tabs.update(tab.id, { muted: true }); } catch {}
+      if (shouldPause) await injectScript(tab.id, PAUSE_SCRIPT);
       await hideTab(tab);
     }
   } else {
@@ -246,8 +254,19 @@ chrome.tabs.onAttached.addListener(async (tabId, { newWindowId }) => {
   }
 });
 
-chrome.windows.onRemoved.addListener((wid) => {
-  STASH_WINDOW_IDS.delete(wid);
+chrome.windows.onRemoved.addListener(async (wid) => {
+  const wasStash = STASH_WINDOW_IDS.delete(wid);
+  // If this was a stash window, drop the hidden-tab records pointing at it.
+  // chrome.tabs.onRemoved may not fire for every tab inside a closed window,
+  // so we can't rely on tab-level cleanup alone.
+  if (wasStash) {
+    const hidden = await getState(STORAGE_KEYS.HIDDEN);
+    const remaining = hidden.filter((r) => r.windowId !== wid);
+    if (remaining.length !== hidden.length) {
+      await setState(STORAGE_KEYS.HIDDEN, remaining);
+      await updateBadge();
+    }
+  }
 });
 
 async function maybeApplyToTabLater(tabId) {
@@ -274,10 +293,17 @@ chrome.commands.onCommand.addListener(async (command) => {
   } else if (command === 'toggle-hide') {
     await setHideMode(!(await getHideMode()));
   } else if (command === 'emergency-mode') {
-    await setScriptMute(true);
+    const action = await getEmergencyAction();
     const matching = await findMatchingTabs();
-    for (const t of matching) {
-      await hideTab(t);
+    if (action === 'closeMatchTabs') {
+      for (const t of matching) {
+        try { await chrome.tabs.remove(t.id); } catch {}
+      }
+    } else {
+      await setScriptMute(true);
+      for (const t of matching) {
+        await hideTab(t);
+      }
     }
   }
   await updateBadge();

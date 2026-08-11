@@ -18,7 +18,7 @@
     "message": "Alternar ocultação para abas que correspondem a palavras-chave"
   },
   "cmdToggleEmergency": {
-    "message": "Modo de emergência — silenciar e ocultar agora"
+    "message": "Ação de emergência — conforme a configuração acima"
   },
   "popupTitle": {
     "message": "Stealth Tabs"
@@ -121,5 +121,29 @@
   },
   "emptyInputWarn": {
     "message": "Por favor, insira uma palavra-chave primeiro."
+  },
+  "shortcutDisabled": {
+    "message": "Desativado"
+  },
+  "emergencySection": {
+    "message": "Ação de emergência"
+  },
+  "emergencyHelp": {
+    "message": "Escolha o que acontece ao pressionar o atalho de emergência."
+  },
+  "emergencyActionMuteHide": {
+    "message": "Silenciar e ocultar abas correspondentes"
+  },
+  "emergencyActionClose": {
+    "message": "Fechar abas correspondentes"
+  },
+  "mediaPauseSection": {
+    "message": "Ao silenciar ou ocultar abas"
+  },
+  "mediaPauseHelp": {
+    "message": "Escolha se também deve interromper a reprodução de mídia nas abas correspondentes quando forem silenciadas ou ocultadas."
+  },
+  "mediaPauseLabel": {
+    "message": "Pausar os vídeos e áudio que contêm"
   }
 }

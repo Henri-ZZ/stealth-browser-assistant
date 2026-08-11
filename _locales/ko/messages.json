@@ -18,7 +18,7 @@
     "message": "키워드와 일치하는 탭 숨기기 전환"
   },
   "cmdToggleEmergency": {
-    "message": "긴급 모드 — 지금 음소거 및 숨기기"
+    "message": "긴급 동작 — 위 설정에 따름"
   },
   "popupTitle": {
     "message": "Stealth Tabs"
@@ -121,5 +121,29 @@
   },
   "emptyInputWarn": {
     "message": "먼저 키워드를 입력하세요."
+  },
+  "shortcutDisabled": {
+    "message": "비활성화됨"
+  },
+  "emergencySection": {
+    "message": "긴급 동작"
+  },
+  "emergencyHelp": {
+    "message": "긴급 단축키를 눌렀을 때 수행할 동작을 선택하세요."
+  },
+  "emergencyActionMuteHide": {
+    "message": "일치하는 탭 음소거 및 숨기기"
+  },
+  "emergencyActionClose": {
+    "message": "일치하는 탭 닫기"
+  },
+  "mediaPauseSection": {
+    "message": "탭을 음소거 또는 숨길 때"
+  },
+  "mediaPauseHelp": {
+    "message": "일치하는 탭이 음소거되거나 숨겨질 때 미디어 재생을 함께 중지할지 선택하세요."
+  },
+  "mediaPauseLabel": {
+    "message": "해당 탭의 비디오와 오디오를 일시 중지"
   }
 }

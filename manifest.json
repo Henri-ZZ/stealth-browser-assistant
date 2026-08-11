@@ -41,7 +41,7 @@
       "description": "__MSG_cmdToggleHide__"
     },
     "emergency-mode": {
-      "suggested_key": { "default": "Alt+Shift+Space" },
+      "suggested_key": { "default": "Alt+Shift+E" },
       "description": "__MSG_cmdToggleEmergency__"
     }
   }

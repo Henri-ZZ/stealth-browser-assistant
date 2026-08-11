@@ -292,3 +292,34 @@ kbd {
   font-size: 12px;
   margin-right: 8px;
 }
+
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  transition: border-color .15s, background .15s;
+}
+.radio-option:hover { border-color: var(--accent); }
+.radio-option input[type="radio"] { margin: 0; accent-color: var(--accent); }
+.radio-option:has(input:checked) { border-color: var(--accent); background: var(--bg-soft); }
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  transition: border-color .15s, background .15s;
+}
+.checkbox-option:hover { border-color: var(--accent); }
+.checkbox-option input[type="checkbox"] { margin: 0; accent-color: var(--accent); }
+.checkbox-option:has(input:checked) { border-color: var(--accent); background: var(--bg-soft); }

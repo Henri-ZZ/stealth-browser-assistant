@@ -18,7 +18,7 @@
     "message": "Alternar ocultación para pestañas que coincidan con palabras clave"
   },
   "cmdToggleEmergency": {
-    "message": "Modo de emergencia — silenciar y ocultar ahora"
+    "message": "Acción de emergencia — según la configuración de arriba"
   },
   "popupTitle": {
     "message": "Stealth Tabs"
@@ -121,5 +121,29 @@
   },
   "emptyInputWarn": {
     "message": "Introduce primero una palabra clave."
+  },
+  "shortcutDisabled": {
+    "message": "Desactivado"
+  },
+  "emergencySection": {
+    "message": "Acción de emergencia"
+  },
+  "emergencyHelp": {
+    "message": "Elige qué ocurre al pulsar el atajo de emergencia."
+  },
+  "emergencyActionMuteHide": {
+    "message": "Silenciar y ocultar pestañas coincidentes"
+  },
+  "emergencyActionClose": {
+    "message": "Cerrar pestañas coincidentes"
+  },
+  "mediaPauseSection": {
+    "message": "Al silenciar u ocultar pestañas"
+  },
+  "mediaPauseHelp": {
+    "message": "Elige si también se detiene la reproducción multimedia en las pestañas coincidentes cuando se silencian u ocultan."
+  },
+  "mediaPauseLabel": {
+    "message": "Pausar los vídeos y audio que contienen"
   }
 }
