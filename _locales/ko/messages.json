@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser"
   },
   "extDescription": {
     "message": "키보드 단축키로 비공개 탭을 즉시 음소거, 숨기기 및 관리합니다."
@@ -21,7 +21,7 @@
     "message": "긴급 동작 — 위 설정에 따름"
   },
   "popupTitle": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "actionToggleMute": {
     "message": "음소거"
@@ -102,7 +102,7 @@
     "message": "단축키"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — 설정"
+    "message": "Stealth Browser Assistant — 설정"
   },
   "optionsKeywordsHelp": {
     "message": "탭의 URL 또는 제목에 키워드가 포함되어 있으면 일치합니다(대소문자 구분 없음). 도메인(예: bank.com) 또는 임의의 단어(예: 급여명세서)를 사용하세요."

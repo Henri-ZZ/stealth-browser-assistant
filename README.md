@@ -1,4 +1,4 @@
-# Stealth Tabs · 隐私标签页助手
+# Stealth Browser Assistant · 隐私浏览助手
 
 > Private browsing assistant for sensitive tabs.
 > Instantly mute, hide and manage private browser tabs with keyboard shortcuts.

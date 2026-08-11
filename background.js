@@ -1,4 +1,4 @@
-// Service worker for Stealth Tabs.
+// Service worker for Stealth Browser Assistant.
 //
 // hideMode — when ON, every matching tab is moved into a minimized stash window.
 // Mute uses script injection (no Chrome mute API). The popup has a toggle
@@ -173,7 +173,7 @@ async function unhideAll() {
       try { await chrome.tabs.update(record.tabId, { muted: false }); } catch {}
       restored.push(record);
     } catch (err) {
-      console.warn('Stealth Tabs: failed to restore tab', record, err);
+      console.warn('Stealth Browser Assistant: failed to restore tab', record, err);
     }
   }
 

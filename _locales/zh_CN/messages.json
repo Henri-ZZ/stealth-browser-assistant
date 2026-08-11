@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "隐私标签页助手"
+    "message": "隐私浏览助手"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "隐私浏览"
   },
   "extDescription": {
     "message": "通过键盘快捷键即时静音、隐藏和管理私密浏览器标签页。"
@@ -21,7 +21,7 @@
     "message": "紧急动作 — 按上面的配置执行"
   },
   "popupTitle": {
-    "message": "隐私标签页助手"
+    "message": "隐私浏览助手"
   },
   "actionToggleMute": {
     "message": "静音"
@@ -93,7 +93,7 @@
     "message": "快捷键"
   },
   "optionsPageTitle": {
-    "message": "隐私标签页助手 — 设置"
+    "message": "隐私浏览助手 — 设置"
   },
   "optionsKeywordsHelp": {
     "message": "只要标签页的网址或标题中包含该关键词即视为匹配(不区分大小写)。可用域名(如 bank.com)或任意词(如 paystub)。"

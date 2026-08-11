@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "short_name": "Stealth Tabs",
+  "short_name": "Stealth Browser",
   "version": "0.1.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
@@ -19,7 +19,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Stealth Tabs",
+    "default_title": "Stealth Browser Assistant",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",

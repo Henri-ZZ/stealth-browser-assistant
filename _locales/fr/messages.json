@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser"
   },
   "extDescription": {
     "message": "Désactivez le son, masquez et gérez instantanément les onglets privés avec des raccourcis clavier."
@@ -21,7 +21,7 @@
     "message": "Action d'urgence — selon la configuration ci-dessus"
   },
   "popupTitle": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "actionToggleMute": {
     "message": "Couper le son"
@@ -102,7 +102,7 @@
     "message": "Raccourcis"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — Paramètres"
+    "message": "Stealth Browser Assistant — Paramètres"
   },
   "optionsKeywordsHelp": {
     "message": "Un mot-clé correspond s'il apparaît dans l'URL ou le titre de l'onglet (insensible à la casse). Utilisez un domaine (ex. bank.com) ou n'importe quel mot (ex. fiche de paie)."

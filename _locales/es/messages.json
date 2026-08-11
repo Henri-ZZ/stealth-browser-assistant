@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser"
   },
   "extDescription": {
     "message": "Silencia, oculta y gestiona pestañas privadas al instante con atajos de teclado."
@@ -21,7 +21,7 @@
     "message": "Acción de emergencia — según la configuración de arriba"
   },
   "popupTitle": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "actionToggleMute": {
     "message": "Silenciar"
@@ -102,7 +102,7 @@
     "message": "Atajos de teclado"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — Configuración"
+    "message": "Stealth Browser Assistant — Configuración"
   },
   "optionsKeywordsHelp": {
     "message": "Cada palabra clave coincide si aparece en la URL o título de la pestaña (sin distinción de mayúsculas). Usa un dominio (ej. bank.com) o cualquier palabra (ej. nómina)."

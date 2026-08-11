@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser"
   },
   "extDescription": {
     "message": "キーボードショートカットでプライベートタブを即座にミュート、非表示、管理します。"
@@ -21,7 +21,7 @@
     "message": "緊急時の動作 — 上の設定に従う"
   },
   "popupTitle": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "actionToggleMute": {
     "message": "ミュート"
@@ -102,7 +102,7 @@
     "message": "ショートカット"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — 設定"
+    "message": "Stealth Browser Assistant — 設定"
   },
   "optionsKeywordsHelp": {
     "message": "タブのURLまたはタイトルにキーワードが含まれている場合に一致します（大文字小文字を区別しません）。ドメイン（例：bank.com）または任意の単語（例：給与明細）を使用してください。"

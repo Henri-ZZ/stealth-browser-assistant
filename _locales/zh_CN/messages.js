@@ -2,8 +2,8 @@
 // service worker can't import JSON modules directly. The JSON file itself is
 // still required for `__MSG_xxx__` substitution in manifest.json.
 export default {
-  extName: { message: "隐私标签页助手" },
-  extShortName: { message: "Stealth Tabs" },
+  extName: { message: "隐私浏览助手" },
+  extShortName: { message: "隐私浏览" },
   extDescription: {
     message: "通过键盘快捷键即时静音、隐藏和管理私密浏览器标签页。",
   },
@@ -11,7 +11,7 @@ export default {
   cmdToggleMute: { message: "切换静音匹配关键词的标签页" },
   cmdToggleHide: { message: "切换隐藏匹配关键词的标签页" },
   cmdToggleEmergency: { message: "紧急动作 — 按上面的配置执行" },
-  popupTitle: { message: "隐私标签页助手" },
+  popupTitle: { message: "隐私浏览助手" },
   actionToggleMute: { message: "静音" },
   muteSection: { message: "静音" },
   muteAll: { message: "全部静音" },
@@ -40,7 +40,7 @@ export default {
   langHelp: { message: "选择界面语言,或跟随浏览器。" },
   langFollowBrowser: { message: "跟随浏览器" },
   optionsTitle: { message: "快捷键" },
-  optionsPageTitle: { message: "隐私标签页助手 — 设置" },
+  optionsPageTitle: { message: "隐私浏览助手 — 设置" },
   optionsKeywordsHelp: {
     message:
       "只要标签页的网址或标题中包含该关键词即视为匹配(不区分大小写)。可用域名(如 bank.com)或任意词(如 paystub)。",

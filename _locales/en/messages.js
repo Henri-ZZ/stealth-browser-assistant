@@ -2,8 +2,8 @@
 // service worker can't import JSON modules directly. The JSON file itself is
 // still required for `__MSG_xxx__` substitution in manifest.json.
 export default {
-  extName: { message: "Stealth Tabs" },
-  extShortName: { message: "Stealth Tabs" },
+  extName: { message: "Stealth Browser Assistant" },
+  extShortName: { message: "Stealth Browser" },
   extDescription: {
     message:
       "Instantly mute, hide and manage private browser tabs with keyboard shortcuts.",
@@ -12,7 +12,7 @@ export default {
   cmdToggleMute: { message: "Toggle mute for tabs matching keywords" },
   cmdToggleHide: { message: "Toggle hiding tabs matching keywords" },
   cmdToggleEmergency: { message: "Emergency action — as configured above" },
-  popupTitle: { message: "Stealth Tabs" },
+  popupTitle: { message: "Stealth Browser Assistant" },
   actionToggleMute: { message: "Mute" },
   muteSection: { message: "Mute" },
   muteAll: { message: "Mute All" },
@@ -45,7 +45,7 @@ export default {
   },
   langFollowBrowser: { message: "Follow browser" },
   optionsTitle: { message: "Shortcuts" },
-  optionsPageTitle: { message: "Stealth Tabs — Settings" },
+  optionsPageTitle: { message: "Stealth Browser Assistant — Settings" },
   optionsKeywordsHelp: {
     message:
       "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub).",

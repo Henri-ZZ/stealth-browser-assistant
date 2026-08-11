@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser"
   },
   "extDescription": {
     "message": "Silencie, oculta e gerencia abas privadas instantaneamente com atalhos de teclado."
@@ -21,7 +21,7 @@
     "message": "Ação de emergência — conforme a configuração acima"
   },
   "popupTitle": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "actionToggleMute": {
     "message": "Silenciar"
@@ -102,7 +102,7 @@
     "message": "Atalhos"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — Configurações"
+    "message": "Stealth Browser Assistant — Configurações"
   },
   "optionsKeywordsHelp": {
     "message": "Cada palavra-chave corresponde se aparecer no URL ou título da aba (sem distinção de maiúsculas). Use um domínio (ex. bank.com) ou qualquer palavra (ex. contracheque)."

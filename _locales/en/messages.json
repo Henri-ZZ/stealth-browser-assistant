@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "extShortName": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser"
   },
   "extDescription": {
     "message": "Instantly mute, hide and manage private browser tabs with keyboard shortcuts."
@@ -21,7 +21,7 @@
     "message": "Emergency action — as configured above"
   },
   "popupTitle": {
-    "message": "Stealth Tabs"
+    "message": "Stealth Browser Assistant"
   },
   "actionToggleMute": {
     "message": "Mute"
@@ -93,7 +93,7 @@
     "message": "Shortcuts"
   },
   "optionsPageTitle": {
-    "message": "Stealth Tabs — Settings"
+    "message": "Stealth Browser Assistant — Settings"
   },
   "optionsKeywordsHelp": {
     "message": "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub)."

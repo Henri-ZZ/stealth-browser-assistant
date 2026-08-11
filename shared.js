@@ -1,4 +1,4 @@
-// Shared utilities for Stealth Tabs: storage keys, keyword matching, hidden-tab registry.
+// Shared utilities for Stealth Browser Assistant: storage keys, keyword matching, hidden-tab registry.
 // Imported by background.js, popup.js and options.js as an ES module.
 
 export const STORAGE_KEYS = {
