@@ -51,4 +51,7 @@ export default {
   mediaPauseSection: { message: 'Lors de la mise en sourdine ou du masquage des onglets' },
   mediaPauseHelp: { message: 'Choisissez s\'il faut aussi arrêter la lecture multimédia dans les onglets correspondants lorsqu\'ils sont mis en sourdine ou masqués.' },
   mediaPauseLabel: { message: 'Mettre en pause les vidéos et l\'audio qu\'ils contiennent' },
+  premiumUnlockUnlimited: { message: 'Passez à Premium pour des mots-clés illimités' },
+  premiumUnlockFeature: { message: 'Passez à Premium pour débloquer cette fonctionnalité' },
+  premiumUpgradeCta: { message: 'Découvrir Premium' },
 };

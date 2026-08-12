@@ -51,4 +51,7 @@ export default {
   mediaPauseSection: { message: 'Al silenciar u ocultar pestañas' },
   mediaPauseHelp: { message: 'Elige si también se detiene la reproducción multimedia en las pestañas coincidentes cuando se silencian u ocultan.' },
   mediaPauseLabel: { message: 'Pausar los vídeos y audio que contienen' },
+  premiumUnlockUnlimited: { message: 'Hazte Premium para keywords ilimitados' },
+  premiumUnlockFeature: { message: 'Hazte Premium para desbloquear esta función' },
+  premiumUpgradeCta: { message: 'Conoce Premium' },
 };

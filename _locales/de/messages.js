@@ -51,4 +51,7 @@ export default {
   mediaPauseSection: { message: 'Beim Stummschalten oder Ausblenden von Tabs' },
   mediaPauseHelp: { message: 'Wähle, ob die Wiedergabe in passenden Tabs zusätzlich gestoppt wird, wenn sie stummgeschaltet oder ausgeblendet werden.' },
   mediaPauseLabel: { message: 'Videos und Audio darin anhalten' },
+  premiumUnlockUnlimited: { message: 'Mit Premium unbegrenzte Keywords freischalten' },
+  premiumUnlockFeature: { message: 'Mit Premium diese Funktion freischalten' },
+  premiumUpgradeCta: { message: 'Premium kennenlernen' },
 };

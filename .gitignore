@@ -1,5 +1,4 @@
 .workbuddy/
-assets/
 icon.png
 *.pyc
 __pycache__/

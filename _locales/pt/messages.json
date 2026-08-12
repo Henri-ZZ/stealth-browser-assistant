@@ -145,5 +145,14 @@
   },
   "mediaPauseLabel": {
     "message": "Pausar os vídeos e áudio que contêm"
+  },
+  "premiumUnlockUnlimited": {
+    "message": "Torne-se Premium para palavras-chave ilimitadas"
+  },
+  "premiumUnlockFeature": {
+    "message": "Torne-se Premium para desbloquear este recurso"
+  },
+  "premiumUpgradeCta": {
+    "message": "Conheça Premium"
   }
 }

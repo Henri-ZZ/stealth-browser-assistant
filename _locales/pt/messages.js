@@ -51,4 +51,7 @@ export default {
   mediaPauseSection: { message: 'Ao silenciar ou ocultar abas' },
   mediaPauseHelp: { message: 'Escolha se também deve interromper a reprodução de mídia nas abas correspondentes quando forem silenciadas ou ocultadas.' },
   mediaPauseLabel: { message: 'Pausar os vídeos e áudio que contêm' },
+  premiumUnlockUnlimited: { message: 'Torne-se Premium para palavras-chave ilimitadas' },
+  premiumUnlockFeature: { message: 'Torne-se Premium para desbloquear este recurso' },
+  premiumUpgradeCta: { message: 'Conheça Premium' },
 };

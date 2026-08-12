@@ -1,4 +1,4 @@
-import { resolveLocale, tFor } from './shared.js';
+import { resolveLocale, tFor, isPremium } from './shared.js';
 
 let LOCALE = 'en';
 
@@ -53,6 +53,7 @@ async function refreshStatus() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  document.body.classList.toggle('is-premium', isPremium());
   await applyI18n();
 
   document.getElementById('muteToggle').addEventListener('click', async () => {

@@ -51,4 +51,7 @@ export default {
   mediaPauseSection: { message: '탭을 음소거 또는 숨길 때' },
   mediaPauseHelp: { message: '일치하는 탭이 음소거되거나 숨겨질 때 미디어 재생을 함께 중지할지 선택하세요.' },
   mediaPauseLabel: { message: '해당 탭의 비디오와 오디오를 일시 중지' },
+  premiumUnlockUnlimited: { message: '프리미엄으로 무제한 키워드 잠금 해제' },
+  premiumUnlockFeature: { message: '프리미엄으로 이 기능 잠금 해제' },
+  premiumUpgradeCta: { message: 'Premium 알아보기' },
 };

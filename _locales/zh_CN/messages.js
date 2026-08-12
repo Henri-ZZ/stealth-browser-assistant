@@ -61,4 +61,7 @@ export default {
       "选择是否在匹配的标签页被静音或隐藏时,顺便停止其中的视频和音频播放。",
   },
   mediaPauseLabel: { message: "暂停其中的视频和音频" },
+  premiumUnlockUnlimited: { message: "升级 Premium 解锁无限关键词" },
+  premiumUnlockFeature: { message: "升级 Premium 解锁此功能" },
+  premiumUpgradeCta: { message: "了解Premium" },
 };

@@ -145,5 +145,14 @@
   },
   "mediaPauseLabel": {
     "message": "タブ内の動画と音声を一時停止"
+  },
+  "premiumUnlockUnlimited": {
+    "message": "プレミアムで無制限のキーワードを解放"
+  },
+  "premiumUnlockFeature": {
+    "message": "プレミアムでこの機能を解放"
+  },
+  "premiumUpgradeCta": {
+    "message": "Premium について知る"
   }
 }

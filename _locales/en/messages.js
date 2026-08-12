@@ -68,4 +68,7 @@ export default {
       "Choose whether to also stop media playback in matching tabs when they get muted or hidden.",
   },
   mediaPauseLabel: { message: "Pause the videos and audio in them" },
+  premiumUnlockUnlimited: { message: "Get premium for unlimited keywords" },
+  premiumUnlockFeature: { message: "Get premium to unlock this feature" },
+  premiumUpgradeCta: { message: "Learn about Premium" },
 };

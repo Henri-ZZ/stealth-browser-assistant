@@ -2,13 +2,13 @@
 // Imported by background.js, popup.js and options.js as an ES module.
 
 export const STORAGE_KEYS = {
-  KEYWORDS: 'keywords',
-  HIDDEN: 'hiddenTabs', // array of HiddenRecord
-  SCRIPT_MUTE: 'scriptMute', // boolean: user toggled mute via popup (script-level, not Chrome API)
-  HIDE_MODE: 'hideMode', // boolean: auto-hide matching tabs while on
-  LANG_PREF: 'langPref', // '' | 'en' | 'zh_CN' ('' => follow browser UI language)
-  EMERGENCY_ACTION: 'emergencyAction', // 'muteHide' | 'closeMatchTabs' — what Alt+Shift+Space does
-  PAUSE_ON_MUTE_HIDE: 'pauseOnMuteHide', // boolean: also pause media when mute/hide is applied
+  KEYWORDS: "keywords",
+  HIDDEN: "hiddenTabs", // array of HiddenRecord
+  SCRIPT_MUTE: "scriptMute", // boolean: user toggled mute via popup (script-level, not Chrome API)
+  HIDE_MODE: "hideMode", // boolean: auto-hide matching tabs while on
+  LANG_PREF: "langPref", // '' | 'en' | 'zh_CN' ('' => follow browser UI language)
+  EMERGENCY_ACTION: "emergencyAction", // 'muteHide' | 'closeMatchTabs' — what Alt+Shift+Space does
+  PAUSE_ON_MUTE_HIDE: "pauseOnMuteHide", // boolean: also pause media when mute/hide is applied
 };
 
 /**
@@ -27,12 +27,12 @@ const DEFAULTS = {
   [STORAGE_KEYS.HIDDEN]: [],
   [STORAGE_KEYS.SCRIPT_MUTE]: false,
   [STORAGE_KEYS.HIDE_MODE]: false,
-  [STORAGE_KEYS.LANG_PREF]: '',
-  [STORAGE_KEYS.EMERGENCY_ACTION]: 'muteHide',
+  [STORAGE_KEYS.LANG_PREF]: "",
+  [STORAGE_KEYS.EMERGENCY_ACTION]: "muteHide",
   [STORAGE_KEYS.PAUSE_ON_MUTE_HIDE]: false,
 };
 
-export const EMERGENCY_ACTIONS = ['muteHide', 'closeMatchTabs'];
+export const EMERGENCY_ACTIONS = ["muteHide", "closeMatchTabs"];
 
 // Supported locales. Messages are bundled at build time so the UI can switch
 // language instantly (chrome.i18n.getMessage only ever reads the browser UI
@@ -43,14 +43,14 @@ export const EMERGENCY_ACTIONS = ['muteHide', 'closeMatchTabs'];
 // does not allow JSON module imports — that produces "Failed to load the
 // script unexpectedly" at SW startup. The .json files still live alongside
 // because Chrome's manifest i18n (`__MSG_xxx__`) reads them directly.
-import enMessages from './_locales/en/messages.js';
-import zhCNMessages from './_locales/zh_CN/messages.js';
-import esMessages from './_locales/es/messages.js';
-import deMessages from './_locales/de/messages.js';
-import jaMessages from './_locales/ja/messages.js';
-import frMessages from './_locales/fr/messages.js';
-import ptMessages from './_locales/pt/messages.js';
-import koMessages from './_locales/ko/messages.js';
+import enMessages from "./_locales/en/messages.js";
+import zhCNMessages from "./_locales/zh_CN/messages.js";
+import esMessages from "./_locales/es/messages.js";
+import deMessages from "./_locales/de/messages.js";
+import jaMessages from "./_locales/ja/messages.js";
+import frMessages from "./_locales/fr/messages.js";
+import ptMessages from "./_locales/pt/messages.js";
+import koMessages from "./_locales/ko/messages.js";
 
 export const MESSAGES = {
   en: enMessages,
@@ -63,7 +63,16 @@ export const MESSAGES = {
   ko: koMessages,
 };
 
-export const SUPPORTED_LOCALES = ['en', 'zh_CN', 'es', 'de', 'ja', 'fr', 'pt', 'ko'];
+export const SUPPORTED_LOCALES = [
+  "en",
+  "zh_CN",
+  "es",
+  "de",
+  "ja",
+  "fr",
+  "pt",
+  "ko",
+];
 
 export async function getState(key = null) {
   if (key === null) {
@@ -109,7 +118,7 @@ export async function getPauseOnMuteHide() {
  */
 export async function getEmergencyAction() {
   const v = await getState(STORAGE_KEYS.EMERGENCY_ACTION);
-  return EMERGENCY_ACTIONS.includes(v) ? v : 'muteHide';
+  return EMERGENCY_ACTIONS.includes(v) ? v : "muteHide";
 }
 
 /**
@@ -117,8 +126,8 @@ export async function getEmergencyAction() {
  */
 export function tabMatchesKeywords(tab, keywords) {
   if (!keywords || keywords.length === 0) return false;
-  const title = (tab.title || '').toLowerCase();
-  const url = (tab.url || '').toLowerCase();
+  const title = (tab.title || "").toLowerCase();
+  const url = (tab.url || "").toLowerCase();
   return keywords.some((k) => {
     const kw = String(k).toLowerCase();
     if (!kw) return false;
@@ -131,7 +140,7 @@ export function tabMatchesKeywords(tab, keywords) {
  */
 export async function getLangPref() {
   const v = await getState(STORAGE_KEYS.LANG_PREF);
-  return v || '';
+  return v || "";
 }
 
 /**
@@ -144,10 +153,10 @@ export async function resolveLocale() {
   const ui = chrome.i18n.getUILanguage();
   // Try exact match first, then fall back to language prefix (e.g. 'pt-BR' → 'pt')
   if (SUPPORTED_LOCALES.includes(ui)) return ui;
-  const prefix = ui.split('-')[0];
-  const map = { zh: 'zh_CN' };  // map language prefixes to our locale codes
+  const prefix = ui.split("-")[0];
+  const map = { zh: "zh_CN" }; // map language prefixes to our locale codes
   const mapped = map[prefix] || prefix;
-  return SUPPORTED_LOCALES.includes(mapped) ? mapped : 'en';
+  return SUPPORTED_LOCALES.includes(mapped) ? mapped : "en";
 }
 
 /**
@@ -158,18 +167,45 @@ export function tFor(locale, messageName, substitutions = null) {
   const langs = [MESSAGES[locale], MESSAGES.en];
   let entry;
   for (const dict of langs) {
-    if (dict && dict[messageName]) { entry = dict[messageName]; break; }
+    if (dict && dict[messageName]) {
+      entry = dict[messageName];
+      break;
+    }
   }
   if (!entry) return messageName;
-  let msg = entry.message ?? '';
+  let msg = entry.message ?? "";
   if (entry.placeholders && substitutions != null) {
     const subs = Array.isArray(substitutions) ? substitutions : [substitutions];
     for (const [key, ph] of Object.entries(entry.placeholders)) {
-      const idx = parseInt(ph.content?.replace(/[^0-9]/g, ''), 10) - 1;
+      const idx = parseInt(ph.content?.replace(/[^0-9]/g, ""), 10) - 1;
       if (!Number.isNaN(idx) && subs[idx] != null) {
-        msg = msg.replace(new RegExp(`\\$${key}\\$`, 'gi'), String(subs[idx]));
+        msg = msg.replace(new RegExp(`\\$${key}\\$`, "gi"), String(subs[idx]));
       }
     }
   }
   return msg;
+}
+
+// ───────────────────────── premium tier ─────────────────────────
+
+/**
+ * Maximum keywords a free-tier user can save. Adjust here to change the cap
+ * for all non-premium users in one place.
+ */
+export const KEYWORD_LIMIT_FREE = 5;
+
+/**
+ * Whether the current user has an active Premium license.
+ * TODO: replace with real license check (storage flag, server ping, etc.).
+ */
+export function isPremium() {
+  return false;
+}
+
+/**
+ * Effective keyword cap for the current user. Premium users get unlimited;
+ * everyone else is bounded by KEYWORD_LIMIT_FREE.
+ */
+export function getKeywordLimit() {
+  return isPremium() ? Infinity : KEYWORD_LIMIT_FREE;
 }

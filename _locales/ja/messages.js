@@ -51,4 +51,7 @@ export default {
   mediaPauseSection: { message: 'タブをミュートまたは非表示にしたとき' },
   mediaPauseHelp: { message: '一致するタブがミュートまたは非表示になったとき、メディア再生も停止するか選択します。' },
   mediaPauseLabel: { message: 'タブ内の動画と音声を一時停止' },
+  premiumUnlockUnlimited: { message: 'プレミアムで無制限のキーワードを解放' },
+  premiumUnlockFeature: { message: 'プレミアムでこの機能を解放' },
+  premiumUpgradeCta: { message: 'Premium について知る' },
 };

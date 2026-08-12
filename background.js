@@ -17,7 +17,7 @@
 import {
   STORAGE_KEYS, getState, setState, getKeywords,
   getScriptMute, getHideMode, getEmergencyAction, getPauseOnMuteHide,
-  tabMatchesKeywords,
+  tabMatchesKeywords, isPremium,
 } from './shared.js';
 
 const STASH_WINDOW_STATE = 'minimized';
@@ -56,7 +56,7 @@ async function setScriptMute(on) {
   await setState(STORAGE_KEYS.SCRIPT_MUTE, on);
   const tabs = await findMatchingTabs();
   const func = on ? MUTE_SCRIPT : UNMUTE_SCRIPT;
-  const shouldPause = on && await getPauseOnMuteHide();
+  const shouldPause = on && await getPauseOnMuteHide() && isPremium();
   for (const t of tabs) {
     await injectScript(t.id, func);
     if (shouldPause) await injectScript(t.id, PAUSE_SCRIPT);
@@ -72,7 +72,7 @@ async function enforceScriptMuteOnTab(tab) {
   const keywords = await getKeywords();
   if (!tabMatchesKeywords(tab, keywords)) return;
   await injectScript(tab.id, MUTE_SCRIPT);
-  if (await getPauseOnMuteHide()) await injectScript(tab.id, PAUSE_SCRIPT);
+  if (await getPauseOnMuteHide() && isPremium()) await injectScript(tab.id, PAUSE_SCRIPT);
 }
 
 // ───────────────────────── hide mode ─────────────────────────
@@ -84,7 +84,7 @@ async function enforceHideOnTab(tab) {
   if (!(await getHideMode())) return;
   const keywords = await getKeywords();
   if (!tabMatchesKeywords(tab, keywords)) return;
-  if (await getPauseOnMuteHide()) await injectScript(tab.id, PAUSE_SCRIPT);
+  if (await getPauseOnMuteHide() && isPremium()) await injectScript(tab.id, PAUSE_SCRIPT);
   await hideTab(tab);
 }
 
@@ -92,7 +92,7 @@ async function setHideMode(on) {
   await setState(STORAGE_KEYS.HIDE_MODE, on);
   if (on) {
     const tabs = await findMatchingTabs();
-    const shouldPause = await getPauseOnMuteHide();
+    const shouldPause = await getPauseOnMuteHide() && isPremium();
     for (const tab of tabs) {
       // Also mute hidden tabs so the stash window stays silent.
       try { await chrome.tabs.update(tab.id, { muted: true }); } catch {}
@@ -293,7 +293,8 @@ chrome.commands.onCommand.addListener(async (command) => {
   } else if (command === 'toggle-hide') {
     await setHideMode(!(await getHideMode()));
   } else if (command === 'emergency-mode') {
-    const action = await getEmergencyAction();
+    let action = await getEmergencyAction();
+    if (action === 'closeMatchTabs' && !isPremium()) action = 'muteHide';
     const matching = await findMatchingTabs();
     if (action === 'closeMatchTabs') {
       for (const t of matching) {

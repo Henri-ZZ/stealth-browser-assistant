@@ -145,5 +145,14 @@
   },
   "mediaPauseLabel": {
     "message": "해당 탭의 비디오와 오디오를 일시 중지"
+  },
+  "premiumUnlockUnlimited": {
+    "message": "프리미엄으로 무제한 키워드 잠금 해제"
+  },
+  "premiumUnlockFeature": {
+    "message": "프리미엄으로 이 기능 잠금 해제"
+  },
+  "premiumUpgradeCta": {
+    "message": "Premium 알아보기"
   }
 }

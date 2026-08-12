@@ -145,5 +145,14 @@
   },
   "mediaPauseLabel": {
     "message": "Videos und Audio darin anhalten"
+  },
+  "premiumUnlockUnlimited": {
+    "message": "Mit Premium unbegrenzte Keywords freischalten"
+  },
+  "premiumUnlockFeature": {
+    "message": "Mit Premium diese Funktion freischalten"
+  },
+  "premiumUpgradeCta": {
+    "message": "Premium kennenlernen"
   }
 }
