@@ -20,6 +20,15 @@
   "cmdToggleEmergency": {
     "message": "Action d'urgence — selon la configuration ci-dessus"
   },
+  "cmdCleanSensitive": {
+    "message": "Nettoyer les données privées"
+  },
+  "popupCleanButton": {
+    "message": "Nettoyer les données privées"
+  },
+  "cleanupSection": {
+    "message": "Nettoyer les données privées"
+  },
   "popupTitle": {
     "message": "Stealth Browser Assistant"
   },
@@ -154,5 +163,86 @@
   },
   "premiumUpgradeCta": {
     "message": "Découvrir Premium"
+  },
+  "popupCleanDone": {
+    "message": "Nettoyage terminé"
+  },
+  "popupCleanNothing": {
+    "message": "Aucun élément sélectionné à nettoyer"
+  },
+  "popupCleanError": {
+    "message": "Échec du nettoyage"
+  },
+  "matchHitSection": {
+    "message": "Retour visuel des correspondances"
+  },
+  "matchHitHelp": {
+    "message": "Faites ressortir les onglets correspondant à vos mots-clés."
+  },
+  "matchHitRedBorder": {
+    "message": "Clignotement de la bordure rouge"
+  },
+  "matchTabIconLabel": {
+    "message": "Remplacer l’icône de l’onglet"
+  },
+  "cleanupHistoryLabel": {
+    "message": "Historique de navigation"
+  },
+  "cleanupHistoryDesc": {
+    "message": "Supprime les pages correspondantes de votre historique de navigation et des suggestions de la barre d’adresse de Chrome."
+  },
+  "cleanupCookiesLabel": {
+    "message": "Cookies et données du site"
+  },
+  "cleanupCookiesDesc": {
+    "message": "Cookies et autres données du site, comme Local Storage"
+  },
+  "cleanupCookiesWarn": {
+    "message": "Peut vous déconnecter des sites web"
+  },
+  "cleanupDownloadsLabel": {
+    "message": "Historique des téléchargements"
+  },
+  "cleanupDownloadsDesc": {
+    "message": "Historique des téléchargements ; ne supprime pas les fichiers réels"
+  },
+  "premiumIntro": {
+    "message": "Premium débloque toutes les fonctionnalités de cette extension."
+  },
+  "premiumActivateLabel": {
+    "message": "Vous avez déjà une License Key ?"
+  },
+  "premiumCodePlaceholder": {
+    "message": "Saisir la License Key"
+  },
+  "premiumActivate": {
+    "message": "Activer"
+  },
+  "premiumActivateEmpty": {
+    "message": "Veuillez saisir une License Key."
+  },
+  "premiumActivating": {
+    "message": "Activation en cours…"
+  },
+  "premiumActivateSuccess": {
+    "message": "Premium activé avec succès."
+  },
+  "premiumActivateInvalid": {
+    "message": "Cette License Key n’est pas valide."
+  },
+  "premiumActivateRevoked": {
+    "message": "Cette License Key a été révoquée."
+  },
+  "premiumActivateRefunded": {
+    "message": "Cette License Key a été remboursée."
+  },
+  "premiumActivateError": {
+    "message": "Échec de l’activation. Vérifiez votre connexion et réessayez."
+  },
+  "cleanupHelp": {
+    "message": "Nettoie uniquement les données des domaines correspondant à vos mots-clés."
+  },
+  "popupCleanNoKeywords": {
+    "message": "Ajoutez des mots-clés pour limiter ce qui est nettoyé"
   }
 }

@@ -1,8 +1,10 @@
 import {
   STORAGE_KEYS, getKeywords, setState, getEmergencyAction, getPauseOnMuteHide,
+  getRedBorderFlash, getTabIconOverride, getCleanupTypes, setCleanupType, CLEANUP_TYPE_KEYS,
   resolveLocale, tFor, getLangPref, SUPPORTED_LOCALES,
-  isPremium, getKeywordLimit,
+  isPremium, getKeywordLimit, refreshPremiumState,
 } from './shared.js';
+import { activateLicense } from './license.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -77,25 +79,32 @@ async function applyShortcuts() {
   } catch {
     return; // no commands permission — keep the HTML defaults
   }
+  // Chrome's commands API reports the suggested key as "Alt" even on macOS
+  // (where it actually maps to the Option key) — spell it out for Mac users.
+  const isMac = /Mac|iP(hone|ad|od)/.test(navigator.platform || '');
+  const displayShortcut = (s) =>
+    isMac ? String(s).replace(/\bAlt\+/g, 'Option+') : s;
+
   const byName = Object.fromEntries(commands.map((c) => [c.name, c.shortcut || '']));
   const map = [
     ['kbdToggleMute', 'toggle-mute'],
     ['kbdToggleHide', 'toggle-hide'],
     ['kbdToggleEmergency', 'emergency-mode'],
+    ['kbdCleanSensitive', 'clean-sensitive-data'],
   ];
   for (const [id, csName] of map) {
     const el = document.getElementById(id);
     if (!el) continue;
     const value = byName[csName];
     if (value) {
-      el.textContent = value;
+      el.textContent = displayShortcut(value);
     } else {
       el.textContent = t('shortcutDisabled');
     }
   }
 }
 
-const PREMIUM_URL = 'https://example.com/premium'; // TODO: real product URL
+const PREMIUM_URL = 'https://stealthba.henri.ren/';
 
 function showPopover(trigger, text) {
   const popover = $('premiumPopover');
@@ -129,12 +138,14 @@ function setupPremiumTriggers() {
   const pill = $('keywordsCount');
   const pauseOption = document.querySelector('label.checkbox-option:has(#pauseOnMuteHide)');
   const closeOption = document.querySelector('label.radio-option:has(input[value="closeMatchTabs"])');
+  const cleanupOptions = [...document.querySelectorAll('label.cleanup-option')];
   const popover = $('premiumPopover');
 
   const triggers = [
     { el: pill, key: 'premiumUnlockUnlimited', needsFull: true },
     { el: pauseOption, key: 'premiumUnlockFeature' },
     { el: closeOption, key: 'premiumUnlockFeature' },
+    ...cleanupOptions.map((el) => ({ el, key: 'premiumUnlockFeature' })),
   ].filter((tr) => tr.el);
 
   let leaveTimer = null;
@@ -154,6 +165,9 @@ function setupPremiumTriggers() {
 
   triggers.forEach((trigger) => {
     trigger.el.addEventListener('mouseenter', () => {
+      // Re-check on every hover: if the user upgraded mid-session the cache is
+      // already true (refreshPremiumState runs right after activation).
+      if (isPremium()) return;
       if (trigger.needsFull && !trigger.el.classList.contains('is-full')) return;
       showFor(trigger);
     });
@@ -182,6 +196,7 @@ function setupPremiumTriggers() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await applyI18n();
+  await refreshPremiumState();
 
   // Language dropdown
   const langSelect = $('langSelect');
@@ -192,24 +207,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     await applyI18n();
   });
 
-  const premium = isPremium();
-  document.body.classList.toggle('is-premium', premium);
+  applyPremiumState();
 
   // Downgrade stale premium-only settings for free users so the UI matches
   // what the extension will actually do.
   let emergencyAction = await getEmergencyAction();
-  if (!premium && emergencyAction === 'closeMatchTabs') {
+  if (!isPremium() && emergencyAction === 'closeMatchTabs') {
     await setState(STORAGE_KEYS.EMERGENCY_ACTION, 'muteHide');
     emergencyAction = 'muteHide';
   }
-  if (!premium && await getPauseOnMuteHide()) {
+  if (!isPremium() && await getPauseOnMuteHide()) {
     await setState(STORAGE_KEYS.PAUSE_ON_MUTE_HIDE, false);
   }
 
   // Emergency action radios
   document.querySelectorAll('input[name="emergencyAction"]').forEach((input) => {
     input.checked = input.value === emergencyAction;
-    if (input.value === 'closeMatchTabs') input.disabled = !premium;
     input.addEventListener('change', async () => {
       if (!input.checked) return;
       await setState(STORAGE_KEYS.EMERGENCY_ACTION, input.value);
@@ -220,9 +233,42 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pauseCheckbox = $('pauseOnMuteHide');
   if (pauseCheckbox) {
     pauseCheckbox.checked = await getPauseOnMuteHide();
-    pauseCheckbox.disabled = !premium;
     pauseCheckbox.addEventListener('change', async () => {
       await setState(STORAGE_KEYS.PAUSE_ON_MUTE_HIDE, pauseCheckbox.checked);
+    });
+  }
+
+  // Match-hit feedback: red border flash
+  const redBorderFlash = $('redBorderFlash');
+  if (redBorderFlash) {
+    redBorderFlash.checked = await getRedBorderFlash();
+    redBorderFlash.addEventListener('change', async () => {
+      await setState(STORAGE_KEYS.RED_BORDER_FLASH, redBorderFlash.checked);
+    });
+  }
+
+  // Match-hit feedback: replace tab icon
+  const tabIconOverride = $('tabIconOverride');
+  if (tabIconOverride) {
+    tabIconOverride.checked = await getTabIconOverride();
+    tabIconOverride.addEventListener('change', async () => {
+      await setState(STORAGE_KEYS.TAB_ICON_OVERRIDE, tabIconOverride.checked);
+    });
+  }
+
+  // Clean sensitive data: one checkbox per type, all premium-locked
+  const cleanupInputs = {
+    history: 'cleanHistory',
+    cookies: 'cleanCookies',
+    downloads: 'cleanDownloads',
+  };
+  const cleanupState = await getCleanupTypes();
+  for (const type of CLEANUP_TYPE_KEYS) {
+    const el = $(cleanupInputs[type]);
+    if (!el) continue;
+    el.checked = !!cleanupState[type];
+    el.addEventListener('change', async () => {
+      await setCleanupType(type, el.checked);
     });
   }
 
@@ -259,11 +305,119 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   setupPremiumTriggers();
 
-  // Persistent upgrade CTA at the bottom — opens the same premium URL as the popover.
-  const upgradeBtn = $('premiumUpgradeCta');
-  if (upgradeBtn) {
-    upgradeBtn.addEventListener('click', () => {
+  setupPremiumCard();
+});
+
+/**
+ * Apply premium status to the page: toggle the body class (which drives the
+ * header badge, lock icons, and card visibility) and enable/disable the
+ * premium-only inputs.
+ */
+function applyPremiumState() {
+  const premium = isPremium();
+  document.body.classList.toggle('is-premium', premium);
+  document.querySelectorAll('input[name="emergencyAction"]').forEach((input) => {
+    if (input.value === 'closeMatchTabs') input.disabled = !premium;
+  });
+  const pauseCheckbox = $('pauseOnMuteHide');
+  if (pauseCheckbox) pauseCheckbox.disabled = !premium;
+  document.querySelectorAll('.cleanup-option input[type="checkbox"]').forEach((input) => {
+    input.disabled = !premium;
+  });
+}
+
+/** A human-readable device label sent with activation (shown in Licentra). */
+function deviceLabel() {
+  const ua = navigator.userAgent || '';
+  if (/Macintosh|Mac OS X/.test(ua)) return 'Chrome on macOS';
+  if (/Windows/.test(ua)) return 'Chrome on Windows';
+  if (/Android/.test(ua)) return 'Chrome on Android';
+  if (/Linux/.test(ua)) return 'Chrome on Linux';
+  return 'Chrome';
+}
+
+function activateReasonMessage(reason) {
+  switch (reason) {
+    case 'invalid_format':
+    case 'license_not_found':
+      return t('premiumActivateInvalid');
+    case 'license_revoked':
+      return t('premiumActivateRevoked');
+    case 'license_refunded':
+      return t('premiumActivateRefunded');
+    default:
+      return t('premiumActivateError');
+  }
+}
+
+/**
+ * Collapsible "Premium" card — collapsed by default. Keeps the upsell low-key:
+ * a short intro, a "learn more" link, and a code-activation field for users who
+ * already bought a license.
+ */
+function setupPremiumCard() {
+  const card = $('premiumCard');
+  const toggle = $('premiumToggle');
+  const body = $('premiumBody');
+  if (!card || !toggle || !body) return;
+
+  toggle.addEventListener('click', () => {
+    const open = body.hidden;
+    body.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    card.classList.toggle('is-open', open);
+  });
+
+  const learnBtn = $('premiumLearnBtn');
+  if (learnBtn) {
+    learnBtn.addEventListener('click', () => {
       chrome.tabs.create({ url: PREMIUM_URL });
     });
   }
-});
+
+  const input = $('premiumCodeInput');
+  const activateBtn = $('premiumActivateBtn');
+  const status = $('premiumActivateStatus');
+
+  const activate = async () => {
+    if (!status) return;
+    const code = (input ? input.value : '').trim();
+    if (!code) {
+      status.textContent = t('premiumActivateEmpty');
+      status.hidden = false;
+      return;
+    }
+
+    if (activateBtn) activateBtn.disabled = true;
+    status.textContent = t('premiumActivating');
+    status.hidden = false;
+
+    const result = await activateLicense(code, deviceLabel());
+
+    if (result.ok) {
+      if (input) input.value = '';
+      status.textContent = t('premiumActivateSuccess');
+      status.hidden = false;
+      await refreshPremiumState();
+      hidePopover(); // no more upsell popovers once premium
+      await renderKeywords(); // keyword counter → ∞ once premium
+      // Let the success message read, then unlock premium features (the
+      // is-premium class also hides this card and shows the header badge).
+      setTimeout(() => applyPremiumState(), 1000);
+    } else {
+      status.textContent = activateReasonMessage(result.reason);
+      status.hidden = false;
+      if (activateBtn) activateBtn.disabled = false;
+    }
+  };
+
+  if (activateBtn) activateBtn.addEventListener('click', activate);
+  if (input) {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && activateBtn) activateBtn.click();
+    });
+    input.addEventListener('input', () => {
+      if (status) status.hidden = true;
+    });
+  }
+}

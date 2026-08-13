@@ -18,7 +18,22 @@
     "message": "Toggle hiding tabs matching keywords"
   },
   "cmdToggleEmergency": {
-    "message": "Emergency action — as configured above"
+    "message": "Emergency action — as configured below"
+  },
+  "cmdCleanSensitive": {
+    "message": "Clean private data"
+  },
+  "popupCleanButton": {
+    "message": "Clean private data"
+  },
+  "popupCleanDone": {
+    "message": "Cleaned"
+  },
+  "popupCleanNothing": {
+    "message": "Nothing selected to clean"
+  },
+  "popupCleanError": {
+    "message": "Cleanup failed"
   },
   "popupTitle": {
     "message": "Stealth Browser Assistant"
@@ -38,7 +53,6 @@
   "hideSection": {
     "message": "Hide"
   },
-
   "actionToggleHide": {
     "message": "Hide"
   },
@@ -65,14 +79,24 @@
   },
   "statusMatching": {
     "message": "$N$ tab(s) currently match your keywords.",
-    "placeholders": { "n": { "content": "$1", "example": "3" } }
+    "placeholders": {
+      "n": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
   },
   "statusHiddenZero": {
     "message": "Hide mode is off."
   },
   "statusHidden": {
     "message": "$N$ tab(s) currently hidden.",
-    "placeholders": { "n": { "content": "$1", "example": "2" } }
+    "placeholders": {
+      "n": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
   },
   "statusHideOff": {
     "message": "Hide mode is off."
@@ -137,6 +161,42 @@
   "mediaPauseLabel": {
     "message": "Pause the videos and audio in them"
   },
+  "matchHitSection": {
+    "message": "Match hit feedback"
+  },
+  "matchHitHelp": {
+    "message": "Make tabs matching your keywords stand out."
+  },
+  "matchHitRedBorder": {
+    "message": "Red border flash"
+  },
+  "matchTabIconLabel": {
+    "message": "Replace tab icon"
+  },
+  "cleanupSection": {
+    "message": "Clean private data"
+  },
+  "cleanupHistoryLabel": {
+    "message": "Browsing history"
+  },
+  "cleanupHistoryDesc": {
+    "message": "Removes matching pages from your browsing history and Chrome’s address bar suggestions."
+  },
+  "cleanupCookiesLabel": {
+    "message": "Cookies & site data"
+  },
+  "cleanupCookiesDesc": {
+    "message": "Cookies and other site data such as Local Storage"
+  },
+  "cleanupCookiesWarn": {
+    "message": "May log you out of websites"
+  },
+  "cleanupDownloadsLabel": {
+    "message": "Downloads history"
+  },
+  "cleanupDownloadsDesc": {
+    "message": "Download history; does not delete the actual files"
+  },
   "premiumUnlockUnlimited": {
     "message": "Get premium for unlimited keywords"
   },
@@ -145,5 +205,44 @@
   },
   "premiumUpgradeCta": {
     "message": "Learn about Premium"
+  },
+  "premiumIntro": {
+    "message": "Premium unlocks every feature in this extension."
+  },
+  "premiumActivateLabel": {
+    "message": "Already have a License Key?"
+  },
+  "premiumCodePlaceholder": {
+    "message": "Enter License Key"
+  },
+  "premiumActivate": {
+    "message": "Activate"
+  },
+  "premiumActivateEmpty": {
+    "message": "Please enter a License Key."
+  },
+  "premiumActivating": {
+    "message": "Activating…"
+  },
+  "premiumActivateSuccess": {
+    "message": "Premium activated successfully."
+  },
+  "premiumActivateInvalid": {
+    "message": "That License Key isn't valid."
+  },
+  "premiumActivateRevoked": {
+    "message": "This License Key has been revoked."
+  },
+  "premiumActivateRefunded": {
+    "message": "This License Key has been refunded."
+  },
+  "premiumActivateError": {
+    "message": "Activation failed. Please check your connection and try again."
+  },
+  "cleanupHelp": {
+    "message": "Only cleans data for domains matching your keywords."
+  },
+  "popupCleanNoKeywords": {
+    "message": "Add keywords to scope what gets cleaned"
   }
 }

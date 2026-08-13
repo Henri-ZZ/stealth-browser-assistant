@@ -20,6 +20,15 @@
   "cmdToggleEmergency": {
     "message": "Ação de emergência — conforme a configuração acima"
   },
+  "cmdCleanSensitive": {
+    "message": "Limpar dados privados"
+  },
+  "popupCleanButton": {
+    "message": "Limpar dados privados"
+  },
+  "cleanupSection": {
+    "message": "Limpar dados privados"
+  },
   "popupTitle": {
     "message": "Stealth Browser Assistant"
   },
@@ -154,5 +163,86 @@
   },
   "premiumUpgradeCta": {
     "message": "Conheça Premium"
+  },
+  "popupCleanDone": {
+    "message": "Limpeza concluída"
+  },
+  "popupCleanNothing": {
+    "message": "Nenhum item selecionado para limpar"
+  },
+  "popupCleanError": {
+    "message": "Falha na limpeza"
+  },
+  "matchHitSection": {
+    "message": "Feedback de correspondência"
+  },
+  "matchHitHelp": {
+    "message": "Deixe as abas que correspondem às suas palavras-chave em destaque."
+  },
+  "matchHitRedBorder": {
+    "message": "Piscar borda vermelha"
+  },
+  "matchTabIconLabel": {
+    "message": "Substituir o ícone da aba"
+  },
+  "cleanupHistoryLabel": {
+    "message": "Histórico de navegação"
+  },
+  "cleanupHistoryDesc": {
+    "message": "Remove as páginas correspondentes do seu histórico de navegação e das sugestões da barra de endereços do Chrome."
+  },
+  "cleanupCookiesLabel": {
+    "message": "Cookies e dados do site"
+  },
+  "cleanupCookiesDesc": {
+    "message": "Cookies e outros dados do site, como Local Storage"
+  },
+  "cleanupCookiesWarn": {
+    "message": "Pode desconectar você dos sites"
+  },
+  "cleanupDownloadsLabel": {
+    "message": "Histórico de downloads"
+  },
+  "cleanupDownloadsDesc": {
+    "message": "Histórico de downloads; não exclui os arquivos baixados"
+  },
+  "premiumIntro": {
+    "message": "O Premium desbloqueia todos os recursos desta extensão."
+  },
+  "premiumActivateLabel": {
+    "message": "Já tem uma License Key?"
+  },
+  "premiumCodePlaceholder": {
+    "message": "Digite a License Key"
+  },
+  "premiumActivate": {
+    "message": "Ativar"
+  },
+  "premiumActivateEmpty": {
+    "message": "Digite uma License Key."
+  },
+  "premiumActivating": {
+    "message": "Ativando…"
+  },
+  "premiumActivateSuccess": {
+    "message": "Premium ativado com sucesso."
+  },
+  "premiumActivateInvalid": {
+    "message": "Essa License Key não é válida."
+  },
+  "premiumActivateRevoked": {
+    "message": "Esta License Key foi revogada."
+  },
+  "premiumActivateRefunded": {
+    "message": "Esta License Key foi reembolsada."
+  },
+  "premiumActivateError": {
+    "message": "Falha na ativação. Verifique sua conexão e tente novamente."
+  },
+  "cleanupHelp": {
+    "message": "Limpa apenas dados de domínios que correspondem às suas palavras-chave."
+  },
+  "popupCleanNoKeywords": {
+    "message": "Adicione palavras-chave para definir o que será limpo"
   }
 }

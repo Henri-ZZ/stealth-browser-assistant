@@ -1,4 +1,4 @@
-import { resolveLocale, tFor, isPremium } from './shared.js';
+import { resolveLocale, tFor, isPremium, refreshPremiumState } from './shared.js';
 
 let LOCALE = 'en';
 
@@ -53,6 +53,7 @@ async function refreshStatus() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await refreshPremiumState();
   document.body.classList.toggle('is-premium', isPremium());
   await applyI18n();
 
@@ -74,6 +75,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.disabled = false;
     refreshStatus();
   });
+
+  // Clean sensitive data — premium only, fires a one-shot cleanup in the background.
+  const cleanupBtn = document.getElementById('cleanupBtn');
+  const cleanupStatus = document.getElementById('cleanupStatus');
+  if (cleanupBtn) {
+    cleanupBtn.disabled = !isPremium();
+    cleanupBtn.addEventListener('click', async () => {
+      if (!cleanupStatus) return;
+      cleanupBtn.disabled = true;
+      const resp = await send({ type: 'run-cleanup' });
+      if (resp && resp.ok) {
+        cleanupStatus.textContent = t('popupCleanDone');
+      } else if (resp && resp.reason === 'no_keywords') {
+        cleanupStatus.textContent = t('popupCleanNoKeywords');
+      } else if (resp && resp.reason === 'none_selected') {
+        cleanupStatus.textContent = t('popupCleanNothing');
+      } else {
+        cleanupStatus.textContent = t('popupCleanError');
+      }
+      cleanupStatus.hidden = false;
+      cleanupBtn.disabled = false;
+      setTimeout(() => { cleanupStatus.hidden = true; }, 2000);
+    });
+  }
+
   document.getElementById('optionsLink').addEventListener('click', (e) => {
     e.preventDefault();
     chrome.runtime.openOptionsPage();

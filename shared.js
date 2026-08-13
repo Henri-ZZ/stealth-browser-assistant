@@ -9,6 +9,10 @@ export const STORAGE_KEYS = {
   LANG_PREF: "langPref", // '' | 'en' | 'zh_CN' ('' => follow browser UI language)
   EMERGENCY_ACTION: "emergencyAction", // 'muteHide' | 'closeMatchTabs' — what Alt+Shift+Space does
   PAUSE_ON_MUTE_HIDE: "pauseOnMuteHide", // boolean: also pause media when mute/hide is applied
+  RED_BORDER_FLASH: "redBorderFlash", // boolean: flash a red border on a matched active tab
+  TAB_ICON_OVERRIDE: "tabIconOverride", // boolean: replace matched tabs' favicon with ours
+  CLEANUP_TYPES: "cleanupTypes", // object: which sensitive data types to clean (see CLEANUP_TYPE_KEYS)
+  LICENSE: "license", // object|null: verified license state (see license.js)
 };
 
 /**
@@ -30,7 +34,16 @@ const DEFAULTS = {
   [STORAGE_KEYS.LANG_PREF]: "",
   [STORAGE_KEYS.EMERGENCY_ACTION]: "muteHide",
   [STORAGE_KEYS.PAUSE_ON_MUTE_HIDE]: false,
+  [STORAGE_KEYS.RED_BORDER_FLASH]: false,
+  [STORAGE_KEYS.TAB_ICON_OVERRIDE]: true,
+  [STORAGE_KEYS.CLEANUP_TYPES]: { history: false, cookies: false, downloads: false },
+  [STORAGE_KEYS.LICENSE]: null,
 };
+
+// Cleanup types that can be scoped to the keyword domains. Cache is excluded:
+// Chrome's browsingData.removeCache cannot filter by origin. Address-bar
+// suggestions are covered by history (clearing history also clears them).
+export const CLEANUP_TYPE_KEYS = ["history", "cookies", "downloads"];
 
 export const EMERGENCY_ACTIONS = ["muteHide", "closeMatchTabs"];
 
@@ -110,6 +123,41 @@ export async function getHideMode() {
  */
 export async function getPauseOnMuteHide() {
   return !!(await getState(STORAGE_KEYS.PAUSE_ON_MUTE_HIDE));
+}
+
+/**
+ * True when the user wants the active tab to flash a red border when it
+ * matches a keyword (or a newly opened tab matches).
+ */
+export async function getRedBorderFlash() {
+  return !!(await getState(STORAGE_KEYS.RED_BORDER_FLASH));
+}
+
+/**
+ * True when matching tabs should have their favicon replaced with the
+ * extension's own icon.
+ */
+export async function getTabIconOverride() {
+  return !!(await getState(STORAGE_KEYS.TAB_ICON_OVERRIDE));
+}
+
+/**
+ * The set of sensitive-data types the user wants cleaned (all false by
+ * default). Keys come from CLEANUP_TYPE_KEYS; unknown/stale keys are dropped.
+ */
+export async function getCleanupTypes() {
+  const stored = await getState(STORAGE_KEYS.CLEANUP_TYPES);
+  const out = {};
+  for (const k of CLEANUP_TYPE_KEYS) out[k] = !!(stored && stored[k]);
+  return out;
+}
+
+/** Toggle one cleanup type (e.g. 'history') on or off. */
+export async function setCleanupType(type, enabled) {
+  const types = await getCleanupTypes();
+  types[type] = !!enabled;
+  await setState(STORAGE_KEYS.CLEANUP_TYPES, types);
+  return types;
 }
 
 /**
@@ -194,12 +242,30 @@ export function tFor(locale, messageName, substitutions = null) {
  */
 export const KEYWORD_LIMIT_FREE = 5;
 
+// In-memory cache of premium status. Synchronous `isPremium()` reads this; it
+// is refreshed from storage by `refreshPremiumState()` at startup in each
+// context (and via storage.onChanged in the service worker). The actual
+// license verification lives in license.js — here we only mirror the persisted
+// "verified-until" deadline so feature gating stays cheap and synchronous.
+let premiumActive = false;
+
 /**
- * Whether the current user has an active Premium license.
- * TODO: replace with real license check (storage flag, server ping, etc.).
+ * Whether the current user has an active, non-stale Premium license.
+ * Reflects the cache maintained by refreshPremiumState().
  */
 export function isPremium() {
-  return false;
+  return premiumActive;
+}
+
+/**
+ * Re-read the persisted license and update the premium cache. Returns the new
+ * premium status. A license counts as active only while its signature's
+ * valid_until timestamp is still in the future.
+ */
+export async function refreshPremiumState() {
+  const lic = await getState(STORAGE_KEYS.LICENSE);
+  premiumActive = !!(lic && typeof lic.validUntil === 'number' && lic.validUntil > Date.now());
+  return premiumActive;
 }
 
 /**

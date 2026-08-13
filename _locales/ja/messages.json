@@ -20,6 +20,15 @@
   "cmdToggleEmergency": {
     "message": "緊急時の動作 — 上の設定に従う"
   },
+  "cmdCleanSensitive": {
+    "message": "プライバシーデータを消去"
+  },
+  "popupCleanButton": {
+    "message": "プライバシーデータを消去"
+  },
+  "cleanupSection": {
+    "message": "プライバシーデータを消去"
+  },
   "popupTitle": {
     "message": "Stealth Browser Assistant"
   },
@@ -154,5 +163,86 @@
   },
   "premiumUpgradeCta": {
     "message": "Premium について知る"
+  },
+  "popupCleanDone": {
+    "message": "クリーンアップしました"
+  },
+  "popupCleanNothing": {
+    "message": "削除対象が選択されていません"
+  },
+  "popupCleanError": {
+    "message": "クリーンアップに失敗しました"
+  },
+  "matchHitSection": {
+    "message": "一致ヒットのフィードバック"
+  },
+  "matchHitHelp": {
+    "message": "キーワードに一致するタブを目立たせます。"
+  },
+  "matchHitRedBorder": {
+    "message": "赤枠を点滅させる"
+  },
+  "matchTabIconLabel": {
+    "message": "タブのアイコンを置き換える"
+  },
+  "cleanupHistoryLabel": {
+    "message": "閲覧履歴"
+  },
+  "cleanupHistoryDesc": {
+    "message": "閲覧履歴と Chrome のアドレスバーの候補から一致するページを削除します。"
+  },
+  "cleanupCookiesLabel": {
+    "message": "Cookie とサイトデータ"
+  },
+  "cleanupCookiesDesc": {
+    "message": "Cookie や Local Storage などのサイトデータ"
+  },
+  "cleanupCookiesWarn": {
+    "message": "ウェブサイトからログアウトされる可能性があります"
+  },
+  "cleanupDownloadsLabel": {
+    "message": "ダウンロード履歴"
+  },
+  "cleanupDownloadsDesc": {
+    "message": "ダウンロード履歴（実際のファイルは削除しません）"
+  },
+  "premiumIntro": {
+    "message": "Premium でこの拡張機能のすべての機能が使えるようになります。"
+  },
+  "premiumActivateLabel": {
+    "message": "License Key をお持ちですか？"
+  },
+  "premiumCodePlaceholder": {
+    "message": "License Key を入力"
+  },
+  "premiumActivate": {
+    "message": "アクティベート"
+  },
+  "premiumActivateEmpty": {
+    "message": "License Key を入力してください。"
+  },
+  "premiumActivating": {
+    "message": "アクティベート中…"
+  },
+  "premiumActivateSuccess": {
+    "message": "Premium が正常にアクティベートされました。"
+  },
+  "premiumActivateInvalid": {
+    "message": "この License Key は無効です。"
+  },
+  "premiumActivateRevoked": {
+    "message": "この License Key は失効しています。"
+  },
+  "premiumActivateRefunded": {
+    "message": "この License Key は返金済みです。"
+  },
+  "premiumActivateError": {
+    "message": "アクティベートに失敗しました。接続を確認してもう一度お試しください。"
+  },
+  "cleanupHelp": {
+    "message": "キーワードに一致するドメインのデータのみ削除します。"
+  },
+  "popupCleanNoKeywords": {
+    "message": "削除対象を絞るにはキーワードを追加してください"
   }
 }

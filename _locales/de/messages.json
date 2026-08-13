@@ -20,6 +20,15 @@
   "cmdToggleEmergency": {
     "message": "Notfallaktion — wie oben konfiguriert"
   },
+  "cmdCleanSensitive": {
+    "message": "Private Daten bereinigen"
+  },
+  "popupCleanButton": {
+    "message": "Private Daten bereinigen"
+  },
+  "cleanupSection": {
+    "message": "Private Daten bereinigen"
+  },
   "popupTitle": {
     "message": "Stealth Browser Assistant"
   },
@@ -154,5 +163,86 @@
   },
   "premiumUpgradeCta": {
     "message": "Premium kennenlernen"
+  },
+  "popupCleanDone": {
+    "message": "Bereinigt"
+  },
+  "popupCleanNothing": {
+    "message": "Nichts zum Bereinigen ausgewählt"
+  },
+  "popupCleanError": {
+    "message": "Bereinigung fehlgeschlagen"
+  },
+  "matchHitSection": {
+    "message": "Treffer-Feedback"
+  },
+  "matchHitHelp": {
+    "message": "Mache Tabs, die deinen Schlüsselwörtern entsprechen, deutlich sichtbar."
+  },
+  "matchHitRedBorder": {
+    "message": "Roter Rahmen blinkt"
+  },
+  "matchTabIconLabel": {
+    "message": "Tab-Symbol ersetzen"
+  },
+  "cleanupHistoryLabel": {
+    "message": "Browserverlauf"
+  },
+  "cleanupHistoryDesc": {
+    "message": "Entfernt übereinstimmende Seiten aus dem Browserverlauf und den Vorschlägen der Chrome-Adressleiste."
+  },
+  "cleanupCookiesLabel": {
+    "message": "Cookies & Websitedaten"
+  },
+  "cleanupCookiesDesc": {
+    "message": "Cookies und andere Websitedaten wie Local Storage"
+  },
+  "cleanupCookiesWarn": {
+    "message": "Kann dich von Websites abmelden"
+  },
+  "cleanupDownloadsLabel": {
+    "message": "Downloadverlauf"
+  },
+  "cleanupDownloadsDesc": {
+    "message": "Downloadverlauf; löscht nicht die tatsächlichen Dateien"
+  },
+  "premiumIntro": {
+    "message": "Premium schaltet alle Funktionen dieser Erweiterung frei."
+  },
+  "premiumActivateLabel": {
+    "message": "Hast du bereits einen License Key?"
+  },
+  "premiumCodePlaceholder": {
+    "message": "License Key eingeben"
+  },
+  "premiumActivate": {
+    "message": "Aktivieren"
+  },
+  "premiumActivateEmpty": {
+    "message": "Bitte gib einen License Key ein."
+  },
+  "premiumActivating": {
+    "message": "Wird aktiviert…"
+  },
+  "premiumActivateSuccess": {
+    "message": "Premium erfolgreich aktiviert."
+  },
+  "premiumActivateInvalid": {
+    "message": "Dieser License Key ist ungültig."
+  },
+  "premiumActivateRevoked": {
+    "message": "Dieser License Key wurde widerrufen."
+  },
+  "premiumActivateRefunded": {
+    "message": "Dieser License Key wurde erstattet."
+  },
+  "premiumActivateError": {
+    "message": "Aktivierung fehlgeschlagen. Bitte überprüfe deine Verbindung und versuche es erneut."
+  },
+  "cleanupHelp": {
+    "message": "Bereinigt nur Daten von Domains, die deinen Schlüsselwörtern entsprechen."
+  },
+  "popupCleanNoKeywords": {
+    "message": "Füge Schlüsselwörter hinzu, um den Umfang der Bereinigung festzulegen"
   }
 }

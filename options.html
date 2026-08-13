@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title data-i18n="optionsPageTitle">Stealth Browser Assistant — Settings</title>
+    <title data-i18n="optionsPageTitle">
+      Stealth Browser Assistant — Settings
+    </title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="options-page">
@@ -31,7 +33,7 @@
       </header>
 
       <section class="card">
-                <h2 data-i18n="keywordsSection">Keywords</h2>
+        <h2 data-i18n="keywordsSection">Keywords</h2>
         <p class="help" data-i18n="optionsKeywordsHelp">
           Each keyword matches a tab…
         </p>
@@ -45,7 +47,9 @@
             placeholder="domain or word, then Enter"
             autocomplete="off"
           />
-          <span class="count-pill" id="keywordsCount" aria-live="polite">0 / 5</span>
+          <span class="count-pill" id="keywordsCount" aria-live="polite"
+            >0 / 5</span
+          >
           <button type="submit" class="btn btn-small" data-i18n="addKeyword">
             Add
           </button>
@@ -54,24 +58,48 @@
       </section>
 
       <section class="card">
-        <h2 data-i18n="mediaPauseSection">When mute or hide tabs</h2>
-        <p class="help" data-i18n="mediaPauseHelp">
-          Choose whether to also stop media playback in matching tabs when they
-          get muted or hidden.
+        <h2 data-i18n="optionsTitle">Shortcuts</h2>
+        <ul class="shortcut-list">
+          <li>
+            <kbd id="kbdToggleMute">Alt+Shift+M</kbd> —
+            <span data-i18n="cmdToggleMute"></span>
+          </li>
+          <li>
+            <kbd id="kbdToggleHide">Alt+Shift+H</kbd> —
+            <span data-i18n="cmdToggleHide"></span>
+          </li>
+          <li>
+            <kbd id="kbdToggleEmergency">Alt+Shift+E</kbd> —
+            <span data-i18n="cmdToggleEmergency"></span>
+          </li>
+          <li>
+            <kbd id="kbdCleanSensitive">Alt+Shift+C</kbd> —
+            <span data-i18n="cmdCleanSensitive"></span>
+          </li>
+        </ul>
+        <p class="help">
+          <span data-i18n="optionsShortcutsHelp"></span>
+          <a
+            href="#"
+            id="openShortcutsLink"
+            class="shortcut-link"
+            data-i18n="openShortcutsPage"
+          ></a>
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="matchHitSection">Match hit feedback</h2>
+        <p class="help" data-i18n="matchHitHelp">
+          Highlight matching tabs so you notice when you're on one.
         </p>
         <label class="checkbox-option">
-          <input type="checkbox" id="pauseOnMuteHide" />
-          <span data-i18n="mediaPauseLabel"
-            >Pause the videos and audio in them</span
-          >
-          <svg class="lock-icon lock-icon--closed" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="11" width="18" height="11" rx="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          <svg class="lock-icon lock-icon--open" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="11" width="18" height="11" rx="2"/>
-            <path d="M7 11V7a5 5 0 0 1 9 0"/>
-          </svg>
+          <input type="checkbox" id="tabIconOverride" />
+          <span data-i18n="matchTabIconLabel">Replace tab icon</span>
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" id="redBorderFlash" />
+          <span data-i18n="matchHitRedBorder">Red border flash</span>
         </label>
       </section>
 
@@ -90,43 +118,209 @@
           <label class="radio-option">
             <input type="radio" name="emergencyAction" value="closeMatchTabs" />
             <span data-i18n="emergencyActionClose">Close matching tabs</span>
-            <svg class="lock-icon lock-icon--closed" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <svg
+              class="lock-icon lock-icon--closed"
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            <svg class="lock-icon lock-icon--open" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0 1 9 0"/>
+            <svg
+              class="lock-icon lock-icon--open"
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 9 0" />
             </svg>
           </label>
         </div>
       </section>
 
       <section class="card">
-        <h2 data-i18n="optionsTitle">Shortcuts</h2>
-        <ul class="shortcut-list">
-          <li>
-            <kbd id="kbdToggleMute">Alt+Shift+M</kbd> —
-            <span data-i18n="cmdToggleMute"></span>
-          </li>
-          <li>
-            <kbd id="kbdToggleHide">Alt+Shift+H</kbd> —
-            <span data-i18n="cmdToggleHide"></span>
-          </li>
-          <li>
-            <kbd id="kbdToggleEmergency">Alt+Shift+E</kbd> —
-            <span data-i18n="cmdToggleEmergency"></span>
-          </li>
-        </ul>
-        <p class="help">
-          <span data-i18n="optionsShortcutsHelp"></span>
-          <a
-            href="#"
-            id="openShortcutsLink"
-            class="shortcut-link"
-            data-i18n="openShortcutsPage"
-          ></a>
+        <h2 data-i18n="mediaPauseSection">When mute or hide tabs</h2>
+        <p class="help" data-i18n="mediaPauseHelp">
+          Choose whether to also stop media playback in matching tabs when they
+          get muted or hidden.
         </p>
+        <label class="checkbox-option">
+          <input type="checkbox" id="pauseOnMuteHide" />
+          <span data-i18n="mediaPauseLabel"
+            >Pause the videos and audio in them</span
+          >
+          <svg
+            class="lock-icon lock-icon--closed"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <svg
+            class="lock-icon lock-icon--open"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 9 0" />
+          </svg>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="cleanupSection">Clean private data</h2>
+        <p class="help" data-i18n="cleanupHelp">
+          Only cleans data for domains matching your keywords.
+        </p>
+        <label class="checkbox-option cleanup-option">
+          <input type="checkbox" id="cleanHistory" />
+          <span class="cleanup-option-text">
+            <span data-i18n="cleanupHistoryLabel">Browsing history</span>
+            <span class="cleanup-option-desc" data-i18n="cleanupHistoryDesc"
+              >Visited URLs and browsing history</span
+            >
+          </span>
+          <svg
+            class="lock-icon lock-icon--closed"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <svg
+            class="lock-icon lock-icon--open"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 9 0" />
+          </svg>
+        </label>
+        <label class="checkbox-option cleanup-option">
+          <input type="checkbox" id="cleanCookies" />
+          <span class="cleanup-option-text">
+            <span data-i18n="cleanupCookiesLabel">Cookies &amp; site data</span>
+            <span class="cleanup-option-desc" data-i18n="cleanupCookiesDesc"
+              >Cookies and other site data such as Local Storage</span
+            >
+            <span class="cleanup-option-warn" data-i18n="cleanupCookiesWarn"
+              >May log you out of websites</span
+            >
+          </span>
+          <svg
+            class="lock-icon lock-icon--closed"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <svg
+            class="lock-icon lock-icon--open"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 9 0" />
+          </svg>
+        </label>
+        <label class="checkbox-option cleanup-option">
+          <input type="checkbox" id="cleanDownloads" />
+          <span class="cleanup-option-text">
+            <span data-i18n="cleanupDownloadsLabel">Downloads history</span>
+            <span class="cleanup-option-desc" data-i18n="cleanupDownloadsDesc"
+              >Download history; does not delete the actual files</span
+            >
+          </span>
+          <svg
+            class="lock-icon lock-icon--closed"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <svg
+            class="lock-icon lock-icon--open"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 9 0" />
+          </svg>
+        </label>
       </section>
 
       <section class="card">
@@ -146,12 +340,77 @@
           <option value="ko">한국어</option>
         </select>
       </section>
-    <button class="popover-cta premium-upgrade" id="premiumUpgradeCta" type="button" data-i18n="premiumUpgradeCta">
-        了解Premium
-      </button>
+      <section class="card premium-card" id="premiumCard">
+        <button
+          class="premium-toggle"
+          id="premiumToggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="premiumBody"
+        >
+          <span class="premium-toggle-title">Premium</span>
+          <svg
+            class="premium-chevron"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+        <div class="premium-body" id="premiumBody" hidden>
+          <p class="help premium-intro" data-i18n="premiumIntro">
+            Premium unlocks every feature in this extension.
+          </p>
+          <button
+            class="premium-learn"
+            id="premiumLearnBtn"
+            type="button"
+            data-i18n="premiumUpgradeCta"
+          >
+            了解Premium
+          </button>
+          <div class="premium-activate">
+            <span class="premium-activate-label" data-i18n="premiumActivateLabel"
+              >Already have a License Key?</span
+            >
+            <div class="premium-activate-row">
+              <input
+                id="premiumCodeInput"
+                type="text"
+                data-i18n-placeholder="premiumCodePlaceholder"
+                placeholder="Enter License Key"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                class="btn btn-small"
+                id="premiumActivateBtn"
+                type="button"
+                data-i18n="premiumActivate"
+              >
+                Activate
+              </button>
+            </div>
+            <p
+              class="hint premium-activate-status"
+              id="premiumActivateStatus"
+              hidden
+            ></p>
+          </div>
+        </div>
+      </section>
     </main>
     <div class="popover" id="premiumPopover" hidden role="dialog">
-      <button class="popover-cta" id="premiumPopoverCta" type="button">Get premium</button>
+      <button class="popover-cta" id="premiumPopoverCta" type="button">
+        Get premium
+      </button>
     </div>
     <script type="module" src="options.js"></script>
   </body>

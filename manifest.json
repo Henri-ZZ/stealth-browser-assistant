@@ -11,7 +11,7 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["tabs", "storage", "scripting"],
+  "permissions": ["tabs", "storage", "scripting", "alarms", "browsingData", "history", "downloads"],
   "host_permissions": ["*://*/*"],
   "background": {
     "service_worker": "background.js",
@@ -43,6 +43,10 @@
     "emergency-mode": {
       "suggested_key": { "default": "Alt+Shift+E" },
       "description": "__MSG_cmdToggleEmergency__"
+    },
+    "clean-sensitive-data": {
+      "suggested_key": { "default": "Alt+Shift+C" },
+      "description": "__MSG_cmdCleanSensitive__"
     }
   }
 }

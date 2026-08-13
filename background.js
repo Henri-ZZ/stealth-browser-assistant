@@ -17,8 +17,10 @@
 import {
   STORAGE_KEYS, getState, setState, getKeywords,
   getScriptMute, getHideMode, getEmergencyAction, getPauseOnMuteHide,
-  tabMatchesKeywords, isPremium,
+  getRedBorderFlash, getTabIconOverride, getCleanupTypes,
+  tabMatchesKeywords, isPremium, refreshPremiumState,
 } from './shared.js';
+import { maybeCheckIn } from './license.js';
 
 const STASH_WINDOW_STATE = 'minimized';
 
@@ -39,9 +41,9 @@ async function findMatchingTabs() {
 /**
  * Inject a small script into a tab. Returns false on failure (e.g. protected page).
  */
-async function injectScript(tabId, func) {
+async function injectScript(tabId, func, args = []) {
   try {
-    await chrome.scripting.executeScript({ target: { tabId }, func });
+    await chrome.scripting.executeScript({ target: { tabId }, func, args });
     return true;
   } catch {
     return false;
@@ -51,6 +53,32 @@ async function injectScript(tabId, func) {
 function MUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { el.muted = true; }); }
 function UNMUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { el.muted = false; }); }
 function PAUSE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { if (!el.paused) el.pause(); }); }
+
+/**
+ * Flash a thin red border around the whole page twice (match-hit feedback).
+ * Uses a fixed overlay + CSSOM property sets only, so it works under strict
+ * page CSP and never disturbs the page layout or input.
+ */
+function FLASH_RED_BORDER_SCRIPT() {
+  const el = document.createElement('div');
+  el.style.position = 'fixed';
+  el.style.inset = '0';
+  el.style.pointerEvents = 'none';
+  el.style.zIndex = '2147483647';
+  el.style.border = '2px solid #d8392b';
+  el.style.opacity = '0';
+  (document.documentElement || document.body).appendChild(el);
+
+  let count = 0;
+  const hide = () => {
+    el.style.opacity = '0';
+    count += 1;
+    if (count < 2) setTimeout(show, 160); // brief gap between the two flashes
+    else setTimeout(() => el.remove(), 100);
+  };
+  const show = () => { el.style.opacity = '0.8'; setTimeout(hide, 220); };
+  setTimeout(show, 0);
+}
 
 async function setScriptMute(on) {
   await setState(STORAGE_KEYS.SCRIPT_MUTE, on);
@@ -230,8 +258,117 @@ chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
   if ('url' in change || 'title' in change || change.status === 'complete') {
     enforceScriptMuteOnTab(tab).catch(() => {});
     enforceHideOnTab(tab).catch(() => {});
+    enforceFaviconOnTab(tab).catch(() => {});
+    // A newly opened / navigated tab that matches a keyword: flash only when
+    // it's the tab the user is actually looking at.
+    if (tab.active) flashIfMatched(tab).catch(() => {});
   }
 });
+
+// ───────────────────────── match-hit feedback ─────────────────────────
+
+const MATCH_FLASH_COOLDOWN_MS = 1500;
+const lastMatchFlashByTab = new Map();
+
+/**
+ * Flash a red border on the tab if it matches a keyword and the feedback
+ * setting is on. Only called for the active tab — flashing a background tab
+ * would be invisible.
+ */
+async function flashIfMatched(tab) {
+  if (!(await getRedBorderFlash())) return;
+  const keywords = await getKeywords();
+  if (!keywords.length || !tabMatchesKeywords(tab, keywords)) return;
+
+  // Avoid double-flashes when onActivated and onUpdated fire for the same
+  // navigation within a short window.
+  const now = Date.now();
+  if (now - (lastMatchFlashByTab.get(tab.id) || 0) < MATCH_FLASH_COOLDOWN_MS) return;
+  lastMatchFlashByTab.set(tab.id, now);
+
+  await injectScript(tab.id, FLASH_RED_BORDER_SCRIPT);
+}
+
+// Switching to a matching tab (or a newly opened one that already matches).
+chrome.tabs.onActivated.addListener(async ({ tabId }) => {
+  try {
+    const tab = await chrome.tabs.get(tabId);
+    flashIfMatched(tab).catch(() => {});
+  } catch {
+    // tab already gone — nothing to flash
+  }
+});
+
+// ───────────────────────── tab icon override ─────────────────────────
+
+// The extension icon as a data: URI, computed once and reused for every tab.
+let faviconDataUri = null;
+
+async function getFaviconDataUri() {
+  if (faviconDataUri !== null) return faviconDataUri;
+  try {
+    const res = await fetch(chrome.runtime.getURL('icons/icon-16.png'));
+    const bytes = new Uint8Array(await res.arrayBuffer());
+    let bin = '';
+    for (const b of bytes) bin += String.fromCharCode(b);
+    faviconDataUri = `data:image/png;base64,${btoa(bin)}`;
+  } catch {
+    faviconDataUri = '';
+  }
+  return faviconDataUri;
+}
+
+/**
+ * Replace every favicon <link> of the page with the given icon URL (data URI),
+ * or add one if the page has none. Chrome picks up the change and updates the
+ * tab icon.
+ */
+function SET_FAVICON_SCRIPT(url) {
+  const links = document.querySelectorAll('link[rel~="icon"]');
+  if (links.length) {
+    for (const link of links) link.href = url;
+  } else {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = url;
+    (document.head || document.documentElement).appendChild(link);
+  }
+}
+
+/**
+ * Point a matching tab's favicon at our own icon. Skips hidden (stashed) tabs.
+ */
+async function enforceFaviconOnTab(tab) {
+  if (!(await getTabIconOverride())) return;
+  const keywords = await getKeywords();
+  if (!keywords.length || !tabMatchesKeywords(tab, keywords)) return;
+  const hidden = await getState(STORAGE_KEYS.HIDDEN);
+  if (hidden.some((r) => r.tabId === tab.id)) return;
+
+  const uri = await getFaviconDataUri();
+  if (!uri) return;
+  await injectScript(tab.id, SET_FAVICON_SCRIPT, [uri]);
+}
+
+/**
+ * Apply the icon override to every currently matching tab. Runs on
+ * browser/extension startup so tabs opened before this setting existed still
+ * get the icon.
+ */
+async function syncFavicons() {
+  if (!(await getTabIconOverride())) return;
+  const keywords = await getKeywords();
+  if (!keywords.length) return;
+  const hidden = await getState(STORAGE_KEYS.HIDDEN);
+  const hiddenIds = new Set(hidden.map((r) => r.tabId));
+  const tabs = await chrome.tabs.query({});
+  for (const tab of tabs) {
+    if (hiddenIds.has(tab.id)) continue;
+    if (tabMatchesKeywords(tab, keywords)) {
+      await enforceFaviconOnTab(tab).catch(() => {});
+    }
+  }
+}
 
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
@@ -276,6 +413,7 @@ async function maybeApplyToTabLater(tabId) {
       if (tab.url || tab.title) {
         await enforceScriptMuteOnTab(tab);
         await enforceHideOnTab(tab);
+        await enforceFaviconOnTab(tab).catch(() => {});
         return;
       }
     } catch {
@@ -287,11 +425,140 @@ async function maybeApplyToTabLater(tabId) {
 
 // ───────────────────────── keyboard commands ─────────────────────────
 
+/**
+ * One-shot sensitive-data cleanup. Premium only.
+ *
+ * Cleanup is SCOPED to the keyword domains (the section's description says so):
+ * - history / downloads: matched by URL substring against the keywords
+ *   (faithful to the extension's keyword matching; clearing history also
+ *   clears Chrome's address-bar suggestions).
+ * - cookies & site data: cleaned only for origins derived from domain-like
+ *   keywords (includeOrigins).
+ * - cache / address-bar suggestions: excluded — cache can't be filtered by
+ *   origin, and address-bar suggestions aren't reliably removable on their own.
+ */
+async function runCleanup() {
+  if (!isPremium()) return { ok: false, reason: 'locked' };
+  const types = await getCleanupTypes();
+  const keywords = (await getKeywords()).map((k) => k.toLowerCase()).filter(Boolean);
+  if (!Object.values(types).some(Boolean)) return { ok: false, reason: 'none_selected' };
+  if (!keywords.length) return { ok: false, reason: 'no_keywords' };
+
+  const origins = keywordOrigins(keywords);
+  const byUrl = (url) => keywords.some((k) => (url || '').toLowerCase().includes(k));
+
+  const results = [];
+  if (types.history) results.push(['history', await cleanHistoryByKeywords(keywords)]);
+  if (types.cookies && origins.length) {
+    await Promise.allSettled(
+      ['removeCookies', 'removeLocalStorage', 'removeIndexedDB', 'removeFileSystems',
+       'removeServiceWorkers', 'removeWebSQL'].map(
+        (m) => safeBrowsingDataRemove(m, { since: 0, includeOrigins: origins }),
+      ),
+    );
+  }
+  if (types.downloads) results.push(['downloads', await cleanDownloadsByKeywords(byUrl)]);
+
+  console.log('Stealth Browser Assistant: cleanup done', Object.fromEntries(results));
+  return { ok: true };
+}
+
+/** Origins (scheme://host) for domain-like keywords; ignores path-like words. */
+function keywordOrigins(keywords) {
+  const origins = new Set();
+  for (const kw of keywords) {
+    if (!isDomainLike(kw)) continue;
+    origins.add(`https://${kw}`);
+    origins.add(`http://${kw}`);
+  }
+  return [...origins];
+}
+
+function isDomainLike(kw) {
+  return (
+    /^localhost(:\d+)?$/.test(kw) ||
+    /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(kw)
+  );
+}
+
+async function safeBrowsingDataRemove(method, opts) {
+  try {
+    await chrome.browsingData[method](opts);
+  } catch {
+    // one type failing shouldn't block the others
+  }
+}
+
+/**
+ * Delete history entries whose URL/title matches any keyword. Walks backwards
+ * in time windows so the maxResults cap never hides older items.
+ */
+async function cleanHistoryByKeywords(keywords) {
+  const search = (q) => new Promise((res) => chrome.history.search(q, res));
+  const del = (url) => new Promise((res) => chrome.history.deleteUrl({ url }, res));
+  const WINDOW_MS = 90 * 24 * 60 * 60 * 1000;
+  let endTime = Date.now();
+  let deleted = 0;
+  for (let guard = 0; guard < 1000; guard++) {
+    const items = await search({ text: '', startTime: 0, endTime, maxResults: 500 });
+    if (!items || items.length === 0) break;
+    let oldest = endTime;
+    for (const it of items) {
+      if (it.lastVisitTime && it.lastVisitTime < oldest) oldest = it.lastVisitTime;
+      if (tabMatchesKeywords({ url: it.url, title: it.title }, keywords)) {
+        try {
+          await del(it.url);
+          deleted += 1;
+        } catch (err) {
+          console.warn('Stealth Browser Assistant: deleteUrl failed', it.url, err);
+        }
+      }
+    }
+    if (items.length < 500 || oldest >= endTime) break;
+    endTime = oldest - 1;
+  }
+  return deleted;
+}
+
+/** Erase download-history records whose URL matches a keyword (files stay). */
+function escapeRegExp(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+async function cleanDownloadsByKeywords(byUrl) {
+  // Callback-style wrappers: work whether or not the downloads API supports
+  // promises in the current Chrome version.
+  const search = () => new Promise((resolve) => chrome.downloads.search({}, resolve));
+  const erase = (query) => new Promise((resolve) => chrome.downloads.erase(query, resolve));
+  try {
+    const items = await search();
+    if (!Array.isArray(items)) {
+      console.warn('Stealth Browser Assistant: downloads.search returned', items);
+      return 0;
+    }
+    const matched = items.filter((d) => byUrl(d.url || ''));
+    // erase() takes a DownloadQuery, NOT an array of ids. Match each record via
+    // its exact URL as an (unanchored) regex so only that record is erased.
+    for (const d of matched) {
+      await erase({ urlRegex: escapeRegExp(d.url || '') });
+    }
+    console.log(
+      `Stealth Browser Assistant: downloads cleanup — erased ${matched.length}/${items.length} records`,
+    );
+    return matched.length;
+  } catch (err) {
+    console.warn('Stealth Browser Assistant: downloads cleanup failed', err);
+    return 0;
+  }
+}
+
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'toggle-mute') {
     await setScriptMute(!(await getScriptMute()));
   } else if (command === 'toggle-hide') {
     await setHideMode(!(await getHideMode()));
+  } else if (command === 'clean-sensitive-data') {
+    await runCleanup();
   } else if (command === 'emergency-mode') {
     let action = await getEmergencyAction();
     if (action === 'closeMatchTabs' && !isPremium()) action = 'muteHide';
@@ -322,6 +589,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       case 'set-hide-mode': {
         await setHideMode(!!msg.on);
         break;
+      }
+      case 'run-cleanup': {
+        sendResponse(await runCleanup());
+        return;
       }
       case 'status': {
         const tabs = await findMatchingTabs();
@@ -367,14 +638,48 @@ async function updateBadge() {
 
 chrome.runtime.onStartup.addListener(async () => {
   await rehydrateStashWindowIds();
+  await refreshPremiumState();
+  maybeCheckIn().then(() => refreshPremiumState());
   await updateBadge();
   if (await getHideMode()) {
     const tabs = await findMatchingTabs();
     for (const tab of tabs) await hideTab(tab);
   }
+  syncFavicons().catch(() => {});
 });
 
-chrome.runtime.onInstalled.addListener(updateBadge);
+chrome.runtime.onInstalled.addListener(() => {
+  updateBadge();
+  scheduleLicenseCheckIn();
+  syncFavicons().catch(() => {});
+});
+
+// ───────────────────────── license (premium) ─────────────────────────
+
+const LICENSE_CHECK_IN_ALARM = 'license-check-in';
+
+function scheduleLicenseCheckIn() {
+  // Heartbeat at half the signature TTL (default 24h) so revocations / refunds
+  // take effect without waiting for a full browser restart.
+  chrome.alarms.create(LICENSE_CHECK_IN_ALARM, { periodInMinutes: 12 * 60 });
+}
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === LICENSE_CHECK_IN_ALARM) {
+    maybeCheckIn().then(() => refreshPremiumState());
+  }
+});
+
+// Keep the sync premium cache in step with activation from the options page.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes[STORAGE_KEYS.LICENSE]) {
+    refreshPremiumState();
+  }
+});
+
+// Warm the cache on service-worker startup.
+refreshPremiumState();
+scheduleLicenseCheckIn();
 
 async function rehydrateStashWindowIds() {
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
