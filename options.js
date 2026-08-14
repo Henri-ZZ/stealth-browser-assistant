@@ -386,6 +386,13 @@ function activateReasonMessage(reason) {
       return t('premiumActivateRevoked');
     case 'license_refunded':
       return t('premiumActivateRefunded');
+    // Business-level expiry (payload.license_expires_at lapsed) or the
+    // server's license_expired reason — the key itself is fine, the
+    // subscription has ended. Reuse the invalid message until we add a
+    // dedicated "expired" string to the language packs.
+    case 'expired':
+    case 'license_expired':
+      return t('premiumActivateInvalid');
     default:
       return t('premiumActivateError');
   }

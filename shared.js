@@ -284,12 +284,18 @@ export function isPremium() {
 
 /**
  * Re-read the persisted license and update the premium cache. Returns the new
- * premium status. A license counts as active only while its signature's
- * valid_until timestamp is still in the future.
+ * premium status. A license counts as active only while BOTH its signature's
+ * valid_until timestamp is in the future AND (for timed subscriptions) the
+ * business-level licenseExpiresAt hasn't lapsed.
  */
 export async function refreshPremiumState() {
   const lic = await getState(STORAGE_KEYS.LICENSE);
-  premiumActive = !!(lic && typeof lic.validUntil === 'number' && lic.validUntil > Date.now());
+  let active = !!(lic && typeof lic.validUntil === 'number' && lic.validUntil > Date.now());
+  if (active && lic.licenseExpiresAt != null) {
+    const expiresAt = Date.parse(lic.licenseExpiresAt);
+    active = Number.isFinite(expiresAt) && expiresAt > Date.now();
+  }
+  premiumActive = active;
   return premiumActive;
 }
 

@@ -148,8 +148,11 @@ export async function getDeviceFingerprint() {
 /**
  * Validate + verify a signed response. Returns { ok, payload } on success or
  * { ok:false, reason } where reason is one of:
- *   invalid / stale / bad_signature / license_not_found / license_revoked /
- *   license_refunded / activation_evicted
+ *   invalid / stale / expired / bad_signature / license_not_found /
+ *   license_revoked / license_refunded / activation_evicted
+ *
+ * Order mirrors EXTERNAL.md's client checklist: product → valid_until →
+ * license_expires_at → signature (cheap checks fail fast before crypto).
  */
 async function verifyResponse(resp) {
   if (!resp || resp.valid !== true) {
@@ -162,6 +165,15 @@ async function verifyResponse(resp) {
   if (!Number.isFinite(validUntil) || validUntil <= Date.now()) {
     return { ok: false, reason: 'stale' };
   }
+  // Business-level expiry (null = lifetime). The server signs this into the
+  // payload, so enforce it client-side too — a fresh signature for a lapsed
+  // subscription must not keep premium features unlocked.
+  if (payload.license_expires_at != null) {
+    const expiresAt = Date.parse(payload.license_expires_at);
+    if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
+      return { ok: false, reason: 'expired' };
+    }
+  }
   const ok = await verifySignature(payload, signature);
   return ok ? { ok: true, payload } : { ok: false, reason: 'bad_signature' };
 }
@@ -171,6 +183,8 @@ async function post(endpoint, body) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    // Don't let a hung server hold the service worker open indefinitely.
+    signal: AbortSignal.timeout(10_000),
   });
   try {
     return await res.json();
@@ -179,7 +193,7 @@ async function post(endpoint, body) {
   }
 }
 
-function persistLicense(key, fingerprint, payload) {
+function persistLicense(key, fingerprint, payload, certificate) {
   return setState(STORAGE_KEYS.LICENSE, {
     key,
     fingerprint,
@@ -188,6 +202,10 @@ function persistLicense(key, fingerprint, payload) {
     licenseId: payload.license_id,
     licenseExpiresAt: payload.license_expires_at,
     validUntil: Date.parse(payload.valid_until),
+    // Signed License Certificate (EXTERNAL.md §"Signed License Certificate"):
+    // every successful activate/check-in returns a fresh one and the client
+    // overwrites its stored copy, for potential offline migration later.
+    certificate: certificate ?? null,
   });
 }
 
@@ -209,7 +227,7 @@ export async function activateLicense(rawKey, label) {
 
   const result = await verifyResponse(resp);
   if (result.ok) {
-    await persistLicense(key, fingerprint, result.payload);
+    await persistLicense(key, fingerprint, result.payload, resp.certificate);
   }
   return result;
 }
@@ -236,7 +254,7 @@ export async function checkInLicense() {
 
   const result = await verifyResponse(resp);
   if (result.ok) {
-    await persistLicense(license.key, license.fingerprint, result.payload);
+    await persistLicense(license.key, license.fingerprint, result.payload, resp.certificate);
   } else if (TERMINAL_REASONS.has(result.reason)) {
     // License is gone for good — clear local state so isPremium() turns off.
     await clearLicense();
@@ -245,11 +263,14 @@ export async function checkInLicense() {
 }
 
 // Reasons that mean the license is permanently invalid (clear local state).
-// Transient failures (network / stale / bad_signature / invalid) leave it alone.
+// Transient failures (network / stale / expired / bad_signature / invalid)
+// leave it alone — `expired` may resolve after the customer renews, and the
+// next successful check-in will refresh the persisted state.
 const TERMINAL_REASONS = new Set([
   'license_not_found',
   'license_revoked',
   'license_refunded',
+  'license_expired',
   'activation_evicted',
 ]);
 
