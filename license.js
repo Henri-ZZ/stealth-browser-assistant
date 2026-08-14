@@ -18,6 +18,21 @@ import { STORAGE_KEYS, getState, setState } from './shared.js';
 export const LICENTRA_BASE_URL = 'https://licentra.henri.ren';
 export const PRODUCT_SLUG = 'stealth-browser-assistant';
 
+// ───────────────────────── offline grace window ─────────────────────────
+//
+// When check-in fails because Licentra is unreachable (network error, 5xx,
+// rate-limited, non-JSON body), the client may keep premium active for a
+// limited offline window instead of locking the user out mid-failure.
+// Rules (user-confirmed):
+//   - each failed check-in extends validUntil by GRACE_STEP_MS (30 min);
+//   - the extension may never push validUntil past graceUntil;
+//   - graceUntil = last successful verify + GRACE_WINDOW_MS (48 h);
+//   - once now >= graceUntil the license is treated as offline-expired and
+//     the UI shows an explicit error (reason `grace_exhausted`).
+// Server-side denials (revoked / refunded / …) NEVER get grace.
+const GRACE_STEP_MS = 30 * 60 * 1000; // 30 minutes per failed check-in
+const GRACE_WINDOW_MS = 48 * 60 * 60 * 1000; // 48h total from last success
+
 // ECDSA P-256 public key (SPKI PEM) for PRODUCT_SLUG. From assets/public_key.
 export const PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQsObNhyvBIqD/EmGsElYA0NsM0BV
@@ -186,11 +201,16 @@ async function post(endpoint, body) {
     // Don't let a hung server hold the service worker open indefinitely.
     signal: AbortSignal.timeout(10_000),
   });
+  let json = null;
   try {
-    return await res.json();
+    json = await res.json();
   } catch {
-    return null;
+    // Non-JSON body (proxy error page, empty reply) — callers treat as a
+    // server-side failure.
   }
+  // Keep the HTTP status so callers can distinguish "server answered with an
+  // error" (500/400/429…) from a network-level failure (fetch threw).
+  return { status: res.status, body: json };
 }
 
 function persistLicense(key, fingerprint, payload, certificate) {
@@ -202,6 +222,12 @@ function persistLicense(key, fingerprint, payload, certificate) {
     licenseId: payload.license_id,
     licenseExpiresAt: payload.license_expires_at,
     validUntil: Date.parse(payload.valid_until),
+    // Offline grace: reset on every successful verify — the 48h window is
+    // measured from the last time the server actually confirmed the license.
+    graceUntil: Date.now() + GRACE_WINDOW_MS,
+    // Clear any recorded server error (500/400/…) from a previous outage —
+    // verification just succeeded, so there is nothing to surface anymore.
+    lastServerError: null,
     // Signed License Certificate (EXTERNAL.md §"Signed License Certificate"):
     // every successful activate/check-in returns a fresh one and the client
     // overwrites its stored copy, for potential offline migration later.
@@ -220,7 +246,7 @@ export async function activateLicense(rawKey, label) {
   const fingerprint = await getDeviceFingerprint();
   let resp;
   try {
-    resp = await post('/api/license/activate', { key, fingerprint, label });
+    resp = (await post('/api/license/activate', { key, fingerprint, label })).body;
   } catch {
     return { ok: false, reason: 'network' };
   }
@@ -235,6 +261,14 @@ export async function activateLicense(rawKey, label) {
 /**
  * Re-validate an existing license (detects revoke / refund / eviction). Used as
  * the periodic heartbeat once the signature's valid_until window has passed.
+ *
+ * Failure handling:
+ *  - server explicitly denied (revoked / refunded / not_found / evicted /
+ *    license_expired) → terminal, clears local state (TERMINAL_REASONS);
+ *  - server unreachable / 5xx / rate-limited / non-JSON → offline grace
+ *    window: extend validUntil by 30 min up to the 48h graceUntil, unless the
+ *    grace window is already exhausted (→ `grace_exhausted`, keeps state so
+ *    the next successful check-in can recover).
  */
 export async function checkInLicense() {
   const license = await getState(STORAGE_KEYS.LICENSE);
@@ -242,14 +276,31 @@ export async function checkInLicense() {
     return { ok: false, reason: 'no_license' };
   }
 
-  let resp;
+  let http;
   try {
-    resp = await post('/api/license/check-in', {
+    http = await post('/api/license/check-in', {
       key: license.key,
       fingerprint: license.fingerprint,
     });
   } catch {
-    return { ok: false, reason: 'network' };
+    // Network failure — the server never answered. Fall back to the grace
+    // window instead of bricking premium on a transient outage.
+    return grantGrace(license, null);
+  }
+
+  const resp = http.body;
+  // Server answered with an HTTP error (5xx / 400 / 429 / …) — keep the
+  // status + body error so the UI can surface the actual server error after
+  // the grace window expires. body may be null (non-JSON reply).
+  const serverError = http.status >= 400
+    ? { status: http.status, error: resp?.error ?? `HTTP ${http.status}` }
+    : null;
+
+  // Server answered but not with a license verdict (5xx, rate limit, or a
+  // body we couldn't parse into `valid`). Same treatment: server-side
+  // problem, not a license problem — use the grace window.
+  if (!resp || typeof resp.valid !== 'boolean') {
+    return grantGrace(license, serverError);
   }
 
   const result = await verifyResponse(resp);
@@ -260,6 +311,44 @@ export async function checkInLicense() {
     await clearLicense();
   }
   return result;
+}
+
+/**
+ * Offline grace: keep premium usable while the server is unreachable.
+ * Extends validUntil by GRACE_STEP_MS, capped at graceUntil (last successful
+ * verify + 48h). When the 48h window is exhausted, returns `grace_exhausted`
+ * — the caller keeps local state (a future successful check-in recovers) but
+ * isPremium() turns off because both deadlines are in the past.
+ *
+ * `serverError` ({ status, error } | null) records the server's last actual
+ * response (e.g. 500 / 400) so the UI can surface the REAL error after the
+ * window expires, instead of a generic message. It is persisted with the
+ * license and cleared on the next successful verify.
+ */
+async function grantGrace(license, serverError = null) {
+  const now = Date.now();
+  // Old stored licenses (before grace existed) have no graceUntil — fall back
+  // to a full window so existing users aren't locked out on first failure.
+  const graceUntil = typeof license.graceUntil === 'number'
+    ? license.graceUntil
+    : now + GRACE_WINDOW_MS;
+
+  if (now >= graceUntil) {
+    // Also persist the latest server error on exhaustion, so the UI (which
+    // reads storage, not this return value) can surface it.
+    if (serverError) {
+      await setState(STORAGE_KEYS.LICENSE, { ...license, lastServerError: serverError });
+    }
+    return { ok: false, reason: 'grace_exhausted', serverError };
+  }
+
+  const nextValidUntil = Math.min(now + GRACE_STEP_MS, graceUntil);
+  await setState(STORAGE_KEYS.LICENSE, {
+    ...license,
+    validUntil: nextValidUntil,
+    ...(serverError ? { lastServerError: serverError } : {}),
+  });
+  return { ok: true, grace: true };
 }
 
 // Reasons that mean the license is permanently invalid (clear local state).

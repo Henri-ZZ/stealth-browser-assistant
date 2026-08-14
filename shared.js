@@ -284,16 +284,25 @@ export function isPremium() {
 
 /**
  * Re-read the persisted license and update the premium cache. Returns the new
- * premium status. A license counts as active only while BOTH its signature's
- * valid_until timestamp is in the future AND (for timed subscriptions) the
- * business-level licenseExpiresAt hasn't lapsed.
+ * premium status.
+ *
+ * A license counts as active while EITHER the server-signed signature window
+ * (validUntil) is in the future OR the offline grace window (graceUntil, set
+ * on the last successful verify +48h) is in the future — the latter keeps
+ * premium usable during a Licentra outage. Business-level expiry
+ * (licenseExpiresAt) is NOT extendable by grace: a lapsed subscription is
+ * locked regardless of the grace window.
  */
 export async function refreshPremiumState() {
   const lic = await getState(STORAGE_KEYS.LICENSE);
-  let active = !!(lic && typeof lic.validUntil === 'number' && lic.validUntil > Date.now());
+  const now = Date.now();
+  let active = !!lic && (
+    (typeof lic.validUntil === 'number' && lic.validUntil > now) ||
+    (typeof lic.graceUntil === 'number' && lic.graceUntil > now)
+  );
   if (active && lic.licenseExpiresAt != null) {
     const expiresAt = Date.parse(lic.licenseExpiresAt);
-    active = Number.isFinite(expiresAt) && expiresAt > Date.now();
+    active = Number.isFinite(expiresAt) && expiresAt > now;
   }
   premiumActive = active;
   return premiumActive;

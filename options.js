@@ -1,5 +1,5 @@
 import {
-  STORAGE_KEYS, getKeywords, setState, getEmergencyAction, getPauseOnMuteHide,
+  STORAGE_KEYS, getState, getKeywords, setState, getEmergencyAction, getPauseOnMuteHide,
   getRedBorderFlash, getTabIconOverride, getCleanupTypes, setCleanupType, CLEANUP_TYPE_KEYS,
   getAutoCleanupState, setAutoCleanupState,
   resolveLocale, tFor, getLangPref, SUPPORTED_LOCALES,
@@ -345,7 +345,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupPremiumTriggers();
 
   setupPremiumCard();
+
+  // If the offline grace window (48h) ran out while Licentra was unreachable,
+  // show an explicit error so the user knows it's a connectivity problem, not
+  // a broken key. The license row is kept — the next successful check-in
+  // recovers automatically.
+  await showGraceExhaustedNotice();
 });
+
+/**
+ * Show an explicit error hint in the premium card when both the signed
+ * validUntil and the grace window have lapsed but the license row still
+ * exists (i.e. the server never answered, not a revocation). Surfaces the
+ * server's actual last error (e.g. "500 internal_server_error") when one was
+ * recorded; falls back to the generic connectivity message otherwise.
+ */
+async function showGraceExhaustedNotice() {
+  const lic = await getState(STORAGE_KEYS.LICENSE);
+  if (!lic) return;
+  const now = Date.now();
+  const sigFresh = typeof lic.validUntil === 'number' && lic.validUntil > now;
+  const graceFresh = typeof lic.graceUntil === 'number' && lic.graceUntil > now;
+  if (sigFresh || graceFresh) return;
+  const statusEl = $('premiumActivateStatus');
+  if (!statusEl) return;
+
+  const se = lic.lastServerError;
+  if (se && typeof se === 'object' && se.status && se.error) {
+    statusEl.textContent = `${se.status} ${se.error}`;
+  } else {
+    statusEl.textContent = t('premiumActivateError');
+  }
+}
 
 /**
  * Apply premium status to the page: toggle the body class (which drives the
