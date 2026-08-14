@@ -180,7 +180,7 @@
     "message": "浏览历史"
   },
   "cleanupHistoryDesc": {
-    "message": "从浏览历史和 Chrome 的地址栏建议中移除匹配的页面。"
+    "message": "从浏览历史中移除匹配的记录。地址栏联想可能随之减少，但收藏夹等其他来源仍可能让它出现。"
   },
   "cleanupCookiesLabel": {
     "message": "Cookie 和网站数据"
@@ -244,5 +244,25 @@
   },
   "popupCleanNoKeywords": {
     "message": "请先添加关键词以限定清理范围"
+  },
+  "autoCleanupTitle": {
+    "message": "自动清理"
+  },
+  "autoCleanupHelp": {
+    "message": "关闭最后一个匹配的标签页后 $minutes$ 分钟自动清理。",
+    "placeholders": {
+      "minutes": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoCleanupLabel": {
+    "message": "开启自动清理"
+  },
+  "autoCleanupDelayLabel": {
+    "message": "延迟（分钟）"
+  },
+  "popupCleanDisabled": {
+    "message": "未选中任何清理项，请到设置页面选择。"
   }
 }

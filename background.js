@@ -18,6 +18,7 @@ import {
   STORAGE_KEYS, getState, setState, getKeywords,
   getScriptMute, getHideMode, getEmergencyAction, getPauseOnMuteHide,
   getRedBorderFlash, getTabIconOverride, getCleanupTypes,
+  getAutoCleanupState, setAutoCleanupState,
   tabMatchesKeywords, isPremium, refreshPremiumState,
 } from './shared.js';
 import { maybeCheckIn } from './license.js';
@@ -252,6 +253,7 @@ function mergeRecords(newRecords) {
 
 chrome.tabs.onCreated.addListener((tab) => {
   maybeApplyToTabLater(tab.id);
+  reevaluateSensitiveSession().catch(() => {});
 });
 
 chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
@@ -259,6 +261,7 @@ chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
     enforceScriptMuteOnTab(tab).catch(() => {});
     enforceHideOnTab(tab).catch(() => {});
     enforceFaviconOnTab(tab).catch(() => {});
+    reevaluateSensitiveSession().catch(() => {});
     // A newly opened / navigated tab that matches a keyword: flash only when
     // it's the tab the user is actually looking at.
     if (tab.active) flashIfMatched(tab).catch(() => {});
@@ -371,6 +374,7 @@ async function syncFavicons() {
 }
 
 chrome.tabs.onRemoved.addListener(async (tabId) => {
+  reevaluateSensitiveSession().catch(() => {});
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
   if (!hidden.some((r) => r.tabId === tabId)) return;
   const remaining = hidden.filter((r) => r.tabId !== tabId);
@@ -422,6 +426,103 @@ async function maybeApplyToTabLater(tabId) {
     await new Promise((r) => setTimeout(r, 300));
   }
 }
+
+// ───────────────────────── auto cleanup (sensitive session) ─────────────────────────
+//
+// When the LAST tab matching a keyword is closed, wait `delayMinutes` (default 5)
+// and then run the scoped cleanup — unless a matching tab reappears, which
+// cancels the countdown. State lives in chrome.storage (cleanupAt is an
+// absolute timestamp) so it survives SW recycling and browser restarts;
+// chrome.alarms only wakes us up at the right moment.
+
+const AUTO_CLEANUP_ALARM = 'sba-auto-cleanup';
+
+async function hasMatchingTabs() {
+  return (await findMatchingTabs()).length > 0;
+}
+
+async function scheduleAutoCleanup() {
+  const state = await getAutoCleanupState();
+  const delayMs = Math.max(1, state.delayMinutes || 0) * 60 * 1000;
+  const cleanupAt = Date.now() + delayMs;
+  await setAutoCleanupState({ cleanupPending: true, sessionActive: true, cleanupAt });
+  await chrome.alarms.create(AUTO_CLEANUP_ALARM, { when: cleanupAt });
+  console.log(`SBA: auto cleanup scheduled for ${new Date(cleanupAt).toLocaleString()}`);
+}
+
+async function cancelAutoCleanup() {
+  await chrome.alarms.clear(AUTO_CLEANUP_ALARM);
+  await setAutoCleanupState({ cleanupPending: false, cleanupAt: null });
+}
+
+/**
+ * Core state machine. Called on every relevant tab event, on startup and when
+ * keywords/auto-cleanup settings change.
+ */
+async function reevaluateSensitiveSession() {
+  const state = await getAutoCleanupState();
+
+  if (!state.enabled) {
+    if (state.cleanupPending || state.cleanupAt) {
+      await chrome.alarms.clear(AUTO_CLEANUP_ALARM);
+      await setAutoCleanupState({ sessionActive: false, cleanupPending: false, cleanupAt: null });
+    }
+    return;
+  }
+
+  if (await hasMatchingTabs()) {
+    // Sensitive session active — cancel any pending cleanup.
+    if (state.cleanupPending || state.cleanupAt) {
+      await chrome.alarms.clear(AUTO_CLEANUP_ALARM);
+    }
+    await setAutoCleanupState({ sessionActive: true, cleanupPending: false, cleanupAt: null });
+    return;
+  }
+
+  // No matching tabs.
+  if (!state.sessionActive) return; // never entered a sensitive session
+
+  if (state.cleanupPending && state.cleanupAt && Date.now() >= state.cleanupAt) {
+    // Overdue (e.g. Chrome was closed past the deadline) — clean now.
+    const res = await runCleanup();
+    await setAutoCleanupState({ sessionActive: false, cleanupPending: false, cleanupAt: null });
+    console.log('SBA: auto cleanup executed (overdue)', res);
+    return;
+  }
+
+  if (!state.cleanupPending) {
+    await scheduleAutoCleanup();
+  }
+}
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name !== AUTO_CLEANUP_ALARM) return;
+  const state = await getAutoCleanupState();
+  if (!state.enabled || !state.cleanupPending) return;
+
+  // Alarm firing alone is not permission to clean — re-check the tabs.
+  if (await hasMatchingTabs()) {
+    await cancelAutoCleanup();
+    await setAutoCleanupState({ sessionActive: true });
+    return;
+  }
+  if (state.cleanupAt && Date.now() >= state.cleanupAt) {
+    const res = await runCleanup();
+    await setAutoCleanupState({ sessionActive: false, cleanupPending: false, cleanupAt: null });
+    console.log('SBA: auto cleanup executed', res);
+  } else if (state.cleanupAt) {
+    // Fired early — reschedule for the real deadline.
+    await chrome.alarms.create(AUTO_CLEANUP_ALARM, { when: state.cleanupAt });
+  }
+});
+
+// Re-evaluate whenever tab state, keywords or auto-cleanup settings change.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'local') return;
+  if (changes[STORAGE_KEYS.KEYWORDS] || changes[STORAGE_KEYS.AUTO_CLEANUP]) {
+    reevaluateSensitiveSession().catch(() => {});
+  }
+});
 
 // ───────────────────────── keyboard commands ─────────────────────────
 
@@ -646,12 +747,14 @@ chrome.runtime.onStartup.addListener(async () => {
     for (const tab of tabs) await hideTab(tab);
   }
   syncFavicons().catch(() => {});
+  reevaluateSensitiveSession().catch(() => {});
 });
 
 chrome.runtime.onInstalled.addListener(() => {
   updateBadge();
   scheduleLicenseCheckIn();
   syncFavicons().catch(() => {});
+  reevaluateSensitiveSession().catch(() => {});
 });
 
 // ───────────────────────── license (premium) ─────────────────────────

@@ -1,4 +1,4 @@
-import { resolveLocale, tFor, isPremium, refreshPremiumState } from './shared.js';
+import { resolveLocale, tFor, isPremium, refreshPremiumState, getCleanupTypes } from './shared.js';
 
 let LOCALE = 'en';
 
@@ -76,11 +76,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     refreshStatus();
   });
 
-  // Clean sensitive data — premium only, fires a one-shot cleanup in the background.
+  // Clean sensitive data — fires a one-shot cleanup in the background. Greyed
+  // out when nothing is selected to clean (or the user isn't premium) with a
+  // hover hint to pick items in Settings.
   const cleanupBtn = document.getElementById('cleanupBtn');
   const cleanupStatus = document.getElementById('cleanupStatus');
   if (cleanupBtn) {
-    cleanupBtn.disabled = !isPremium();
+    const cleanupTypes = await getCleanupTypes();
+    const noneSelected = !Object.values(cleanupTypes).some(Boolean);
+    const premium = isPremium();
+    cleanupBtn.disabled = !premium || noneSelected;
+    if (cleanupBtn.disabled) {
+      cleanupBtn.dataset.tip = t('popupCleanDisabled');
+    }
     cleanupBtn.addEventListener('click', async () => {
       if (!cleanupStatus) return;
       cleanupBtn.disabled = true;

@@ -65,7 +65,7 @@ export default {
   matchHitRedBorder: { message: "Destello de borde rojo" },
   matchTabIconLabel: { message: "Cambiar el icono de la pestaña" },
   cleanupHistoryLabel: { message: "Historial de navegación" },
-  cleanupHistoryDesc: { message: "Elimina las páginas coincidentes del historial de navegación y de las sugerencias de la barra de direcciones de Chrome." },
+  cleanupHistoryDesc: { message: "Elimina las entradas coincidentes de tu historial de navegación. Las sugerencias de la barra de direcciones pueden reducirse, pero los marcadores u otras fuentes pueden seguir mostrándolas." },
   cleanupCookiesLabel: { message: "Cookies y datos del sitio" },
   cleanupCookiesDesc: { message: "Cookies y otros datos del sitio, como Local Storage" },
   cleanupCookiesWarn: { message: "Puede cerrar tu sesión en los sitios web" },
@@ -84,4 +84,12 @@ export default {
   premiumActivateError: { message: "No se pudo activar. Comprueba tu conexión e inténtalo de nuevo." },
   cleanupHelp: { message: "Solo limpia los datos de los dominios que coinciden con tus palabras clave." },
   popupCleanNoKeywords: { message: "Añade palabras clave para acotar qué se limpia" },
+  autoCleanupTitle: { message: "Limpieza automática" },
+  autoCleanupHelp: {
+    message: "Se limpia automáticamente $minutes$ minutos después de cerrar la última pestaña que coincide.",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "Activar limpieza automática" },
+  autoCleanupDelayLabel: { message: "Retraso (minutos)" },
+  popupCleanDisabled: { message: "No has seleccionado ningún elemento de limpieza. Elige algunos en Ajustes." },
 };

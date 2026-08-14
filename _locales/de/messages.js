@@ -65,7 +65,7 @@ export default {
   matchHitRedBorder: { message: "Roter Rahmen blinkt" },
   matchTabIconLabel: { message: "Tab-Symbol ersetzen" },
   cleanupHistoryLabel: { message: "Browserverlauf" },
-  cleanupHistoryDesc: { message: "Entfernt übereinstimmende Seiten aus dem Browserverlauf und den Vorschlägen der Chrome-Adressleiste." },
+  cleanupHistoryDesc: { message: "Entfernt übereinstimmende Einträge aus deinem Browserverlauf. Vorschläge in der Adressleiste können dadurch seltener werden, aber Lesezeichen oder andere Quellen können sie weiterhin anzeigen." },
   cleanupCookiesLabel: { message: "Cookies & Websitedaten" },
   cleanupCookiesDesc: { message: "Cookies und andere Websitedaten wie Local Storage" },
   cleanupCookiesWarn: { message: "Kann dich von Websites abmelden" },
@@ -84,4 +84,12 @@ export default {
   premiumActivateError: { message: "Aktivierung fehlgeschlagen. Bitte überprüfe deine Verbindung und versuche es erneut." },
   cleanupHelp: { message: "Bereinigt nur Daten von Domains, die deinen Schlüsselwörtern entsprechen." },
   popupCleanNoKeywords: { message: "Füge Schlüsselwörter hinzu, um den Umfang der Bereinigung festzulegen" },
+  autoCleanupTitle: { message: "Automatische Bereinigung" },
+  autoCleanupHelp: {
+    message: "Bereinigt automatisch $minutes$ Minuten, nachdem der letzte passende Tab geschlossen wurde.",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "Automatische Bereinigung aktivieren" },
+  autoCleanupDelayLabel: { message: "Verzögerung (Minuten)" },
+  popupCleanDisabled: { message: "Keine Bereinigungsoptionen ausgewählt. Wähle welche in den Einstellungen." },
 };

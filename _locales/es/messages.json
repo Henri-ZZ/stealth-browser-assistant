@@ -189,7 +189,7 @@
     "message": "Historial de navegación"
   },
   "cleanupHistoryDesc": {
-    "message": "Elimina las páginas coincidentes del historial de navegación y de las sugerencias de la barra de direcciones de Chrome."
+    "message": "Elimina las entradas coincidentes de tu historial de navegación. Las sugerencias de la barra de direcciones pueden reducirse, pero los marcadores u otras fuentes pueden seguir mostrándolas."
   },
   "cleanupCookiesLabel": {
     "message": "Cookies y datos del sitio"
@@ -244,5 +244,25 @@
   },
   "popupCleanNoKeywords": {
     "message": "Añade palabras clave para acotar qué se limpia"
+  },
+  "autoCleanupTitle": {
+    "message": "Limpieza automática"
+  },
+  "autoCleanupHelp": {
+    "message": "Se limpia automáticamente $minutes$ minutos después de cerrar la última pestaña que coincide.",
+    "placeholders": {
+      "minutes": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoCleanupLabel": {
+    "message": "Activar limpieza automática"
+  },
+  "autoCleanupDelayLabel": {
+    "message": "Retraso (minutos)"
+  },
+  "popupCleanDisabled": {
+    "message": "No has seleccionado ningún elemento de limpieza. Elige algunos en Ajustes."
   }
 }

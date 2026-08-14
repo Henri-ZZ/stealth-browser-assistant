@@ -65,7 +65,7 @@ export default {
   matchHitRedBorder: { message: "Clignotement de la bordure rouge" },
   matchTabIconLabel: { message: "Remplacer l’icône de l’onglet" },
   cleanupHistoryLabel: { message: "Historique de navigation" },
-  cleanupHistoryDesc: { message: "Supprime les pages correspondantes de votre historique de navigation et des suggestions de la barre d’adresse de Chrome." },
+  cleanupHistoryDesc: { message: "Supprime les entrées correspondantes de votre historique de navigation. Les suggestions de la barre d’adresse peuvent diminuer, mais les favoris ou d’autres sources peuvent continuer à les afficher." },
   cleanupCookiesLabel: { message: "Cookies et données du site" },
   cleanupCookiesDesc: { message: "Cookies et autres données du site, comme Local Storage" },
   cleanupCookiesWarn: { message: "Peut vous déconnecter des sites web" },
@@ -84,4 +84,12 @@ export default {
   premiumActivateError: { message: "Échec de l’activation. Vérifiez votre connexion et réessayez." },
   cleanupHelp: { message: "Nettoie uniquement les données des domaines correspondant à vos mots-clés." },
   popupCleanNoKeywords: { message: "Ajoutez des mots-clés pour limiter ce qui est nettoyé" },
+  autoCleanupTitle: { message: "Nettoyage automatique" },
+  autoCleanupHelp: {
+    message: "Nettoie automatiquement $minutes$ minutes après la fermeture du dernier onglet correspondant.",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "Activer le nettoyage automatique" },
+  autoCleanupDelayLabel: { message: "Délai (minutes)" },
+  popupCleanDisabled: { message: "Aucun élément de nettoyage sélectionné. Choisissez-en dans les paramètres." },
 };

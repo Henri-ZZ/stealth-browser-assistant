@@ -65,7 +65,7 @@ export default {
   matchHitRedBorder: { message: "赤枠を点滅させる" },
   matchTabIconLabel: { message: "タブのアイコンを置き換える" },
   cleanupHistoryLabel: { message: "閲覧履歴" },
-  cleanupHistoryDesc: { message: "閲覧履歴と Chrome のアドレスバーの候補から一致するページを削除します。" },
+  cleanupHistoryDesc: { message: "閲覧履歴から一致するエントリを削除します。アドレスバーの候補は減る可能性がありますが、ブックマークなどの他の情報源から表示されることもあります。" },
   cleanupCookiesLabel: { message: "Cookie とサイトデータ" },
   cleanupCookiesDesc: { message: "Cookie や Local Storage などのサイトデータ" },
   cleanupCookiesWarn: { message: "ウェブサイトからログアウトされる可能性があります" },
@@ -84,4 +84,12 @@ export default {
   premiumActivateError: { message: "アクティベートに失敗しました。接続を確認してもう一度お試しください。" },
   cleanupHelp: { message: "キーワードに一致するドメインのデータのみ削除します。" },
   popupCleanNoKeywords: { message: "削除対象を絞るにはキーワードを追加してください" },
+  autoCleanupTitle: { message: "自動クリーンアップ" },
+  autoCleanupHelp: {
+    message: "最後に一致するタブを閉じてから $minutes$ 分後に自動的に削除します。",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "自動クリーンアップを有効にする" },
+  autoCleanupDelayLabel: { message: "遅延（分）" },
+  popupCleanDisabled: { message: "削除項目が選択されていません。設定ページで選択してください。" },
 };

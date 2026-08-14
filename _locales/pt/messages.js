@@ -65,7 +65,7 @@ export default {
   matchHitRedBorder: { message: "Piscar borda vermelha" },
   matchTabIconLabel: { message: "Substituir o ícone da aba" },
   cleanupHistoryLabel: { message: "Histórico de navegação" },
-  cleanupHistoryDesc: { message: "Remove as páginas correspondentes do seu histórico de navegação e das sugestões da barra de endereços do Chrome." },
+  cleanupHistoryDesc: { message: "Remove as entradas correspondentes do seu histórico de navegação. As sugestões da barra de endereços podem diminuir, mas favoritos ou outras fontes ainda podem exibi-las." },
   cleanupCookiesLabel: { message: "Cookies e dados do site" },
   cleanupCookiesDesc: { message: "Cookies e outros dados do site, como Local Storage" },
   cleanupCookiesWarn: { message: "Pode desconectar você dos sites" },
@@ -84,4 +84,12 @@ export default {
   premiumActivateError: { message: "Falha na ativação. Verifique sua conexão e tente novamente." },
   cleanupHelp: { message: "Limpa apenas dados de domínios que correspondem às suas palavras-chave." },
   popupCleanNoKeywords: { message: "Adicione palavras-chave para definir o que será limpo" },
+  autoCleanupTitle: { message: "Limpeza automática" },
+  autoCleanupHelp: {
+    message: "Limpa automaticamente $minutes$ minutos após fechar a última aba correspondente.",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "Ativar limpeza automática" },
+  autoCleanupDelayLabel: { message: "Atraso (minutos)" },
+  popupCleanDisabled: { message: "Nenhum item de limpeza selecionado. Escolha alguns nas configurações." },
 };

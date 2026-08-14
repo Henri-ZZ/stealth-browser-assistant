@@ -180,7 +180,7 @@
     "message": "Browsing history"
   },
   "cleanupHistoryDesc": {
-    "message": "Removes matching pages from your browsing history and Chrome’s address bar suggestions."
+    "message": "Removes matching entries from your browsing history. Address bar suggestions may be reduced, but bookmarks or other sources can still surface them."
   },
   "cleanupCookiesLabel": {
     "message": "Cookies & site data"
@@ -244,5 +244,25 @@
   },
   "popupCleanNoKeywords": {
     "message": "Add keywords to scope what gets cleaned"
+  },
+  "autoCleanupTitle": {
+    "message": "Auto cleanup"
+  },
+  "autoCleanupHelp": {
+    "message": "Cleans automatically $minutes$ minutes after the last matching tab is closed.",
+    "placeholders": {
+      "minutes": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoCleanupLabel": {
+    "message": "Enable auto cleanup"
+  },
+  "autoCleanupDelayLabel": {
+    "message": "Delay (minutes)"
+  },
+  "popupCleanDisabled": {
+    "message": "No cleanup items selected. Choose some in Settings."
   }
 }

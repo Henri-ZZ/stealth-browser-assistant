@@ -1,6 +1,7 @@
 import {
   STORAGE_KEYS, getKeywords, setState, getEmergencyAction, getPauseOnMuteHide,
   getRedBorderFlash, getTabIconOverride, getCleanupTypes, setCleanupType, CLEANUP_TYPE_KEYS,
+  getAutoCleanupState, setAutoCleanupState,
   resolveLocale, tFor, getLangPref, SUPPORTED_LOCALES,
   isPremium, getKeywordLimit, refreshPremiumState,
 } from './shared.js';
@@ -139,6 +140,7 @@ function setupPremiumTriggers() {
   const pauseOption = document.querySelector('label.checkbox-option:has(#pauseOnMuteHide)');
   const closeOption = document.querySelector('label.radio-option:has(input[value="closeMatchTabs"])');
   const cleanupOptions = [...document.querySelectorAll('label.cleanup-option')];
+  const autoCleanupOption = document.querySelector('label.auto-cleanup-option');
   const popover = $('premiumPopover');
 
   const triggers = [
@@ -146,6 +148,7 @@ function setupPremiumTriggers() {
     { el: pauseOption, key: 'premiumUnlockFeature' },
     { el: closeOption, key: 'premiumUnlockFeature' },
     ...cleanupOptions.map((el) => ({ el, key: 'premiumUnlockFeature' })),
+    { el: autoCleanupOption, key: 'premiumUnlockFeature' },
   ].filter((tr) => tr.el);
 
   let leaveTimer = null;
@@ -205,6 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   langSelect.addEventListener('change', async () => {
     await setState(STORAGE_KEYS.LANG_PREF, langSelect.value);
     await applyI18n();
+    if (typeof renderAutoCleanup === 'function') renderAutoCleanup();
   });
 
   applyPremiumState();
@@ -272,6 +276,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Auto cleanup: toggle + numeric delay (minutes), premium-locked
+  const autoState = await getAutoCleanupState();
+  const autoToggle = $('autoCleanupToggle');
+  const autoDelayRow = $('autoCleanupDelay');
+  const autoMinutes = $('autoCleanupMinutes');
+  const autoHelp = $('autoCleanupHelp');
+  const renderAutoCleanup = () => {
+    if (!autoToggle) return;
+    autoToggle.checked = !!autoState.enabled;
+    if (autoMinutes) autoMinutes.value = String(autoState.delayMinutes);
+    if (autoDelayRow) autoDelayRow.hidden = !autoState.enabled;
+    if (autoHelp && LOCALE) {
+      autoHelp.textContent = tFor(LOCALE, 'autoCleanupHelp', [String(autoState.delayMinutes)]);
+    }
+  };
+  if (autoToggle) {
+    autoToggle.addEventListener('change', async () => {
+      autoState.enabled = autoToggle.checked;
+      await setAutoCleanupState({ enabled: autoState.enabled });
+      renderAutoCleanup();
+    });
+  }
+  if (autoMinutes) {
+    autoMinutes.addEventListener('input', async () => {
+      // digits only, clamp to [1, 1440]
+      const digits = autoMinutes.value.replace(/\D/g, '');
+      const minutes = Math.min(1440, Math.max(1, parseInt(digits || '1', 10)));
+      autoMinutes.value = String(minutes);
+      autoState.delayMinutes = minutes;
+      await setAutoCleanupState({ delayMinutes: minutes });
+      renderAutoCleanup();
+    });
+  }
+  renderAutoCleanup();
+
   $('addForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = $('newKeyword');
@@ -324,6 +363,8 @@ function applyPremiumState() {
   document.querySelectorAll('.cleanup-option input[type="checkbox"]').forEach((input) => {
     input.disabled = !premium;
   });
+  const autoCleanupToggle = $('autoCleanupToggle');
+  if (autoCleanupToggle) autoCleanupToggle.disabled = !premium;
 }
 
 /** A human-readable device label sent with activation (shown in Licentra). */
@@ -351,23 +392,10 @@ function activateReasonMessage(reason) {
 }
 
 /**
- * Collapsible "Premium" card — collapsed by default. Keeps the upsell low-key:
- * a short intro, a "learn more" link, and a code-activation field for users who
- * already bought a license.
+ * "Premium" card — always expanded: a short intro, a "learn more" link, and a
+ * code-activation field for users who already bought a license.
  */
 function setupPremiumCard() {
-  const card = $('premiumCard');
-  const toggle = $('premiumToggle');
-  const body = $('premiumBody');
-  if (!card || !toggle || !body) return;
-
-  toggle.addEventListener('click', () => {
-    const open = body.hidden;
-    body.hidden = !open;
-    toggle.setAttribute('aria-expanded', String(open));
-    card.classList.toggle('is-open', open);
-  });
-
   const learnBtn = $('premiumLearnBtn');
   if (learnBtn) {
     learnBtn.addEventListener('click', () => {

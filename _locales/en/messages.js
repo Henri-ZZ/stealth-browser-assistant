@@ -81,7 +81,7 @@ export default {
   cleanupSection: { message: "Clean private data" },
   cleanupHelp: { message: "Only cleans data for domains matching your keywords." },
   cleanupHistoryLabel: { message: "Browsing history" },
-  cleanupHistoryDesc: { message: "Removes matching pages from your browsing history and Chrome’s address bar suggestions." },
+  cleanupHistoryDesc: { message: "Removes matching entries from your browsing history. Address bar suggestions may be reduced, but bookmarks or other sources can still surface them." },
   cleanupCookiesLabel: { message: "Cookies & site data" },
   cleanupCookiesDesc: {
     message: "Cookies and other site data such as Local Storage",
@@ -107,4 +107,12 @@ export default {
   premiumActivateError: {
     message: "Activation failed. Please check your connection and try again.",
   },
+  autoCleanupTitle: { message: "Auto cleanup" },
+  autoCleanupHelp: {
+    message: "Cleans automatically $minutes$ minutes after the last matching tab is closed.",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "Enable auto cleanup" },
+  autoCleanupDelayLabel: { message: "Delay (minutes)" },
+  popupCleanDisabled: { message: "No cleanup items selected. Choose some in Settings." },
 };

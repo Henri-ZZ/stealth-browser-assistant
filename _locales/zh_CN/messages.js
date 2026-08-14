@@ -74,7 +74,7 @@ export default {
   cleanupSection: { message: "清理隐私数据" },
   cleanupHelp: { message: "只清理匹配关键词的域名的数据。" },
   cleanupHistoryLabel: { message: "浏览历史" },
-  cleanupHistoryDesc: { message: "从浏览历史和 Chrome 的地址栏建议中移除匹配的页面。" },
+  cleanupHistoryDesc: { message: "从浏览历史中移除匹配的记录。地址栏联想可能随之减少，但收藏夹等其他来源仍可能让它出现。" },
   cleanupCookiesLabel: { message: "Cookie 和网站数据" },
   cleanupCookiesDesc: { message: "Cookie、Local Storage 等网站数据" },
   cleanupCookiesWarn: { message: "可能导致登出网站" },
@@ -94,4 +94,12 @@ export default {
   premiumActivateRevoked: { message: "该激活码已被吊销。" },
   premiumActivateRefunded: { message: "该激活码已退款。" },
   premiumActivateError: { message: "激活失败，请检查网络后重试。" },
+  autoCleanupTitle: { message: "自动清理" },
+  autoCleanupHelp: {
+    message: "关闭最后一个匹配的标签页后 $minutes$ 分钟自动清理。",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "开启自动清理" },
+  autoCleanupDelayLabel: { message: "延迟（分钟）" },
+  popupCleanDisabled: { message: "未选中任何清理项，请到设置页面选择。" },
 };

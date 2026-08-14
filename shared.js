@@ -12,6 +12,7 @@ export const STORAGE_KEYS = {
   RED_BORDER_FLASH: "redBorderFlash", // boolean: flash a red border on a matched active tab
   TAB_ICON_OVERRIDE: "tabIconOverride", // boolean: replace matched tabs' favicon with ours
   CLEANUP_TYPES: "cleanupTypes", // object: which sensitive data types to clean (see CLEANUP_TYPE_KEYS)
+  AUTO_CLEANUP: "autoCleanup", // object: { enabled, delayMinutes, sessionActive, cleanupPending, cleanupAt }
   LICENSE: "license", // object|null: verified license state (see license.js)
 };
 
@@ -37,6 +38,13 @@ const DEFAULTS = {
   [STORAGE_KEYS.RED_BORDER_FLASH]: false,
   [STORAGE_KEYS.TAB_ICON_OVERRIDE]: true,
   [STORAGE_KEYS.CLEANUP_TYPES]: { history: false, cookies: false, downloads: false },
+  [STORAGE_KEYS.AUTO_CLEANUP]: {
+    enabled: false,
+    delayMinutes: 5,
+    sessionActive: false,
+    cleanupPending: false,
+    cleanupAt: null,
+  },
   [STORAGE_KEYS.LICENSE]: null,
 };
 
@@ -158,6 +166,23 @@ export async function setCleanupType(type, enabled) {
   types[type] = !!enabled;
   await setState(STORAGE_KEYS.CLEANUP_TYPES, types);
   return types;
+}
+
+/**
+ * Auto-cleanup state: { enabled, delayMinutes, sessionActive, cleanupPending,
+ * cleanupAt }. cleanupAt is an absolute timestamp (ms) — persisted so it
+ * survives browser/SW restarts.
+ */
+export async function getAutoCleanupState() {
+  const stored = await getState(STORAGE_KEYS.AUTO_CLEANUP);
+  return { ...DEFAULTS[STORAGE_KEYS.AUTO_CLEANUP], ...(stored || {}) };
+}
+
+/** Merge a partial update into the auto-cleanup state. */
+export async function setAutoCleanupState(patch) {
+  const next = { ...(await getAutoCleanupState()), ...patch };
+  await setState(STORAGE_KEYS.AUTO_CLEANUP, next);
+  return next;
 }
 
 /**

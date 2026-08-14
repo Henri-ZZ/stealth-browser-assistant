@@ -32,7 +32,7 @@
         />
       </header>
 
-      <section class="card">
+      <section class="card card--full">
         <h2 data-i18n="keywordsSection">Keywords</h2>
         <p class="help" data-i18n="optionsKeywordsHelp">
           Each keyword matches a tab…
@@ -57,7 +57,7 @@
         <p id="hint" class="hint" data-i18n="noKeywords">No keywords yet.</p>
       </section>
 
-      <section class="card">
+      <section class="card shortcuts-card">
         <h2 data-i18n="optionsTitle">Shortcuts</h2>
         <ul class="shortcut-list">
           <li>
@@ -196,7 +196,7 @@
         </label>
       </section>
 
-      <section class="card">
+      <section class="card card--full">
         <h2 data-i18n="cleanupSection">Clean private data</h2>
         <p class="help" data-i18n="cleanupHelp">
           Only cleans data for domains matching your keywords.
@@ -207,6 +207,45 @@
             <span data-i18n="cleanupHistoryLabel">Browsing history</span>
             <span class="cleanup-option-desc" data-i18n="cleanupHistoryDesc"
               >Visited URLs and browsing history</span
+            >
+          </span>
+          <svg
+            class="lock-icon lock-icon--closed"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <svg
+            class="lock-icon lock-icon--open"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 9 0" />
+          </svg>
+        </label>
+        <label class="checkbox-option cleanup-option">
+          <input type="checkbox" id="cleanDownloads" />
+          <span class="cleanup-option-text">
+            <span data-i18n="cleanupDownloadsLabel">Downloads history</span>
+            <span class="cleanup-option-desc" data-i18n="cleanupDownloadsDesc"
+              >Download history; does not delete the actual files</span
             >
           </span>
           <svg
@@ -282,45 +321,62 @@
             <path d="M7 11V7a5 5 0 0 1 9 0" />
           </svg>
         </label>
-        <label class="checkbox-option cleanup-option">
-          <input type="checkbox" id="cleanDownloads" />
-          <span class="cleanup-option-text">
-            <span data-i18n="cleanupDownloadsLabel">Downloads history</span>
-            <span class="cleanup-option-desc" data-i18n="cleanupDownloadsDesc"
-              >Download history; does not delete the actual files</span
+
+        <div class="auto-cleanup-block">
+          <h3 class="sub-title" data-i18n="autoCleanupTitle">Auto cleanup</h3>
+          <p class="help" id="autoCleanupHelp" data-i18n="autoCleanupHelp">
+            Cleans automatically $minutes$ minutes after the last matching tab
+            is closed.
+          </p>
+          <label class="checkbox-option auto-cleanup-option">
+            <input type="checkbox" id="autoCleanupToggle" />
+            <span data-i18n="autoCleanupLabel">Enable auto cleanup</span>
+            <svg
+              class="lock-icon lock-icon--closed"
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
             >
-          </span>
-          <svg
-            class="lock-icon lock-icon--closed"
-            viewBox="0 0 24 24"
-            width="12"
-            height="12"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="11" width="18" height="11" rx="2" />
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-          <svg
-            class="lock-icon lock-icon--open"
-            viewBox="0 0 24 24"
-            width="12"
-            height="12"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="11" width="18" height="11" rx="2" />
-            <path d="M7 11V7a5 5 0 0 1 9 0" />
-          </svg>
-        </label>
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <svg
+              class="lock-icon lock-icon--open"
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 9 0" />
+            </svg>
+          </label>
+          <div class="auto-cleanup-delay" id="autoCleanupDelay" hidden>
+            <label for="autoCleanupMinutes" data-i18n="autoCleanupDelayLabel"
+              >Delay (minutes)</label
+            >
+            <input
+              type="number"
+              id="autoCleanupMinutes"
+              class="num-input"
+              min="1"
+              max="1440"
+              step="1"
+              inputmode="numeric"
+            />
+          </div>
+        </div>
       </section>
 
       <section class="card">
@@ -341,30 +397,8 @@
         </select>
       </section>
       <section class="card premium-card" id="premiumCard">
-        <button
-          class="premium-toggle"
-          id="premiumToggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="premiumBody"
-        >
-          <span class="premium-toggle-title">Premium</span>
-          <svg
-            class="premium-chevron"
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </button>
-        <div class="premium-body" id="premiumBody" hidden>
+        <h2>Premium</h2>
+        <div class="premium-body" id="premiumBody">
           <p class="help premium-intro" data-i18n="premiumIntro">
             Premium unlocks every feature in this extension.
           </p>
@@ -377,7 +411,9 @@
             了解Premium
           </button>
           <div class="premium-activate">
-            <span class="premium-activate-label" data-i18n="premiumActivateLabel"
+            <span
+              class="premium-activate-label"
+              data-i18n="premiumActivateLabel"
               >Already have a License Key?</span
             >
             <div class="premium-activate-row">

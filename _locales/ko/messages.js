@@ -65,7 +65,7 @@ export default {
   matchHitRedBorder: { message: "빨간 테두리 깜빡임" },
   matchTabIconLabel: { message: "탭 아이콘 교체" },
   cleanupHistoryLabel: { message: "방문 기록" },
-  cleanupHistoryDesc: { message: "방문 기록 및 Chrome 주소 표시줄 제안에서 일치하는 페이지를 제거합니다." },
+  cleanupHistoryDesc: { message: "방문 기록에서 일치하는 항목을 제거합니다. 주소 표시줄 제안은 줄어들 수 있지만 북마크 등 다른 출처에서 여전히 표시될 수 있습니다." },
   cleanupCookiesLabel: { message: "쿠키 및 사이트 데이터" },
   cleanupCookiesDesc: { message: "쿠키 및 Local Storage 등 사이트 데이터" },
   cleanupCookiesWarn: { message: "웹사이트에서 로그아웃될 수 있습니다" },
@@ -84,4 +84,12 @@ export default {
   premiumActivateError: { message: "활성화에 실패했습니다. 연결을 확인하고 다시 시도하세요." },
   cleanupHelp: { message: "키워드와 일치하는 도메인의 데이터만 정리합니다." },
   popupCleanNoKeywords: { message: "정리 범위를 지정하려면 키워드를 추가하세요" },
+  autoCleanupTitle: { message: "자동 정리" },
+  autoCleanupHelp: {
+    message: "마지막으로 일치하는 탭을 닫은 후 $minutes$분 후에 자동으로 정리합니다.",
+    placeholders: { minutes: { content: "$1" } },
+  },
+  autoCleanupLabel: { message: "자동 정리 활성화" },
+  autoCleanupDelayLabel: { message: "지연 (분)" },
+  popupCleanDisabled: { message: "정리 항목이 선택되지 않았습니다. 설정 페이지에서 선택하세요." },
 };
