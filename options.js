@@ -30,12 +30,6 @@ async function applyI18n() {
   await renderKeywords();
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
-}
-
 function updateKeywordsCount(count) {
   const el = $('keywordsCount');
   if (!el) return;
@@ -47,14 +41,24 @@ function updateKeywordsCount(count) {
 async function renderKeywords() {
   const keywords = await getKeywords();
   const list = $('keywordList');
-  list.innerHTML = '';
+  list.replaceChildren();
   $('hint').style.display = keywords.length ? 'none' : 'block';
   updateKeywordsCount(keywords.length);
 
   keywords.forEach((kw, i) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span class="kw-chip">${escapeHtml(kw)}</span>
-      <button class="kw-remove" title="${t('remove')}" data-i="${i}">×</button>`;
+
+    const chip = document.createElement('span');
+    chip.className = 'kw-chip';
+    chip.textContent = kw; // textContent auto-escapes — no innerHTML needed.
+
+    const remove = document.createElement('button');
+    remove.className = 'kw-remove';
+    remove.title = t('remove');
+    remove.dataset.i = String(i);
+    remove.textContent = '\u00d7';
+
+    li.append(chip, remove);
     list.appendChild(li);
   });
 
@@ -308,18 +312,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     autoToggle.addEventListener('change', async () => {
       if (autoToggle.checked) {
         // Auto cleanup runs from background alarms, which have NO user gesture
-        // — permission prompts are impossible there. So collect every needed
-        // permission NOW (this change event IS a gesture). Deny → revert.
-        const cleanupTypes = await getCleanupTypes();
-        const types = CLEANUP_TYPE_KEYS.filter((t) => cleanupTypes[t]);
-        if (types.length > 0) {
-          const granted = await requestCleanupPermissions(types);
-          if (!granted) {
-            autoToggle.checked = false;
-            showPermissionNotice();
-            renderAutoCleanup();
-            return;
-          }
+        // — permission prompts are impossible there. Request every cleanup
+        // permission up-front (Chrome silently grants ones already held, so
+        // this only ever shows one prompt even for repeat enables). contains()
+        // is probed first so we don't fall into the anti-nagging trap where
+        // the user previously denied a request but later granted the same
+        // permission via the browser's extension page. Deny → revert.
+        const alreadyHave = await hasCleanupPermissions(CLEANUP_TYPE_KEYS);
+        const granted = alreadyHave || await requestCleanupPermissions(CLEANUP_TYPE_KEYS);
+        if (!granted) {
+          autoToggle.checked = false;
+          showPermissionNotice();
+          renderAutoCleanup();
+          return;
         }
       }
       autoState.enabled = autoToggle.checked;
@@ -361,10 +366,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await renderKeywords();
 
-  // Open chrome://extensions/shortcuts
+  // Open the browser's keyboard-shortcut settings. Firefox blocks extensions
+  // from opening about:addons, so it gets a manual-path hint instead.
   $('openShortcutsLink').addEventListener('click', (e) => {
     e.preventDefault();
-    chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
+    if (isFirefox()) {
+      showNavHint();
+    } else {
+      openBrowserPage('chrome://extensions/shortcuts');
+    }
   });
 
   await applyShortcuts();
@@ -388,10 +398,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
+ * True on Firefox. Detection must NOT rely on chrome.* aliases: Firefox's
+ * chrome.* namespace is incomplete — Firefox-only APIs like getBrowserInfo /
+ * getPlatformInfo exist only under browser.*, so `typeof
+ * chrome.runtime.getBrowserInfo` is 'undefined' even on Firefox. The `browser`
+ * global itself is Firefox-specific: Chrome and Edge extension pages expose
+ * only `chrome`. Used to branch on management-page URLs.
+ */
+function isFirefox() {
+  return typeof browser !== 'undefined' && typeof browser.runtime?.getBrowserInfo === 'function';
+}
+
+/**
+ * Open a browser-internal management page in a new tab (Chrome/Edge). Firefox
+ * never reaches this helper — about:addons is blocked there and the nav-hint
+ * path is used instead.
+ */
+function openBrowserPage(url) {
+  chrome.tabs.create({ url }).catch((err) => {
+    console.warn('Stealth Browser Assistant: could not open', url, err);
+  });
+}
+
+/**
  * Show "permission denied" inline in the cleanup section, with a button that
- * jumps to the extension's permission page. Auto-hides after a few seconds.
- * Chrome suppresses repeated permission prompts after a denial, so the user's
- * only recovery path is chrome://extensions — point them there directly.
+ * jumps to the browser's extension management page. Auto-hides after a few
+ * seconds. Chrome suppresses repeated permission prompts after a denial, so
+ * the user's only recovery path is the management page — point them there.
  */
 function showPermissionNotice() {
   const el = $('permissionNotice');
@@ -404,10 +437,29 @@ function showPermissionNotice() {
 }
 
 // The permission page for this extension. Chrome suppresses re-prompts after
-// a denial, so this is the reliable path for the user to re-grant.
+// a denial, so this is the reliable path for the user to re-grant. Firefox
+// blocks extensions from opening about:addons, so it gets a manual-path hint.
 function openExtensionPermissions() {
+  if (isFirefox()) {
+    showNavHint();
+    return;
+  }
   const id = chrome.runtime?.id ? chrome.runtime.id : '';
-  chrome.tabs.create({ url: `chrome://extensions/?id=${id}` });
+  openBrowserPage(`chrome://extensions/?id=${id}`);
+}
+
+/**
+ * Firefox-only guidance toast: Firefox blocks extensions from opening
+ * about:addons via any tabs/windows API, so these entries can't auto-jump.
+ * Show the manual path instead. Auto-hides after a few seconds.
+ */
+function showNavHint() {
+  const el = $('navHint');
+  if (!el) return;
+  el.textContent = t('firefoxManualNavHint');
+  el.hidden = false;
+  clearTimeout(showNavHint._t);
+  showNavHint._t = setTimeout(() => { el.hidden = true; }, 10000);
 }
 
 /**
@@ -458,11 +510,17 @@ function applyPremiumState() {
 /** A human-readable device label sent with activation (shown in Licentra). */
 function deviceLabel() {
   const ua = navigator.userAgent || '';
-  if (/Macintosh|Mac OS X/.test(ua)) return 'Chrome on macOS';
-  if (/Windows/.test(ua)) return 'Chrome on Windows';
-  if (/Android/.test(ua)) return 'Chrome on Android';
-  if (/Linux/.test(ua)) return 'Chrome on Linux';
-  return 'Chrome';
+  const os = /Macintosh|Mac OS X/.test(ua) ? 'macOS'
+    : /Windows/.test(ua) ? 'Windows'
+    : /Android/.test(ua) ? 'Android'
+    : /Linux/.test(ua) ? 'Linux'
+    : 'Unknown';
+  // Edge ships a Chromium UA too — test it BEFORE the generic Chrome check.
+  const browser = /Edg\//.test(ua) ? 'Edge'
+    : /Firefox/.test(ua) ? 'Firefox'
+    : /Chrome|Chromium/.test(ua) ? 'Chrome'
+    : 'Browser';
+  return `${browser} on ${os}`;
 }
 
 function activateReasonMessage(reason) {

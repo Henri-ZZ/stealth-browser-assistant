@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "short_name": "Stealth Browser",
+  "version": "1.0.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": ["tabs", "storage", "scripting", "alarms"],
+  "optional_permissions": ["browsingData", "history", "downloads"],
+  "host_permissions": ["*://*/*"],
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Stealth Browser Assistant",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "toggle-mute": {
+      "suggested_key": { "default": "Alt+Shift+M" },
+      "description": "__MSG_cmdToggleMute__"
+    },
+    "toggle-hide": {
+      "suggested_key": { "default": "Alt+Shift+H" },
+      "description": "__MSG_cmdToggleHide__"
+    },
+    "emergency-mode": {
+      "suggested_key": { "default": "Alt+Shift+E" },
+      "description": "__MSG_cmdToggleEmergency__"
+    },
+    "clean-sensitive-data": {
+      "suggested_key": { "default": "Alt+Shift+C" },
+      "description": "__MSG_cmdCleanSensitive__"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "stealth-browser-assistant@henri.ren",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}

@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — Einstellungen' },
   optionsKeywordsHelp: { message: 'Jedes Schlüsselwort passt, wenn es in der URL oder im Titel des Tabs vorkommt (Groß-/Kleinschreibung wird ignoriert). Verwende eine Domain (z.B. bank.com) oder ein beliebiges Wort (z.B. Gehaltsabrechnung).' },
   optionsShortcutsHelp: { message: 'Tastenkombinationen können angepasst werden unter ' },
-  openShortcutsPage: { message: 'chrome://extensions/shortcuts' },
+  openShortcutsPage: { message: "Tastenkürzel-Einstellungen öffnen" },
   save: { message: 'Speichern' },
   saved: { message: 'Gespeichert' },
   emptyInputWarn: { message: 'Bitte zuerst ein Schlüsselwort eingeben.' },
@@ -92,6 +92,7 @@ export default {
   autoCleanupLabel: { message: "Automatische Bereinigung aktivieren" },
   autoCleanupDelayLabel: { message: "Verzögerung (Minuten)" },
   popupCleanDisabled: { message: "Keine Bereinigungsoptionen ausgewählt. Wähle welche in den Einstellungen." },
-  cleanupPermissionDenied: { message: "Berechtigung verweigert. Chrome fragt nicht erneut — öffnen Sie chrome://extensions und aktivieren Sie die Berechtigungen manuell." },
+  cleanupPermissionDenied: { message: "Berechtigung verweigert. Der Browser fragt nicht erneut – öffnen Sie die Einstellungen dieser Erweiterung und aktivieren Sie die Berechtigungen manuell." },
+  firefoxManualNavHint: { message: "Firefox erlaubt Erweiterungen nicht, diese Seite direkt zu öffnen. Öffnen Sie das ☰-Menü → Add-ons und Themes → Erweiterungen und suchen Sie Stealth Browser Assistant, um Tastenkürzel und Berechtigungen zu verwalten." },
   openPermissionSettings: { message: "Berechtigungseinstellungen öffnen" },
 };

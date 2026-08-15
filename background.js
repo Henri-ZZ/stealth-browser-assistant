@@ -57,9 +57,11 @@ function UNMUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el 
 function PAUSE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { if (!el.paused) el.pause(); }); }
 
 /**
- * Flash a thin red border around the whole page twice (match-hit feedback).
+ * Flash a bold red border around the whole page (match-hit feedback).
  * Uses a fixed overlay + CSSOM property sets only, so it works under strict
- * page CSP and never disturbs the page layout or input.
+ * page CSP and never disturbs the page layout or input. Deliberately
+ * prominent: 4px border + red glow, 3 flashes over ~1.4s — a 2px/0.6s flash
+ * was too easy to miss on content-heavy pages.
  */
 function FLASH_RED_BORDER_SCRIPT() {
   const el = document.createElement('div');
@@ -67,18 +69,21 @@ function FLASH_RED_BORDER_SCRIPT() {
   el.style.inset = '0';
   el.style.pointerEvents = 'none';
   el.style.zIndex = '2147483647';
-  el.style.border = '2px solid #d8392b';
+  el.style.border = '4px solid #d8392b';
+  el.style.boxShadow =
+    'inset 0 0 0 1px rgba(216,57,43,0.35), 0 0 28px 6px rgba(216,57,43,0.55)';
   el.style.opacity = '0';
   (document.documentElement || document.body).appendChild(el);
 
   let count = 0;
+  const FLASHES = 3;
   const hide = () => {
     el.style.opacity = '0';
     count += 1;
-    if (count < 2) setTimeout(show, 160); // brief gap between the two flashes
-    else setTimeout(() => el.remove(), 100);
+    if (count < FLASHES) setTimeout(show, 200); // brief gap between flashes
+    else setTimeout(() => el.remove(), 120);
   };
-  const show = () => { el.style.opacity = '0.8'; setTimeout(hide, 220); };
+  const show = () => { el.style.opacity = '1'; setTimeout(hide, 250); };
   setTimeout(show, 0);
 }
 

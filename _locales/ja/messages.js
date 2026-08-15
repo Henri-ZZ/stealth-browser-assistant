@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — 設定' },
   optionsKeywordsHelp: { message: 'タブのURLまたはタイトルにキーワードが含まれている場合に一致します（大文字小文字を区別しません）。ドメイン（例：bank.com）または任意の単語（例：給与明細）を使用してください。' },
   optionsShortcutsHelp: { message: 'キーボードショートカットは以下でカスタマイズできます：' },
-  openShortcutsPage: { message: 'chrome://extensions/shortcuts' },
+  openShortcutsPage: { message: "ショートカット設定を開く" },
   save: { message: '保存' },
   saved: { message: '保存済み' },
   emptyInputWarn: { message: '最初にキーワードを入力してください。' },
@@ -92,6 +92,7 @@ export default {
   autoCleanupLabel: { message: "自動クリーンアップを有効にする" },
   autoCleanupDelayLabel: { message: "遅延（分）" },
   popupCleanDisabled: { message: "削除項目が選択されていません。設定ページで選択してください。" },
-  cleanupPermissionDenied: { message: "権限が拒否されました。Chrome は再度確認しません。chrome://extensions から手動で権限を有効にしてください。" },
+  cleanupPermissionDenied: { message: "権限が拒否されました。ブラウザーは再度確認しません。この拡張機能の設定ページから手動で権限を有効にしてください。" },
+  firefoxManualNavHint: { message: "Firefox では拡張機能がこのページを直接開くことはできません。☰ メニュー → アドオンとテーマ → 拡張機能 から Stealth Browser Assistant を選んで、ショートカットと権限を管理してください。" },
   openPermissionSettings: { message: "権限設定を開く" },
 };

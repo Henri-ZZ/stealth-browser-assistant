@@ -126,7 +126,7 @@
     "message": "Keyboard shortcuts can be customized at "
   },
   "openShortcutsPage": {
-    "message": "chrome://extensions/shortcuts"
+    "message": "Open shortcut settings"
   },
   "save": {
     "message": "Save"
@@ -266,9 +266,12 @@
     "message": "No cleanup items selected. Choose some in Settings."
   },
   "cleanupPermissionDenied": {
-    "message": "Permission denied. Chrome won't ask again — open chrome://extensions and enable the permissions manually."
+    "message": "Permission denied. The browser won't ask again — open this extension's settings and enable the permissions manually."
   },
   "openPermissionSettings": {
     "message": "Open permission settings"
+  },
+  "firefoxManualNavHint": {
+    "message": "Firefox doesn't let extensions open this page directly. Click the ☰ menu → Add-ons and themes → Extensions, then find Stealth Browser Assistant to manage shortcuts and permissions."
   }
 }

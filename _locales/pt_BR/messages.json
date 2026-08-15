@@ -120,7 +120,7 @@
     "message": "Os atalhos de teclado podem ser personalizados em "
   },
   "openShortcutsPage": {
-    "message": "chrome://extensions/shortcuts"
+    "message": "Abrir configurações de atalhos"
   },
   "save": {
     "message": "Salvar"
@@ -266,9 +266,12 @@
     "message": "Nenhum item de limpeza selecionado. Escolha alguns nas configurações."
   },
   "cleanupPermissionDenied": {
-    "message": "Permissão negada. O Chrome não perguntará novamente — abra chrome://extensions e ative as permissões manualmente."
+    "message": "Permissão negada. O navegador não perguntará novamente — abra as configurações desta extensão e ative as permissões manualmente."
   },
   "openPermissionSettings": {
     "message": "Abrir configurações de permissão"
+  },
+  "firefoxManualNavHint": {
+    "message": "O Firefox não permite que extensões abram esta página diretamente. Abra o menu ☰ → Complementos e temas → Extensões e encontre o Stealth Browser Assistant para gerenciar atalhos e permissões."
   }
 }

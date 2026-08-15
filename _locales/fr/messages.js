@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — Paramètres' },
   optionsKeywordsHelp: { message: 'Un mot-clé correspond s\'il apparaît dans l\'URL ou le titre de l\'onglet (insensible à la casse). Utilisez un domaine (ex. bank.com) ou n\'importe quel mot (ex. fiche de paie).' },
   optionsShortcutsHelp: { message: 'Les raccourcis clavier peuvent être personnalisés dans ' },
-  openShortcutsPage: { message: 'chrome://extensions/shortcuts' },
+  openShortcutsPage: { message: "Ouvrir les paramètres de raccourcis" },
   save: { message: 'Enregistrer' },
   saved: { message: 'Enregistré' },
   emptyInputWarn: { message: 'Veuillez d\'abord entrer un mot-clé.' },
@@ -92,6 +92,7 @@ export default {
   autoCleanupLabel: { message: "Activer le nettoyage automatique" },
   autoCleanupDelayLabel: { message: "Délai (minutes)" },
   popupCleanDisabled: { message: "Aucun élément de nettoyage sélectionné. Choisissez-en dans les paramètres." },
-  cleanupPermissionDenied: { message: "Autorisation refusée. Chrome ne redemandera pas — ouvrez chrome://extensions et activez les autorisations manuellement." },
+  cleanupPermissionDenied: { message: "Autorisation refusée. Le navigateur ne redemandera pas — ouvrez les paramètres de cette extension et activez les autorisations manuellement." },
+  firefoxManualNavHint: { message: "Firefox ne permet pas aux extensions d'ouvrir cette page directement. Ouvrez le menu ☰ → Modules complémentaires et thèmes → Extensions, puis trouvez Stealth Browser Assistant pour gérer les raccourcis et autorisations." },
   openPermissionSettings: { message: "Ouvrir les paramètres d'autorisations" },
 };

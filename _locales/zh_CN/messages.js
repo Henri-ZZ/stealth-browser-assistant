@@ -50,7 +50,7 @@ export default {
       "只要标签页的网址或标题中包含该关键词即视为匹配(不区分大小写)。可用域名(如 bank.com)或任意词(如 paystub)。",
   },
   optionsShortcutsHelp: { message: "可在快捷键设置页面自定义键盘快捷键，" },
-  openShortcutsPage: { message: "chrome://extensions/shortcuts" },
+  openShortcutsPage: { message: "打开快捷键设置" },
   save: { message: "保存" },
   saved: { message: "已保存" },
   emptyInputWarn: { message: "请先输入一个关键词。" },
@@ -100,6 +100,7 @@ export default {
   autoCleanupLabel: { message: "开启自动清理" },
   autoCleanupDelayLabel: { message: "延迟（分钟）" },
   popupCleanDisabled: { message: "未选中任何清理项，请到设置页面选择。" },
-  cleanupPermissionDenied: { message: "权限未授权。Chrome 不会再次弹窗，请到 chrome://extensions 中本扩展的详情页手动开启权限。" },
+  cleanupPermissionDenied: { message: "权限未授权。浏览器不会再次弹窗，请在设置页面中手动开启权限。" },
+  firefoxManualNavHint: { message: "Firefox 不允许扩展直接打开此页面。请点击浏览器右上角 ☰ 菜单 → 扩展和主题 → 扩展，找到 Stealth Browser Assistant 进行设置。" },
   openPermissionSettings: { message: "打开权限设置" },
 };

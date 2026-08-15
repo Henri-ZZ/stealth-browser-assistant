@@ -54,7 +54,7 @@ export default {
       "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub).",
   },
   optionsShortcutsHelp: { message: "Keyboard shortcuts can be customized at " },
-  openShortcutsPage: { message: "chrome://extensions/shortcuts" },
+  openShortcutsPage: { message: "Open shortcut settings" },
   save: { message: "Save" },
   saved: { message: "Saved" },
   emptyInputWarn: { message: "Please enter a keyword first." },
@@ -112,6 +112,7 @@ export default {
   autoCleanupLabel: { message: "Enable auto cleanup" },
   autoCleanupDelayLabel: { message: "Delay (minutes)" },
   popupCleanDisabled: { message: "No cleanup items selected. Choose some in Settings." },
-  cleanupPermissionDenied: { message: "Permission denied. Chrome won't ask again — open chrome://extensions and enable the permissions manually." },
+  cleanupPermissionDenied: { message: "Permission denied. The browser won't ask again — open this extension's settings and enable the permissions manually." },
+  firefoxManualNavHint: { message: "Firefox doesn't let extensions open this page directly. Click the ☰ menu → Add-ons and themes → Extensions, then find Stealth Browser Assistant to manage shortcuts and permissions." },
   openPermissionSettings: { message: "Open permission settings" },
 };

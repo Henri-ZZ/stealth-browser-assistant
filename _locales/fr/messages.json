@@ -120,7 +120,7 @@
     "message": "Les raccourcis clavier peuvent être personnalisés dans "
   },
   "openShortcutsPage": {
-    "message": "chrome://extensions/shortcuts"
+    "message": "Ouvrir les paramètres de raccourcis"
   },
   "save": {
     "message": "Enregistrer"
@@ -266,9 +266,12 @@
     "message": "Aucun élément de nettoyage sélectionné. Choisissez-en dans les paramètres."
   },
   "cleanupPermissionDenied": {
-    "message": "Autorisation refusée. Chrome ne redemandera pas — ouvrez chrome://extensions et activez les autorisations manuellement."
+    "message": "Autorisation refusée. Le navigateur ne redemandera pas — ouvrez les paramètres de cette extension et activez les autorisations manuellement."
   },
   "openPermissionSettings": {
     "message": "Ouvrir les paramètres d'autorisations"
+  },
+  "firefoxManualNavHint": {
+    "message": "Firefox ne permet pas aux extensions d'ouvrir cette page directement. Ouvrez le menu ☰ → Modules complémentaires et thèmes → Extensions, puis trouvez Stealth Browser Assistant pour gérer les raccourcis et autorisations."
   }
 }

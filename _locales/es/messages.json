@@ -120,7 +120,7 @@
     "message": "Los atajos de teclado se pueden personalizar en "
   },
   "openShortcutsPage": {
-    "message": "chrome://extensions/shortcuts"
+    "message": "Abrir configuración de atajos"
   },
   "save": {
     "message": "Guardar"
@@ -266,9 +266,12 @@
     "message": "No has seleccionado ningún elemento de limpieza. Elige algunos en Ajustes."
   },
   "cleanupPermissionDenied": {
-    "message": "Permiso denegado. Chrome no volverá a preguntar: abre chrome://extensions y activa los permisos manualmente."
+    "message": "Permiso denegado. El navegador no volverá a preguntar: abre la configuración de esta extensión y activa los permisos manualmente."
   },
   "openPermissionSettings": {
     "message": "Abrir configuración de permisos"
+  },
+  "firefoxManualNavHint": {
+    "message": "Firefox no permite que las extensiones abran esta página directamente. Abra el menú ☰ → Complementos y temas → Extensiones y busque Stealth Browser Assistant para administrar atajos y permisos."
   }
 }

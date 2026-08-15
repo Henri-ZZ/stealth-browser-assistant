@@ -1,6 +1,6 @@
 import {
   resolveLocale, tFor, isPremium, refreshPremiumState, getCleanupTypes,
-  requestCleanupPermissions, CLEANUP_TYPE_KEYS,
+  requestCleanupPermissions, hasCleanupPermissions, CLEANUP_TYPE_KEYS,
 } from './shared.js';
 
 let LOCALE = 'en';
@@ -97,18 +97,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       cleanupBtn.disabled = true;
 
       // Cleanup runs in the background service worker, which has no user
-      // gesture — request any missing optional permissions HERE (popup click
-      // is a gesture) so the run-cleanup message doesn't fail silently.
+      // gesture — make sure the optional permissions are present HERE (popup
+      // click is a gesture) so the run-cleanup message doesn't fail silently.
+      // Check contains FIRST to avoid the anti-nagging path: if the user
+      // already granted the permission via the about:addons UI, request()
+      // would normally be a silent no-op, but some browsers (notably Firefox)
+      // can still refuse to re-prompt after a prior denial, leaving
+      // contains() true and request() false. Falling through to the run
+      // when contains() already says yes avoids that trap.
       const cleanupTypes = await getCleanupTypes();
       const selected = CLEANUP_TYPE_KEYS.filter((t) => cleanupTypes[t]);
       if (selected.length > 0) {
-        const granted = await requestCleanupPermissions(selected);
+        // Check contains() first so we never round-trip through request() on a
+        // set the user already granted (some browsers refuse to re-prompt
+        // after a prior denial, even when contains() is true).
+        const alreadyHave = await hasCleanupPermissions(selected);
+        const granted = alreadyHave || await requestCleanupPermissions(selected);
         if (!granted) {
           cleanupStatus.textContent = t('cleanupPermissionDenied');
           cleanupStatus.hidden = false;
           cleanupBtn.disabled = false;
           // Longer than the success/error notices — the denial message points
-          // to chrome://extensions and needs a moment to read.
+          // the user to the browser's permission page and needs a moment
+          // to read.
           setTimeout(() => { cleanupStatus.hidden = true; }, 4000);
           return;
         }

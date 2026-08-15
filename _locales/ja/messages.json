@@ -120,7 +120,7 @@
     "message": "キーボードショートカットは以下でカスタマイズできます："
   },
   "openShortcutsPage": {
-    "message": "chrome://extensions/shortcuts"
+    "message": "ショートカット設定を開く"
   },
   "save": {
     "message": "保存"
@@ -266,9 +266,12 @@
     "message": "削除項目が選択されていません。設定ページで選択してください。"
   },
   "cleanupPermissionDenied": {
-    "message": "権限が拒否されました。Chrome は再度確認しません。chrome://extensions から手動で権限を有効にしてください。"
+    "message": "権限が拒否されました。ブラウザーは再度確認しません。この拡張機能の設定ページから手動で権限を有効にしてください。"
   },
   "openPermissionSettings": {
     "message": "権限設定を開く"
+  },
+  "firefoxManualNavHint": {
+    "message": "Firefox では拡張機能がこのページを直接開くことはできません。☰ メニュー → アドオンとテーマ → 拡張機能 から Stealth Browser Assistant を選んで、ショートカットと権限を管理してください。"
   }
 }

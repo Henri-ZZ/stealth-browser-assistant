@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — Configuración' },
   optionsKeywordsHelp: { message: 'Cada palabra clave coincide si aparece en la URL o título de la pestaña (sin distinción de mayúsculas). Usa un dominio (ej. bank.com) o cualquier palabra (ej. nómina).' },
   optionsShortcutsHelp: { message: 'Los atajos de teclado se pueden personalizar en ' },
-  openShortcutsPage: { message: 'chrome://extensions/shortcuts' },
+  openShortcutsPage: { message: "Abrir configuración de atajos" },
   save: { message: 'Guardar' },
   saved: { message: 'Guardado' },
   emptyInputWarn: { message: 'Introduce primero una palabra clave.' },
@@ -92,6 +92,7 @@ export default {
   autoCleanupLabel: { message: "Activar limpieza automática" },
   autoCleanupDelayLabel: { message: "Retraso (minutos)" },
   popupCleanDisabled: { message: "No has seleccionado ningún elemento de limpieza. Elige algunos en Ajustes." },
-  cleanupPermissionDenied: { message: "Permiso denegado. Chrome no volverá a preguntar: abre chrome://extensions y activa los permisos manualmente." },
+  cleanupPermissionDenied: { message: "Permiso denegado. El navegador no volverá a preguntar: abre la configuración de esta extensión y activa los permisos manualmente." },
+  firefoxManualNavHint: { message: "Firefox no permite que las extensiones abran esta página directamente. Abra el menú ☰ → Complementos y temas → Extensiones y busque Stealth Browser Assistant para administrar atajos y permisos." },
   openPermissionSettings: { message: "Abrir configuración de permisos" },
 };
