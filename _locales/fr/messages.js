@@ -2,7 +2,7 @@
 export default {
   extName: { message: 'Stealth Browser Assistant' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: 'Désactivez le son, masquez et gérez instantanément les onglets privés avec des raccourcis clavier.' },
+  extDescription: { message: "Détecte, coupe le son et masque automatiquement les onglets privés avec des mots-clés et domaines personnalisés." },
   subtitle: { message: 'Assistant de navigation privée pour les onglets sensibles' },
   cmdToggleMute: { message: 'Activer/désactiver le son des onglets correspondant aux mots-clés' },
   cmdToggleHide: { message: 'Activer/désactiver le masquage des onglets correspondant aux mots-clés' },

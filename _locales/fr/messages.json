@@ -6,7 +6,7 @@
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Désactivez le son, masquez et gérez instantanément les onglets privés avec des raccourcis clavier."
+    "message": "Détecte, coupe le son et masque automatiquement les onglets privés avec des mots-clés et domaines personnalisés."
   },
   "subtitle": {
     "message": "Assistant de navigation privée pour les onglets sensibles"

@@ -4,9 +4,7 @@
 export default {
   extName: { message: "隐私浏览助手" },
   extShortName: { message: "隐私浏览" },
-  extDescription: {
-    message: "通过键盘快捷键即时静音、隐藏和管理私密浏览器标签页。",
-  },
+  extDescription: { message: "自动检测、静音并隐藏匹配自定义关键词和域名的私密浏览器标签页。" },
   subtitle: { message: "敏感标签页的私密浏览助手" },
   cmdToggleMute: { message: "切换静音匹配关键词的标签页" },
   cmdToggleHide: { message: "切换隐藏匹配关键词的标签页" },

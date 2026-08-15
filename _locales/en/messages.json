@@ -6,7 +6,7 @@
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Instantly mute, hide and manage private browser tabs with keyboard shortcuts."
+    "message": "Automatically detect, mute and hide private browser tabs with custom keywords and domains."
   },
   "subtitle": {
     "message": "Private browsing assistant for sensitive tabs"

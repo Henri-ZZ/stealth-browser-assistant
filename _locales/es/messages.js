@@ -2,7 +2,7 @@
 export default {
   extName: { message: 'Stealth Browser Assistant' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: 'Silencia, oculta y gestiona pestañas privadas al instante con atajos de teclado.' },
+  extDescription: { message: "Detecta, silencia y oculta automáticamente las pestañas privadas del navegador con palabras clave y dominios personalizados." },
   subtitle: { message: 'Asistente de navegación privada para pestañas sensibles' },
   cmdToggleMute: { message: 'Alternar silencio para pestañas que coincidan con palabras clave' },
   cmdToggleHide: { message: 'Alternar ocultación para pestañas que coincidan con palabras clave' },

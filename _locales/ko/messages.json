@@ -6,7 +6,7 @@
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "키보드 단축키로 비공개 탭을 즉시 음소거, 숨기기 및 관리합니다."
+    "message": "사용자 지정 키워드와 도메인으로 비공개 브라우저 탭을 자동으로 감지, 음소거 및 숨깁니다."
   },
   "subtitle": {
     "message": "민감한 탭을 위한 비공개 브라우징 도우미"

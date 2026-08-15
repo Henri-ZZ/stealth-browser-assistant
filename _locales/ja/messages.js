@@ -2,7 +2,7 @@
 export default {
   extName: { message: 'Stealth Browser Assistant' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: 'キーボードショートカットでプライベートタブを即座にミュート、非表示、管理します。' },
+  extDescription: { message: "カスタムキーワードとドメインで、プライベートなブラウザタブを自動的に検出・ミュート・非表示にします。" },
   subtitle: { message: 'センシティブなタブのためのプライベートブラウジングアシスタント' },
   cmdToggleMute: { message: 'キーワードに一致するタブのミュートを切り替え' },
   cmdToggleHide: { message: 'キーワードに一致するタブの非表示を切り替え' },

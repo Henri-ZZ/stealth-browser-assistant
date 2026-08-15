@@ -108,7 +108,7 @@ import esMessages from "./_locales/es/messages.js";
 import deMessages from "./_locales/de/messages.js";
 import jaMessages from "./_locales/ja/messages.js";
 import frMessages from "./_locales/fr/messages.js";
-import ptMessages from "./_locales/pt/messages.js";
+import ptBRMessages from "./_locales/pt_BR/messages.js";
 import koMessages from "./_locales/ko/messages.js";
 
 export const MESSAGES = {
@@ -118,7 +118,7 @@ export const MESSAGES = {
   de: deMessages,
   ja: jaMessages,
   fr: frMessages,
-  pt: ptMessages,
+  pt_BR: ptBRMessages,
   ko: koMessages,
 };
 
@@ -129,7 +129,7 @@ export const SUPPORTED_LOCALES = [
   "de",
   "ja",
   "fr",
-  "pt",
+  "pt_BR",
   "ko",
 ];
 
@@ -262,10 +262,11 @@ export async function resolveLocale() {
   const pref = await getLangPref();
   if (SUPPORTED_LOCALES.includes(pref)) return pref;
   const ui = chrome.i18n.getUILanguage();
-  // Try exact match first, then fall back to language prefix (e.g. 'pt-BR' → 'pt')
+  // Try exact match first, then fall back to language prefix
+  // (e.g. 'pt-BR' → 'pt_BR', 'zh-CN' → 'zh_CN').
   if (SUPPORTED_LOCALES.includes(ui)) return ui;
   const prefix = ui.split("-")[0];
-  const map = { zh: "zh_CN" }; // map language prefixes to our locale codes
+  const map = { zh: "zh_CN", pt: "pt_BR" }; // map language prefixes to our locale codes
   const mapped = map[prefix] || prefix;
   return SUPPORTED_LOCALES.includes(mapped) ? mapped : "en";
 }

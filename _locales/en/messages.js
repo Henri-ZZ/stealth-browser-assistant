@@ -4,10 +4,7 @@
 export default {
   extName: { message: "Stealth Browser Assistant" },
   extShortName: { message: "Stealth Browser" },
-  extDescription: {
-    message:
-      "Instantly mute, hide and manage private browser tabs with keyboard shortcuts.",
-  },
+  extDescription: { message: "Automatically detect, mute and hide private browser tabs with custom keywords and domains." },
   subtitle: { message: "Private browsing assistant for sensitive tabs" },
   cmdToggleMute: { message: "Toggle mute for tabs matching keywords" },
   cmdToggleHide: { message: "Toggle hiding tabs matching keywords" },

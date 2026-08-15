@@ -2,7 +2,7 @@
 export default {
   extName: { message: 'Stealth Browser Assistant' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: 'Silencie, oculta e gerencia abas privadas instantaneamente com atalhos de teclado.' },
+  extDescription: { message: "Detecta, silencia e oculta automaticamente as abas privadas do navegador com palavras-chave e domínios personalizados." },
   subtitle: { message: 'Assistente de navegação privada para abas sensíveis' },
   cmdToggleMute: { message: 'Alternar mudo para abas que correspondem a palavras-chave' },
   cmdToggleHide: { message: 'Alternar ocultação para abas que correspondem a palavras-chave' },
