@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "Stealth Browser",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "icons": {
@@ -11,7 +11,8 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["tabs", "storage", "scripting", "alarms", "browsingData", "history", "downloads"],
+  "permissions": ["tabs", "storage", "scripting", "alarms"],
+  "optional_permissions": ["browsingData", "history", "downloads"],
   "host_permissions": ["*://*/*"],
   "background": {
     "service_worker": "background.js",

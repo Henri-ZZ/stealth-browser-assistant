@@ -92,4 +92,6 @@ export default {
   autoCleanupLabel: { message: "Automatische Bereinigung aktivieren" },
   autoCleanupDelayLabel: { message: "Verzögerung (Minuten)" },
   popupCleanDisabled: { message: "Keine Bereinigungsoptionen ausgewählt. Wähle welche in den Einstellungen." },
+  cleanupPermissionDenied: { message: "Berechtigung verweigert. Chrome fragt nicht erneut — öffnen Sie chrome://extensions und aktivieren Sie die Berechtigungen manuell." },
+  openPermissionSettings: { message: "Berechtigungseinstellungen öffnen" },
 };

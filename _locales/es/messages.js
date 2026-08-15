@@ -92,4 +92,6 @@ export default {
   autoCleanupLabel: { message: "Activar limpieza automática" },
   autoCleanupDelayLabel: { message: "Retraso (minutos)" },
   popupCleanDisabled: { message: "No has seleccionado ningún elemento de limpieza. Elige algunos en Ajustes." },
+  cleanupPermissionDenied: { message: "Permiso denegado. Chrome no volverá a preguntar: abre chrome://extensions y activa los permisos manualmente." },
+  openPermissionSettings: { message: "Abrir configuración de permisos" },
 };

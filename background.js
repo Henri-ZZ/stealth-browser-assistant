@@ -17,9 +17,10 @@
 import {
   STORAGE_KEYS, getState, setState, getKeywords,
   getScriptMute, getHideMode, getEmergencyAction, getPauseOnMuteHide,
-  getRedBorderFlash, getTabIconOverride, getCleanupTypes,
+  getRedBorderFlash, getTabIconOverride, getCleanupTypes, CLEANUP_TYPE_KEYS,
   getAutoCleanupState, setAutoCleanupState,
   tabMatchesKeywords, isPremium, refreshPremiumState,
+  hasCleanupPermissions,
 } from './shared.js';
 import { maybeCheckIn } from './license.js';
 
@@ -544,6 +545,15 @@ async function runCleanup() {
   const keywords = (await getKeywords()).map((k) => k.toLowerCase()).filter(Boolean);
   if (!Object.values(types).some(Boolean)) return { ok: false, reason: 'none_selected' };
   if (!keywords.length) return { ok: false, reason: 'no_keywords' };
+
+  // Cleanup permissions are optional — the user grants them on the options /
+  // popup page (which has a gesture). A background/alarm run has no gesture,
+  // so if a permission was revoked we must bail out loudly instead of calling
+  // a chrome.* API that will throw.
+  const selected = CLEANUP_TYPE_KEYS.filter((t) => types[t]);
+  if (!(await hasCleanupPermissions(selected))) {
+    return { ok: false, reason: 'permission_denied' };
+  }
 
   const origins = keywordOrigins(keywords);
   const byUrl = (url) => keywords.some((k) => (url || '').toLowerCase().includes(k));

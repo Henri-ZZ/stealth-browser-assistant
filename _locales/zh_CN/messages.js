@@ -102,4 +102,6 @@ export default {
   autoCleanupLabel: { message: "开启自动清理" },
   autoCleanupDelayLabel: { message: "延迟（分钟）" },
   popupCleanDisabled: { message: "未选中任何清理项，请到设置页面选择。" },
+  cleanupPermissionDenied: { message: "权限未授权。Chrome 不会再次弹窗，请到 chrome://extensions 中本扩展的详情页手动开启权限。" },
+  openPermissionSettings: { message: "打开权限设置" },
 };

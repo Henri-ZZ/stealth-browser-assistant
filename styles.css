@@ -214,6 +214,7 @@ body > .card .hint { margin: 8px 0 0; }
 
 .section-title { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--fg-soft); text-transform: none; }
 .hint { font-size: 12px; color: var(--fg-soft); }
+.cleanup-permission-notice { color: var(--danger, #d8392b); font-weight: 500; }
 
 .keyword-list {
   list-style: none;

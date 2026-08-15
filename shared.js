@@ -53,6 +53,44 @@ const DEFAULTS = {
 // suggestions are covered by history (clearing history also clears them).
 export const CLEANUP_TYPE_KEYS = ["history", "cookies", "downloads"];
 
+// Optional permissions backing each cleanup type. Declared in manifest
+// `optional_permissions` and requested at runtime (when the user enables the
+// feature) so install-time warnings stay minimal.
+export const CLEANUP_PERMISSIONS = {
+  history: "history",
+  cookies: "browsingData",
+  downloads: "downloads",
+};
+
+/**
+ * True when the permissions backing all the given cleanup types are granted.
+ */
+export async function hasCleanupPermissions(types) {
+  const perms = types
+    .map((t) => CLEANUP_PERMISSIONS[t])
+    .filter((p) => typeof p === "string");
+  if (perms.length === 0) return true;
+  return chrome.permissions.contains({ permissions: perms });
+}
+
+/**
+ * Request the optional permissions backing the given cleanup types. MUST be
+ * called from a user gesture (click / change on an extension page) — Chrome
+ * rejects permission prompts from the service worker / alarms.
+ * Returns true when all requested permissions are granted.
+ */
+export async function requestCleanupPermissions(types) {
+  const perms = types
+    .map((t) => CLEANUP_PERMISSIONS[t])
+    .filter((p) => typeof p === "string");
+  if (perms.length === 0) return true;
+  try {
+    return await chrome.permissions.request({ permissions: perms });
+  } catch {
+    return false;
+  }
+}
+
 export const EMERGENCY_ACTIONS = ["muteHide", "closeMatchTabs"];
 
 // Supported locales. Messages are bundled at build time so the UI can switch

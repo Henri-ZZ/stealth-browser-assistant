@@ -115,4 +115,6 @@ export default {
   autoCleanupLabel: { message: "Enable auto cleanup" },
   autoCleanupDelayLabel: { message: "Delay (minutes)" },
   popupCleanDisabled: { message: "No cleanup items selected. Choose some in Settings." },
+  cleanupPermissionDenied: { message: "Permission denied. Chrome won't ask again — open chrome://extensions and enable the permissions manually." },
+  openPermissionSettings: { message: "Open permission settings" },
 };

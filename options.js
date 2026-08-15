@@ -1,6 +1,7 @@
 import {
   STORAGE_KEYS, getState, getKeywords, setState, getEmergencyAction, getPauseOnMuteHide,
   getRedBorderFlash, getTabIconOverride, getCleanupTypes, setCleanupType, CLEANUP_TYPE_KEYS,
+  requestCleanupPermissions, hasCleanupPermissions,
   getAutoCleanupState, setAutoCleanupState,
   resolveLocale, tFor, getLangPref, SUPPORTED_LOCALES,
   isPremium, getKeywordLimit, refreshPremiumState,
@@ -260,7 +261,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Clean sensitive data: one checkbox per type, all premium-locked
+  // Clean sensitive data: one checkbox per type, all premium-locked. Each type
+  // maps to an optional permission — requesting it here (inside the user's
+  // change gesture) avoids install-time warnings. On denial, revert the
+  // checkbox so the UI never claims a feature that won't work.
   const cleanupInputs = {
     history: 'cleanHistory',
     cookies: 'cleanCookies',
@@ -272,6 +276,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!el) continue;
     el.checked = !!cleanupState[type];
     el.addEventListener('change', async () => {
+      if (el.checked) {
+        const granted = await requestCleanupPermissions([type]);
+        if (!granted) {
+          el.checked = false; // revert — feature can't work without permission
+          await setCleanupType(type, false);
+          showPermissionNotice();
+          return;
+        }
+      }
       await setCleanupType(type, el.checked);
     });
   }
@@ -293,6 +306,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
   if (autoToggle) {
     autoToggle.addEventListener('change', async () => {
+      if (autoToggle.checked) {
+        // Auto cleanup runs from background alarms, which have NO user gesture
+        // — permission prompts are impossible there. So collect every needed
+        // permission NOW (this change event IS a gesture). Deny → revert.
+        const cleanupTypes = await getCleanupTypes();
+        const types = CLEANUP_TYPE_KEYS.filter((t) => cleanupTypes[t]);
+        if (types.length > 0) {
+          const granted = await requestCleanupPermissions(types);
+          if (!granted) {
+            autoToggle.checked = false;
+            showPermissionNotice();
+            renderAutoCleanup();
+            return;
+          }
+        }
+      }
       autoState.enabled = autoToggle.checked;
       await setAutoCleanupState({ enabled: autoState.enabled });
       renderAutoCleanup();
@@ -346,12 +375,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   setupPremiumCard();
 
+  // Permission-denied recovery: jumps to chrome://extensions (Chrome won't
+  // re-prompt after a denial, so this is the only way back in).
+  const permBtn = $('openPermissionBtn');
+  if (permBtn) permBtn.addEventListener('click', openExtensionPermissions);
+
   // If the offline grace window (48h) ran out while Licentra was unreachable,
   // show an explicit error so the user knows it's a connectivity problem, not
   // a broken key. The license row is kept — the next successful check-in
   // recovers automatically.
   await showGraceExhaustedNotice();
 });
+
+/**
+ * Show "permission denied" inline in the cleanup section, with a button that
+ * jumps to the extension's permission page. Auto-hides after a few seconds.
+ * Chrome suppresses repeated permission prompts after a denial, so the user's
+ * only recovery path is chrome://extensions — point them there directly.
+ */
+function showPermissionNotice() {
+  const el = $('permissionNotice');
+  if (!el) return;
+  const textEl = $('permissionNoticeText');
+  if (textEl) textEl.textContent = t('cleanupPermissionDenied');
+  el.hidden = false;
+  clearTimeout(showPermissionNotice._t);
+  showPermissionNotice._t = setTimeout(() => { el.hidden = true; }, 8000);
+}
+
+// The permission page for this extension. Chrome suppresses re-prompts after
+// a denial, so this is the reliable path for the user to re-grant.
+function openExtensionPermissions() {
+  const id = chrome.runtime?.id ? chrome.runtime.id : '';
+  chrome.tabs.create({ url: `chrome://extensions/?id=${id}` });
+}
 
 /**
  * Show an explicit error hint in the premium card when both the signed

@@ -92,4 +92,6 @@ export default {
   autoCleanupLabel: { message: "自動クリーンアップを有効にする" },
   autoCleanupDelayLabel: { message: "遅延（分）" },
   popupCleanDisabled: { message: "削除項目が選択されていません。設定ページで選択してください。" },
+  cleanupPermissionDenied: { message: "権限が拒否されました。Chrome は再度確認しません。chrome://extensions から手動で権限を有効にしてください。" },
+  openPermissionSettings: { message: "権限設定を開く" },
 };

@@ -92,4 +92,6 @@ export default {
   autoCleanupLabel: { message: "자동 정리 활성화" },
   autoCleanupDelayLabel: { message: "지연 (분)" },
   popupCleanDisabled: { message: "정리 항목이 선택되지 않았습니다. 설정 페이지에서 선택하세요." },
+  cleanupPermissionDenied: { message: "권한이 거부되었습니다. Chrome은 다시 묻지 않습니다. chrome://extensions에서 수동으로 권한을 활성화하세요." },
+  openPermissionSettings: { message: "권한 설정 열기" },
 };

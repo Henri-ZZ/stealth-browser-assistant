@@ -92,4 +92,6 @@ export default {
   autoCleanupLabel: { message: "Activer le nettoyage automatique" },
   autoCleanupDelayLabel: { message: "Délai (minutes)" },
   popupCleanDisabled: { message: "Aucun élément de nettoyage sélectionné. Choisissez-en dans les paramètres." },
+  cleanupPermissionDenied: { message: "Autorisation refusée. Chrome ne redemandera pas — ouvrez chrome://extensions et activez les autorisations manuellement." },
+  openPermissionSettings: { message: "Ouvrir les paramètres d'autorisations" },
 };

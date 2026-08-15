@@ -1,4 +1,7 @@
-import { resolveLocale, tFor, isPremium, refreshPremiumState, getCleanupTypes } from './shared.js';
+import {
+  resolveLocale, tFor, isPremium, refreshPremiumState, getCleanupTypes,
+  requestCleanupPermissions, CLEANUP_TYPE_KEYS,
+} from './shared.js';
 
 let LOCALE = 'en';
 
@@ -92,6 +95,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     cleanupBtn.addEventListener('click', async () => {
       if (!cleanupStatus) return;
       cleanupBtn.disabled = true;
+
+      // Cleanup runs in the background service worker, which has no user
+      // gesture — request any missing optional permissions HERE (popup click
+      // is a gesture) so the run-cleanup message doesn't fail silently.
+      const cleanupTypes = await getCleanupTypes();
+      const selected = CLEANUP_TYPE_KEYS.filter((t) => cleanupTypes[t]);
+      if (selected.length > 0) {
+        const granted = await requestCleanupPermissions(selected);
+        if (!granted) {
+          cleanupStatus.textContent = t('cleanupPermissionDenied');
+          cleanupStatus.hidden = false;
+          cleanupBtn.disabled = false;
+          // Longer than the success/error notices — the denial message points
+          // to chrome://extensions and needs a moment to read.
+          setTimeout(() => { cleanupStatus.hidden = true; }, 4000);
+          return;
+        }
+      }
+
       const resp = await send({ type: 'run-cleanup' });
       if (resp && resp.ok) {
         cleanupStatus.textContent = t('popupCleanDone');
