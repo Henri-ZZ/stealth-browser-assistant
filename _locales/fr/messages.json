@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant"
+    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Détecte, coupe le son et masque automatiquement les onglets privés avec des mots-clés et domaines personnalisés."
+    "message": "Masquez, coupez le son ou fermez vite les onglets privés avec des mots-clés personnalisables et des commandes d’urgence en un clic."
   },
   "subtitle": {
     "message": "Assistant de navigation privée pour les onglets sensibles"

@@ -7,7 +7,7 @@
 
 ## 功能
 
-- **自定义关键词列表** — 添加域名或任意词（如 `bank.com`、`工资单`）。标签页的网址或标题中包含任一关键词即视为匹配（不区分大小写）。
+- **自定义关键词列表** — 添加域名或任意词（如 `bank.com`、`salary`）。标签页的网址或标题中包含任一关键词即视为匹配（不区分大小写）。
 - **静音模式（开/关）** — 开启后，所有匹配的标签页内的 `<audio>` / `<video>` 元素被静音，**之后新开或导航到匹配网址的标签页也会自动静音**；关闭后注入解静音脚本。采用页面内脚本注入方式，不碰 Chrome 原生静音 API，用户仍可随时用右键 `Mute site` / `Unmute site` 操作单个标签页。
 - **隐藏模式（开/关）** — 开启后，所有匹配的标签页被移入一个最小化的"暂存窗口"并静音，**之后新开或导航到匹配网址的标签页也会自动隐藏**；关闭时全部还原到原位置。
 
@@ -56,6 +56,48 @@ icons/
   icon-{16,32,48,128,192}.png 默认图标
   mute-{16,32,48,128}.png     静音模式图标
   hide-{16,32,48,128}.png     隐藏模式图标
+```
+
+## 打包发布
+
+`package.sh` 会读取 `manifest.json` 中的版本号并生成对应名称的 ZIP，但不会自动修改版本号。每次发布前需要先手动更新版本：
+
+- Chrome / Edge：修改 `manifest.json` 中的 `version`
+- Firefox：同步修改 `manifest.firefox.json` 中的 `version`
+
+两份 manifest 的版本号应保持一致。例如发布 `1.0.1` 时，将两处都改为：
+
+```json
+"version": "1.0.1"
+```
+
+打包 Chrome / Edge（包括 CWS 上传包）：
+
+```bash
+./package.sh
+```
+
+产物为 `dist/sba-1.0.1.zip`。
+
+同时打包 Chrome / Edge 和 Firefox：
+
+```bash
+./package.sh --all
+```
+
+产物为：
+
+```text
+dist/sba-1.0.1.zip
+dist/sba-1.0.1-firefox.zip
+```
+
+其他可用命令：
+
+```bash
+./package.sh --firefox  # 仅打包 Firefox
+./package.sh --list     # 查看将被打包的文件
+./package.sh --check    # 检查已生成的 Chrome / Edge ZIP
 ```
 
 ## 本地化

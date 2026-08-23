@@ -1,8 +1,8 @@
 // Mirrors _locales/fr/messages.json for ES module import.
 export default {
-  extName: { message: 'Stealth Browser Assistant' },
+  extName: { message: 'Stealth Browser Assistant — Hide & Mute Tabs' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: "Détecte, coupe le son et masque automatiquement les onglets privés avec des mots-clés et domaines personnalisés." },
+  extDescription: { message: "Masquez, coupez le son ou fermez vite les onglets privés avec des mots-clés personnalisables et des commandes d’urgence en un clic." },
   subtitle: { message: 'Assistant de navigation privée pour les onglets sensibles' },
   cmdToggleMute: { message: 'Activer/désactiver le son des onglets correspondant aux mots-clés' },
   cmdToggleHide: { message: 'Activer/désactiver le masquage des onglets correspondant aux mots-clés' },

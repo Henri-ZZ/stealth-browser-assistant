@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant"
+    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "사용자 지정 키워드와 도메인으로 비공개 브라우저 탭을 자동으로 감지, 음소거 및 숨깁니다."
+    "message": "맞춤 설정 가능한 키워드와 원클릭 긴급 제어로 비공개 브라우저 탭을 즉시 숨기거나 음소거하거나 닫으세요."
   },
   "subtitle": {
     "message": "민감한 탭을 위한 비공개 브라우징 도우미"

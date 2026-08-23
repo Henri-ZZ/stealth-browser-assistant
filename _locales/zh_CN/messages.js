@@ -2,9 +2,9 @@
 // service worker can't import JSON modules directly. The JSON file itself is
 // still required for `__MSG_xxx__` substitution in manifest.json.
 export default {
-  extName: { message: "隐私浏览助手" },
+  extName: { message: "Stealth Browser Assistant — Hide & Mute Tabs" },
   extShortName: { message: "隐私浏览" },
-  extDescription: { message: "自动检测、静音并隐藏匹配自定义关键词和域名的私密浏览器标签页。" },
+  extDescription: { message: "通过可自定义关键词和一键紧急控制，立即隐藏、静音或关闭私密浏览器标签页。" },
   subtitle: { message: "敏感标签页的私密浏览助手" },
   cmdToggleMute: { message: "切换静音匹配关键词的标签页" },
   cmdToggleHide: { message: "切换隐藏匹配关键词的标签页" },

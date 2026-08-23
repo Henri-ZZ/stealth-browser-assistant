@@ -1,8 +1,8 @@
 // Mirrors _locales/es/messages.json for ES module import.
 export default {
-  extName: { message: 'Stealth Browser Assistant' },
+  extName: { message: 'Stealth Browser Assistant — Hide & Mute Tabs' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: "Detecta, silencia y oculta automáticamente las pestañas privadas del navegador con palabras clave y dominios personalizados." },
+  extDescription: { message: "Oculta, silencia o cierra al instante pestañas privadas con palabras clave personalizables y controles de emergencia con un clic." },
   subtitle: { message: 'Asistente de navegación privada para pestañas sensibles' },
   cmdToggleMute: { message: 'Alternar silencio para pestañas que coincidan con palabras clave' },
   cmdToggleHide: { message: 'Alternar ocultación para pestañas que coincidan con palabras clave' },

@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant"
+    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Automatically detect, mute and hide private browser tabs with custom keywords and domains."
+    "message": "Hide, mute, or close private browser tabs instantly with customizable keywords and one-click emergency controls."
   },
   "subtitle": {
     "message": "Private browsing assistant for sensitive tabs"
