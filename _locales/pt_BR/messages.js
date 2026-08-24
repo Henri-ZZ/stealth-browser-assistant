@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — Configurações' },
   optionsKeywordsHelp: { message: 'Cada palavra-chave corresponde se aparecer no URL ou título da aba (sem distinção de maiúsculas). Use um domínio (ex. bank.com) ou qualquer palavra (ex. contracheque).' },
   optionsShortcutsHelp: { message: 'Os atalhos de teclado podem ser personalizados em ' },
-  openShortcutsPage: { message: "Abrir configurações de atalhos" },
+  openShortcutsPage: { message: "Configurações de atalhos" },
   save: { message: 'Salvar' },
   saved: { message: 'Salvo' },
   emptyInputWarn: { message: 'Por favor, insira uma palavra-chave primeiro.' },
@@ -95,4 +95,9 @@ export default {
   cleanupPermissionDenied: { message: "Permissão negada. O navegador não perguntará novamente — abra as configurações desta extensão e ative as permissões manualmente." },
   firefoxManualNavHint: { message: "O Firefox não permite que extensões abram esta página diretamente. Abra o menu ☰ → Complementos e temas → Extensões e encontre o Stealth Browser Assistant para gerenciar atalhos e permissões." },
   openPermissionSettings: { message: "Abrir configurações de permissão" },
+  supportSection: { message: "Suporte" },
+  supportReviewPrompt: { message: "Gostando do Stealth Browser Assistant?" },
+  leaveReview: { message: "Deixar uma avaliação" },
+  supportFeedbackPrompt: { message: "Encontrou um bug ou tem uma sugestão?" },
+  sendFeedback: { message: "Enviar feedback" },
 };

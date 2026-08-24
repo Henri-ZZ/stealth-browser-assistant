@@ -126,7 +126,7 @@
     "message": "可在快捷键设置页面自定义键盘快捷键，"
   },
   "openShortcutsPage": {
-    "message": "打开快捷键设置"
+    "message": "快捷键设置"
   },
   "save": {
     "message": "保存"
@@ -273,5 +273,10 @@
   },
   "firefoxManualNavHint": {
     "message": "Firefox 不允许扩展直接打开此页面。请点击浏览器右上角 ☰ 菜单 → 扩展和主题 → 扩展，找到 Stealth Browser Assistant 进行设置。"
-  }
+  },
+  "supportSection": { "message": "支持" },
+  "supportReviewPrompt": { "message": "喜欢 Stealth Browser Assistant 吗？" },
+  "leaveReview": { "message": "留下评价" },
+  "supportFeedbackPrompt": { "message": "遇到错误或有建议？" },
+  "sendFeedback": { "message": "发送反馈" }
 }

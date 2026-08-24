@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — 설정' },
   optionsKeywordsHelp: { message: '탭의 URL 또는 제목에 키워드가 포함되어 있으면 일치합니다(대소문자 구분 없음). 도메인(예: bank.com) 또는 임의의 단어(예: 급여명세서)를 사용하세요.' },
   optionsShortcutsHelp: { message: '키보드 단축키는 다음에서 사용자 지정할 수 있습니다: ' },
-  openShortcutsPage: { message: "단축키 설정 열기" },
+  openShortcutsPage: { message: "단축키 설정" },
   save: { message: '저장' },
   saved: { message: '저장됨' },
   emptyInputWarn: { message: '먼저 키워드를 입력하세요.' },
@@ -95,4 +95,9 @@ export default {
   cleanupPermissionDenied: { message: "권한이 거부되었습니다. 브라우저가 다시 묻지 않습니다. 이 확장 프로그램 설정에서 수동으로 권한을 활성화하세요." },
   firefoxManualNavHint: { message: "Firefox에서는 확장 프로그램이 이 페이지를 직접 열 수 없습니다. ☰ 메뉴 → 부가 기능 및 테마 → 확장 프로그램에서 Stealth Browser Assistant를 찾아 단축키와 권한을 관리하세요." },
   openPermissionSettings: { message: "권한 설정 열기" },
+  supportSection: { message: "지원" },
+  supportReviewPrompt: { message: "Stealth Browser Assistant가 마음에 드시나요?" },
+  leaveReview: { message: "리뷰 남기기" },
+  supportFeedbackPrompt: { message: "버그를 발견했거나 제안이 있으신가요?" },
+  sendFeedback: { message: "피드백 보내기" },
 };

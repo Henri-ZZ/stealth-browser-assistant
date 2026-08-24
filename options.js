@@ -7,7 +7,7 @@ import {
   isPremium, getKeywordLimit, refreshPremiumState,
 } from './shared.js';
 import { activateLicense } from './license.js';
-import { PREMIUM_URL } from './config.js';
+import { PREMIUM_URL, CONTACT_URL, getStoreReviewUrl } from './config.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -383,6 +383,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupPremiumTriggers();
 
   setupPremiumCard();
+
+  // Support links: route Leave Review to the current browser's store, while
+  // Contact remains derived from the centralized website origin.
+  const leaveReviewBtn = $('leaveReviewBtn');
+  if (leaveReviewBtn) {
+    leaveReviewBtn.addEventListener('click', () => {
+      chrome.tabs.create({ url: getStoreReviewUrl(navigator.userAgent || '') });
+    });
+  }
+  const sendFeedbackBtn = $('sendFeedbackBtn');
+  if (sendFeedbackBtn) {
+    sendFeedbackBtn.addEventListener('click', () => {
+      chrome.tabs.create({ url: CONTACT_URL });
+    });
+  }
 
   // Permission-denied recovery: jumps to chrome://extensions (Chrome won't
   // re-prompt after a denial, so this is the only way back in).

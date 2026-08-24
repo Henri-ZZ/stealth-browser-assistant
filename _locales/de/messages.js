@@ -42,7 +42,7 @@ export default {
   optionsPageTitle: { message: 'Stealth Browser Assistant — Einstellungen' },
   optionsKeywordsHelp: { message: 'Jedes Schlüsselwort passt, wenn es in der URL oder im Titel des Tabs vorkommt (Groß-/Kleinschreibung wird ignoriert). Verwende eine Domain (z.B. bank.com) oder ein beliebiges Wort (z.B. Gehaltsabrechnung).' },
   optionsShortcutsHelp: { message: 'Tastenkombinationen können angepasst werden unter ' },
-  openShortcutsPage: { message: "Tastenkürzel-Einstellungen öffnen" },
+  openShortcutsPage: { message: "Tastenkürzel-Einstellungen" },
   save: { message: 'Speichern' },
   saved: { message: 'Gespeichert' },
   emptyInputWarn: { message: 'Bitte zuerst ein Schlüsselwort eingeben.' },
@@ -95,4 +95,9 @@ export default {
   cleanupPermissionDenied: { message: "Berechtigung verweigert. Der Browser fragt nicht erneut – öffnen Sie die Einstellungen dieser Erweiterung und aktivieren Sie die Berechtigungen manuell." },
   firefoxManualNavHint: { message: "Firefox erlaubt Erweiterungen nicht, diese Seite direkt zu öffnen. Öffnen Sie das ☰-Menü → Add-ons und Themes → Erweiterungen und suchen Sie Stealth Browser Assistant, um Tastenkürzel und Berechtigungen zu verwalten." },
   openPermissionSettings: { message: "Berechtigungseinstellungen öffnen" },
+  supportSection: { message: "Support" },
+  supportReviewPrompt: { message: "Gefällt dir Stealth Browser Assistant?" },
+  leaveReview: { message: "Bewertung abgeben" },
+  supportFeedbackPrompt: { message: "Einen Fehler gefunden oder einen Vorschlag?" },
+  sendFeedback: { message: "Feedback senden" },
 };

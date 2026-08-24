@@ -24,6 +24,9 @@
 | Auto cleanup | 最后一个匹配标签页关闭后的定时清理 | scheduled wipe 等 |
 | License Key | Premium 激活凭证 | activation code、serial number、license code 等 |
 | Premium | 付费功能层级 | Pro、Plus、Paid 等 |
+| Support | Settings 中的评价与 private feedback 区块 | Help us、Community 等替代标题 |
+| Leave Review | 前往商店评价页的按钮 | Rate us、Give stars 等 |
+| Send Feedback | 前往 Contact 页的 private feedback 按钮 | Complain、Report privately 等 |
 
 术语规则：
 
@@ -344,6 +347,8 @@ License 服务使用 `https://licentra.henri.ren`。Keywords、标签页列表�
 
 扩展还通过浏览器的卸载回调注册了 `https://stealthba.henri.ren/goodbye`。用户卸载扩展后，浏览器会打开该 goodbye 页面；扩展本身不会在卸载后继续运行或向页面主动传递本地数据。
 
+Settings 的 Send Feedback 会打开官网 Contact 页面。Leave Review 会识别当前浏览器并分别打开 Chrome Web Store、Microsoft Edge Add-ons 或 Firefox Add-ons 的对应评价页面。所有从 Settings 发出的官网、Contact 和商店链接都会附加 `utm_source=settings_page`；这些动作只打开新标签页，不会主动附加 Keywords、private tabs 或其他本地数据。
+
 ### 13.3 访问范围
 
 为了在任意普通网页中执行 Mute、Pause media、Red border flash 和 Replace tab icon，manifest 声明了 `*://*/*` host permissions，并使用 `scripting` 权限注入代码。
@@ -362,7 +367,8 @@ Settings 当前按以下结构组织：
 6. Clean private data：选择 Browsing history、Downloads history、Cookies & site data。
 7. Auto cleanup：开启自动清理并设置延迟。
 8. Language：跟随浏览器或手动选择语言。
-9. Premium：了解 Premium 或输入 License Key 激活。
+9. Support：通过紧凑的两行入口前往 Chrome Web Store 执行 Leave Review，或通过 Contact 页面执行 Send Feedback。
+10. Premium：了解 Premium 或输入 License Key 激活。
 
 当前支持语言：English、简体中文、Español、Deutsch、日本語、Français、Português (Brasil)、한국어。
 
@@ -376,7 +382,7 @@ Settings 当前按以下结构组织：
 | `manifest.firefox.json` | Firefox manifest 变体与 Gecko 配置 |
 | `background.js` | Service Worker；匹配、Mute、Hide、反馈、Emergency Action、清理、alarm、消息桥、工具栏图标 |
 | `shared.js` | storage schema、默认值、匹配函数、权限帮助、本地化、Premium 缓存与 Keywords 上限 |
-| `config.js` | 官网 origin 以及 Premium、卸载页面等派生 URL 的唯一代码配置入口 |
+| `config.js` | 官网 origin、Settings UTM、商店评价页以及 Premium、Contact、卸载页面等 URL 的唯一代码配置入口 |
 | `license.js` | License Key 标准化、设备 fingerprint、Licentra 请求、签名验证、check-in 与离线宽限 |
 | `popup.html` / `popup.js` | 弹窗结构、状态展示、Mute / Hide 切换、一次性 Clean private data |
 | `options.html` / `options.js` | Settings、Keywords、快捷键、Premium gating、权限请求、License Key 激活 |
@@ -470,7 +476,7 @@ _locales/<locale>/messages.js
 AI Agent 在修改本项目时必须遵守以下约束：
 
 1. 先以代码行为为事实来源，再更新文档和文案；不要只依据旧 README 或注释。
-2. 不得改写 Canonical terminology，尤其是 `License Key`、`Emergency Action`、`private`、`Keywords`、`Match hit feedback`、`Clean private data`、`Auto cleanup` 和 `Premium`。
+2. 不得改写 Canonical terminology，尤其是 `License Key`、`Emergency Action`、`private`、`Keywords`、`Match hit feedback`、`Clean private data`、`Auto cleanup`、`Premium`、`Support`、`Leave Review` 和 `Send Feedback`。
 3. 修改本地化文案时同步更新 `.json` 与 `.js`。
 4. 修改版本号时同步更新 `manifest.json` 与 `manifest.firefox.json`。
 5. 新增运行时文件时同步加入 `package.sh` 的 `FILES` 白名单，否则发布 ZIP 不会包含该文件。

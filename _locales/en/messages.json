@@ -126,7 +126,7 @@
     "message": "Keyboard shortcuts can be customized at "
   },
   "openShortcutsPage": {
-    "message": "Open shortcut settings"
+    "message": "Shortcuts settings"
   },
   "save": {
     "message": "Save"
@@ -273,5 +273,10 @@
   },
   "firefoxManualNavHint": {
     "message": "Firefox doesn't let extensions open this page directly. Click the ☰ menu → Add-ons and themes → Extensions, then find Stealth Browser Assistant to manage shortcuts and permissions."
-  }
+  },
+  "supportSection": { "message": "Support" },
+  "supportReviewPrompt": { "message": "Enjoying Stealth Browser Assistant?" },
+  "leaveReview": { "message": "Leave Review" },
+  "supportFeedbackPrompt": { "message": "Found a bug or have a suggestion?" },
+  "sendFeedback": { "message": "Send Feedback" }
 }

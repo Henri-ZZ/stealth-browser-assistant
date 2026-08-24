@@ -120,7 +120,7 @@
     "message": "Les raccourcis clavier peuvent être personnalisés dans "
   },
   "openShortcutsPage": {
-    "message": "Ouvrir les paramètres de raccourcis"
+    "message": "Paramètres des raccourcis"
   },
   "save": {
     "message": "Enregistrer"
@@ -273,5 +273,10 @@
   },
   "firefoxManualNavHint": {
     "message": "Firefox ne permet pas aux extensions d'ouvrir cette page directement. Ouvrez le menu ☰ → Modules complémentaires et thèmes → Extensions, puis trouvez Stealth Browser Assistant pour gérer les raccourcis et autorisations."
-  }
+  },
+  "supportSection": { "message": "Assistance" },
+  "supportReviewPrompt": { "message": "Vous aimez Stealth Browser Assistant ?" },
+  "leaveReview": { "message": "Laisser un avis" },
+  "supportFeedbackPrompt": { "message": "Vous avez trouvé un bug ou avez une suggestion ?" },
+  "sendFeedback": { "message": "Envoyer des commentaires" }
 }

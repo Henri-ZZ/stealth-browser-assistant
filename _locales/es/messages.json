@@ -120,7 +120,7 @@
     "message": "Los atajos de teclado se pueden personalizar en "
   },
   "openShortcutsPage": {
-    "message": "Abrir configuración de atajos"
+    "message": "Configuración de atajos"
   },
   "save": {
     "message": "Guardar"
@@ -273,5 +273,10 @@
   },
   "firefoxManualNavHint": {
     "message": "Firefox no permite que las extensiones abran esta página directamente. Abra el menú ☰ → Complementos y temas → Extensiones y busque Stealth Browser Assistant para administrar atajos y permisos."
-  }
+  },
+  "supportSection": { "message": "Soporte" },
+  "supportReviewPrompt": { "message": "¿Te gusta Stealth Browser Assistant?" },
+  "leaveReview": { "message": "Dejar una reseña" },
+  "supportFeedbackPrompt": { "message": "¿Encontraste un error o tienes alguna sugerencia?" },
+  "sendFeedback": { "message": "Enviar comentarios" }
 }

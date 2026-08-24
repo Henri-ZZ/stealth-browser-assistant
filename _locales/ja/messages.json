@@ -120,7 +120,7 @@
     "message": "キーボードショートカットは以下でカスタマイズできます："
   },
   "openShortcutsPage": {
-    "message": "ショートカット設定を開く"
+    "message": "ショートカット設定"
   },
   "save": {
     "message": "保存"
@@ -273,5 +273,10 @@
   },
   "firefoxManualNavHint": {
     "message": "Firefox では拡張機能がこのページを直接開くことはできません。☰ メニュー → アドオンとテーマ → 拡張機能 から Stealth Browser Assistant を選んで、ショートカットと権限を管理してください。"
-  }
+  },
+  "supportSection": { "message": "サポート" },
+  "supportReviewPrompt": { "message": "Stealth Browser Assistant を気に入っていただけましたか？" },
+  "leaveReview": { "message": "レビューを書く" },
+  "supportFeedbackPrompt": { "message": "不具合を見つけた、またはご提案がありますか？" },
+  "sendFeedback": { "message": "フィードバックを送信" }
 }

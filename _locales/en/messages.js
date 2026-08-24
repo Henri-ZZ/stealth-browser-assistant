@@ -54,7 +54,7 @@ export default {
       "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub).",
   },
   optionsShortcutsHelp: { message: "Keyboard shortcuts can be customized at " },
-  openShortcutsPage: { message: "Open shortcut settings" },
+  openShortcutsPage: { message: "Shortcuts settings" },
   save: { message: "Save" },
   saved: { message: "Saved" },
   emptyInputWarn: { message: "Please enter a keyword first." },
@@ -115,4 +115,9 @@ export default {
   cleanupPermissionDenied: { message: "Permission denied. The browser won't ask again — open this extension's settings and enable the permissions manually." },
   firefoxManualNavHint: { message: "Firefox doesn't let extensions open this page directly. Click the ☰ menu → Add-ons and themes → Extensions, then find Stealth Browser Assistant to manage shortcuts and permissions." },
   openPermissionSettings: { message: "Open permission settings" },
+  supportSection: { message: "Support" },
+  supportReviewPrompt: { message: "Enjoying Stealth Browser Assistant?" },
+  leaveReview: { message: "Leave Review" },
+  supportFeedbackPrompt: { message: "Found a bug or have a suggestion?" },
+  sendFeedback: { message: "Send Feedback" },
 };

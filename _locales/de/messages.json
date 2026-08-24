@@ -120,7 +120,7 @@
     "message": "Tastenkombinationen können angepasst werden unter "
   },
   "openShortcutsPage": {
-    "message": "Tastenkürzel-Einstellungen öffnen"
+    "message": "Tastenkürzel-Einstellungen"
   },
   "save": {
     "message": "Speichern"
@@ -273,5 +273,10 @@
   },
   "firefoxManualNavHint": {
     "message": "Firefox erlaubt Erweiterungen nicht, diese Seite direkt zu öffnen. Öffnen Sie das ☰-Menü → Add-ons und Themes → Erweiterungen und suchen Sie Stealth Browser Assistant, um Tastenkürzel und Berechtigungen zu verwalten."
-  }
+  },
+  "supportSection": { "message": "Support" },
+  "supportReviewPrompt": { "message": "Gefällt dir Stealth Browser Assistant?" },
+  "leaveReview": { "message": "Bewertung abgeben" },
+  "supportFeedbackPrompt": { "message": "Einen Fehler gefunden oder einen Vorschlag?" },
+  "sendFeedback": { "message": "Feedback senden" }
 }
