@@ -7,6 +7,7 @@ import {
   isPremium, getKeywordLimit, refreshPremiumState,
 } from './shared.js';
 import { activateLicense } from './license.js';
+import { PREMIUM_URL } from './config.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -109,8 +110,6 @@ async function applyShortcuts() {
     }
   }
 }
-
-const PREMIUM_URL = 'https://stealthba.henri.ren/';
 
 function showPopover(trigger, text) {
   const popover = $('premiumPopover');

@@ -29,6 +29,7 @@ FILES=(
   manifest.json
   background.js
   shared.js
+  config.js
   license.js
   popup.html
   popup.js

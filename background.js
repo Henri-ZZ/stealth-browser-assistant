@@ -23,8 +23,18 @@ import {
   hasCleanupPermissions,
 } from './shared.js';
 import { maybeCheckIn } from './license.js';
+import { UNINSTALL_URL } from './config.js';
 
 const STASH_WINDOW_STATE = 'minimized';
+
+// Ask the browser to open the goodbye page after the extension is uninstalled.
+// Registration is persisted by the browser; setting it on Service Worker
+// startup also keeps the destination current after extension updates. Use the
+// callback form because Firefox's chrome.* compatibility layer may not return
+// a Promise here.
+chrome.runtime.setUninstallURL(UNINSTALL_URL, () => {
+  void chrome.runtime.lastError;
+});
 
 // In-memory set of window ids we have designated as the minimized "stash" window.
 const STASH_WINDOW_IDS = new Set();

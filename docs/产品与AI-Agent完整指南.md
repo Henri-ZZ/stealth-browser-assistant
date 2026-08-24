@@ -342,6 +342,8 @@ License 服务使用 `https://licentra.henri.ren`。Keywords、标签页列表�
 
 当前代码中明确的外部通信仅用于 License Key 激活和 check-in。页面脚本不会把 Keywords、private tabs 或清理内容上传到 License 服务。
 
+扩展还通过浏览器的卸载回调注册了 `https://stealthba.henri.ren/goodbye`。用户卸载扩展后，浏览器会打开该 goodbye 页面；扩展本身不会在卸载后继续运行或向页面主动传递本地数据。
+
 ### 13.3 访问范围
 
 为了在任意普通网页中执行 Mute、Pause media、Red border flash 和 Replace tab icon，manifest 声明了 `*://*/*` host permissions，并使用 `scripting` 权限注入代码。
@@ -374,6 +376,7 @@ Settings 当前按以下结构组织：
 | `manifest.firefox.json` | Firefox manifest 变体与 Gecko 配置 |
 | `background.js` | Service Worker；匹配、Mute、Hide、反馈、Emergency Action、清理、alarm、消息桥、工具栏图标 |
 | `shared.js` | storage schema、默认值、匹配函数、权限帮助、本地化、Premium 缓存与 Keywords 上限 |
+| `config.js` | 官网 origin 以及 Premium、卸载页面等派生 URL 的唯一代码配置入口 |
 | `license.js` | License Key 标准化、设备 fingerprint、Licentra 请求、签名验证、check-in 与离线宽限 |
 | `popup.html` / `popup.js` | 弹窗结构、状态展示、Mute / Hide 切换、一次性 Clean private data |
 | `options.html` / `options.js` | Settings、Keywords、快捷键、Premium gating、权限请求、License Key 激活 |
@@ -478,6 +481,7 @@ AI Agent 在修改本项目时必须遵守以下约束：
 10. 任何 destructive 行为都必须在 UI 和文档中明确，例如 Close matching tabs、Cookies & site data 清理。
 11. 不得扩大网络数据范围；License 请求不应携带 Keywords、标签页或浏览历史。
 12. 不得把 Free 限制只放在 Settings；执行逻辑需要防止旧状态或手动写入绕过 Premium gating。
+13. 官网域名只能在 `config.js` 的 `WEBSITE_ORIGIN` 中维护；其他代码必须导入派生 URL，不得再次硬编码域名。修改域名或页面路径后还要同步更新本文档中的用户可见链接。
 
 ## 17. 发布与打包
 
