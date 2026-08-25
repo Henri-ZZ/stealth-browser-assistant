@@ -268,6 +268,7 @@ function mergeRecords(newRecords) {
 // ───────────────────────── tab events ─────────────────────────
 
 chrome.tabs.onCreated.addListener((tab) => {
+  newlyCreatedTabs.set(tab.id, Date.now());
   maybeApplyToTabLater(tab.id);
   reevaluateSensitiveSession().catch(() => {});
 });
@@ -278,16 +279,34 @@ chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
     enforceHideOnTab(tab).catch(() => {});
     enforceFaviconOnTab(tab).catch(() => {});
     reevaluateSensitiveSession().catch(() => {});
-    // A newly opened / navigated tab that matches a keyword: flash only when
-    // it's the tab the user is actually looking at.
-    if (tab.active) flashIfMatched(tab).catch(() => {});
+    // Existing-tab navigation (including same-site links and back/forward)
+    // deliberately does not flash. Only a newly created matching tab gets a
+    // one-time load flash; switching tabs is handled by onActivated below.
+    flashNewTabIfMatched(tab).catch(() => {});
   }
 });
 
 // ───────────────────────── match-hit feedback ─────────────────────────
 
 const MATCH_FLASH_COOLDOWN_MS = 1500;
+const NEW_TAB_FLASH_WINDOW_MS = 15_000;
 const lastMatchFlashByTab = new Map();
+const newlyCreatedTabs = new Map();
+
+/** Flash once when a newly created active tab first resolves to a match. */
+async function flashNewTabIfMatched(tab) {
+  const createdAt = newlyCreatedTabs.get(tab.id);
+  if (createdAt == null) return;
+  if (Date.now() - createdAt > NEW_TAB_FLASH_WINDOW_MS) {
+    newlyCreatedTabs.delete(tab.id);
+    return;
+  }
+  if (!tab.active) return;
+  const keywords = await getKeywords();
+  if (!keywords.length || !tabMatchesKeywords(tab, keywords)) return;
+  newlyCreatedTabs.delete(tab.id);
+  await flashIfMatched(tab);
+}
 
 /**
  * Flash a red border on the tab if it matches a keyword and the feedback
@@ -295,24 +314,27 @@ const lastMatchFlashByTab = new Map();
  * would be invisible.
  */
 async function flashIfMatched(tab) {
-  if (!(await getRedBorderFlash())) return;
+  if (!(await getRedBorderFlash())) return false;
   const keywords = await getKeywords();
-  if (!keywords.length || !tabMatchesKeywords(tab, keywords)) return;
+  if (!keywords.length || !tabMatchesKeywords(tab, keywords)) return false;
 
-  // Avoid double-flashes when onActivated and onUpdated fire for the same
-  // navigation within a short window.
+  // Avoid double-flashes when new-tab loading and activation overlap within
+  // a short window.
   const now = Date.now();
-  if (now - (lastMatchFlashByTab.get(tab.id) || 0) < MATCH_FLASH_COOLDOWN_MS) return;
+  if (now - (lastMatchFlashByTab.get(tab.id) || 0) < MATCH_FLASH_COOLDOWN_MS) return false;
   lastMatchFlashByTab.set(tab.id, now);
 
-  await injectScript(tab.id, FLASH_RED_BORDER_SCRIPT);
+  return injectScript(tab.id, FLASH_RED_BORDER_SCRIPT);
 }
 
 // Switching to a matching tab (or a newly opened one that already matches).
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   try {
     const tab = await chrome.tabs.get(tabId);
-    flashIfMatched(tab).catch(() => {});
+    // Keep a brand-new blank tab pending until its URL/title resolves. Once
+    // activation actually flashes a match, prevent a later load event from
+    // flashing it a second time.
+    if (await flashIfMatched(tab)) newlyCreatedTabs.delete(tabId);
   } catch {
     // tab already gone — nothing to flash
   }
@@ -390,6 +412,8 @@ async function syncFavicons() {
 }
 
 chrome.tabs.onRemoved.addListener(async (tabId) => {
+  newlyCreatedTabs.delete(tabId);
+  lastMatchFlashByTab.delete(tabId);
   reevaluateSensitiveSession().catch(() => {});
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
   if (!hidden.some((r) => r.tabId === tabId)) return;
