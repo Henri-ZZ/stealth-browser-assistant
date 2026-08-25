@@ -13,6 +13,19 @@ const $ = (id) => document.getElementById(id);
 
 let LOCALE = 'en';
 
+function ensureLicenseState() {
+  return new Promise((resolve) => {
+    try {
+      chrome.runtime.sendMessage({ type: 'refresh-license-state' }, (resp) => {
+        if (chrome.runtime.lastError) resolve(null);
+        else resolve(resp);
+      });
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
 function t(key, subs) {
   return tFor(LOCALE, key, subs);
 }
@@ -203,6 +216,10 @@ function setupPremiumTriggers() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await applyI18n();
+  // Wait for the background's de-duplicated startup check-in before rendering
+  // or downgrading Premium-only settings. This is especially important after
+  // the extension has been disabled and re-enabled.
+  await ensureLicenseState();
   await refreshPremiumState();
 
   // Language dropdown

@@ -744,6 +744,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         sendResponse(await runCleanup());
         return;
       }
+      case 'refresh-license-state': {
+        sendResponse({ ok: true, premium: await initializeLicenseState() });
+        return;
+      }
       case 'status': {
         const tabs = await findMatchingTabs();
         const hidden = await getState(STORAGE_KEYS.HIDDEN);
@@ -788,8 +792,7 @@ async function updateBadge() {
 
 chrome.runtime.onStartup.addListener(async () => {
   await rehydrateStashWindowIds();
-  await refreshPremiumState();
-  maybeCheckIn().then(() => refreshPremiumState());
+  await initializeLicenseState();
   await updateBadge();
   if (await getHideMode()) {
     const tabs = await findMatchingTabs();
@@ -816,9 +819,27 @@ function scheduleLicenseCheckIn() {
   chrome.alarms.create(LICENSE_CHECK_IN_ALARM, { periodInMinutes: 12 * 60 });
 }
 
+// One shared initialization/check-in prevents duplicate network requests when
+// Service Worker startup and browser startup happen close together. This also
+// runs at module startup, which is important when an extension is re-enabled:
+// Chrome starts the worker but does not necessarily emit runtime.onStartup.
+let licenseInitializationPromise = null;
+
+function initializeLicenseState() {
+  if (licenseInitializationPromise) return licenseInitializationPromise;
+  licenseInitializationPromise = (async () => {
+    await refreshPremiumState();
+    await maybeCheckIn(); // skips the network while the signed state is fresh
+    return refreshPremiumState();
+  })().finally(() => {
+    licenseInitializationPromise = null;
+  });
+  return licenseInitializationPromise;
+}
+
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === LICENSE_CHECK_IN_ALARM) {
-    maybeCheckIn().then(() => refreshPremiumState());
+    initializeLicenseState().catch(() => {});
   }
 });
 
@@ -829,8 +850,9 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-// Warm the cache on service-worker startup.
-refreshPremiumState();
+// Restore and, when necessary, revalidate Premium on every Service Worker
+// start—including extension re-enable, where runtime.onStartup may not fire.
+initializeLicenseState().catch(() => {});
 scheduleLicenseCheckIn();
 
 async function rehydrateStashWindowIds() {

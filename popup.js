@@ -56,6 +56,9 @@ async function refreshStatus() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Ensure a re-enabled extension has had a chance to restore/check in its
+  // persisted License before the popup decides whether Premium is active.
+  await send({ type: 'refresh-license-state' });
   await refreshPremiumState();
   document.body.classList.toggle('is-premium', isPremium());
   await applyI18n();

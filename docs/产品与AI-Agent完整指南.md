@@ -317,6 +317,8 @@ ABCD-2345-EFGH-6789
 
 ### 12.3 Check-in 与离线宽限
 
+- 每次 Service Worker 启动（包括扩展重新启用）都会先读取本地 License，并在需要时立即 check-in；并发的启动事件会复用同一个初始化任务。
+- Settings 和 popup 会在渲染或降级 Premium 功能前等待后台完成该初始化，避免重新启用时短暂或持续误判为 Free。
 - 后台每 12 小时建立一次 check-in alarm。
 - 签名有效期剩余超过 12 小时时不会重复请求。
 - 网络故障、服务器错误、限流或非 JSON 响应会进入离线宽限，而不会立即关闭 Premium。
@@ -442,6 +444,7 @@ keyboard command
 | `set-mute-mode` | `on: boolean` | `{ ok: true }` |
 | `set-hide-mode` | `on: boolean` | `{ ok: true }` |
 | `run-cleanup` | 无 | `{ ok: true }` 或 reason |
+| `refresh-license-state` | 无 | 等待去重后的 License 初始化，返回当前 `premium` 状态 |
 
 未知 message 返回 `{ ok: false, error: "unknown message" }`。
 
