@@ -43,7 +43,7 @@ Stealth Browser Assistant 是一个以 **Keywords** 为核心的 private tabs �
 - Match hit feedback：替换标签页图标，或在当前页面闪烁红色边框。
 - Mute：将匹配标签页中的 `<audio>` 和 `<video>` 元素静音。
 - Hide：将匹配标签页移入最小化的暂存窗口。
-- Emergency Action：一键 Mute + Hide 当前匹配标签页，或直接 Close matching tabs。
+- Emergency Action：一键开启 Mute + Hide，或直接 Close matching tabs。
 - Pause media：在 Mute 或 Hide 时同时暂停音视频。
 - Clean private data：按 Keywords 定向清理浏览历史、下载历史、Cookie 与站点数据。
 - Auto cleanup：最后一个匹配标签页关闭后，延迟执行 Clean private data。
@@ -202,9 +202,10 @@ Chrome 没有向普通扩展开放通用的原地隐藏标签页 API。本产品
 Free 和 Premium 都可用。触发时：
 
 - 将全局 Mute 状态设为开启。
-- 对触发时已经匹配的标签页执行 Hide。
+- 将持续 Hide 状态设为开启。
+- 立即隐藏当前匹配标签页；之后新出现的匹配标签页也会继续 Hide。
 
-重要边界：当前实现不会同时把持续 Hide 状态设为开启。因此它会隐藏“当前匹配标签页”，但之后新出现的匹配标签页只有在 Hide 本来就开启时才会自动隐藏。已隐藏标签页仍保留在隐藏记录中。
+popup 中的 Mute 和 Hide 都会显示 ON。用户将 Hide 切换为 OFF 时，暂存窗口中的标签页会恢复。
 
 ### 8.2 Close matching tabs
 
@@ -487,7 +488,7 @@ AI Agent 在修改本项目时必须遵守以下约束：
 6. 新增清理类型时同步考虑 optional permission、Settings 用户手势授权、后台无用户手势限制、Premium gating 和定向清理范围。
 7. 修改 Hide 时不得假设存在公开的 `chrome.tabs.hide`；当前设计依赖暂存窗口和恢复记录。
 8. 修改 Mute 时区分脚本级媒体 muted 与 Hide 使用的浏览器原生标签页 muted。
-9. 修改 Emergency Action 时区分一次性处理当前匹配标签页与持续 `hideMode`。
+9. Emergency Action 的 Mute + Hide 必须同时开启 `scriptMute` 和 `hideMode`，确保 popup 状态与实际隐藏状态一致，并允许用户通过关闭 Hide 恢复标签页。
 10. 任何 destructive 行为都必须在 UI 和文档中明确，例如 Close matching tabs、Cookies & site data 清理。
 11. 不得扩大网络数据范围；License 请求不应携带 Keywords、标签页或浏览历史。
 12. 不得把 Free 限制只放在 Settings；执行逻辑需要防止旧状态或手动写入绕过 Premium gating。
@@ -532,10 +533,9 @@ dist/sba-<version>-firefox.zip
 2. `background.js` 顶部旧注释曾写“新匹配标签页不会自动 Mute”，但实际事件处理会执行 `enforceScriptMuteOnTab()`；应以实际代码为准。
 3. Replace tab icon 没有保存原 favicon，也没有在关闭设置时主动恢复。
 4. Hide 恢复时统一解除原生 muted，没有记录隐藏前的原始静音状态。
-5. Emergency Action 的 Mute + Hide 不会把持续 `hideMode` 设为开启。
-6. Mute 和 Pause media 只处理注入时已经存在的媒体元素。
-7. 普通词 Keywords 无法用于 Cookies & site data 的 origin 定向清理。
-8. Settings 启用 Auto cleanup 时会请求所有清理权限，而不只是当前已勾选的类型。
+5. Mute 和 Pause media 只处理注入时已经存在的媒体元素。
+6. 普通词 Keywords 无法用于 Cookies & site data 的 origin 定向清理。
+7. Settings 启用 Auto cleanup 时会请求所有清理权限，而不只是当前已勾选的类型。
 
 ## 19. 建议的回归检查清单
 

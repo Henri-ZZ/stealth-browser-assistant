@@ -712,16 +712,14 @@ chrome.commands.onCommand.addListener(async (command) => {
   } else if (command === 'emergency-mode') {
     let action = await getEmergencyAction();
     if (action === 'closeMatchTabs' && !isPremium()) action = 'muteHide';
-    const matching = await findMatchingTabs();
     if (action === 'closeMatchTabs') {
+      const matching = await findMatchingTabs();
       for (const t of matching) {
         try { await chrome.tabs.remove(t.id); } catch {}
       }
     } else {
       await setScriptMute(true);
-      for (const t of matching) {
-        await hideTab(t);
-      }
+      await setHideMode(true);
     }
   }
   await updateBadge();
