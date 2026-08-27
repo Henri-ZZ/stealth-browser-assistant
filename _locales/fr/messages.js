@@ -28,6 +28,10 @@ export default {
     message: '$N$ onglet(s) correspondent à vos mots-clés.',
     placeholders: { n: { content: '$1', example: '3' } },
   },
+  statusMuted: {
+    message: '$N$ onglet(s) actuellement en sourdine.',
+    placeholders: { n: { content: '$1', example: '2' } },
+  },
   statusHiddenZero: { message: 'Le mode masquage est désactivé.' },
   statusHidden: {
     message: '$N$ onglet(s) actuellement masqué(s).',

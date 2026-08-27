@@ -28,6 +28,10 @@ export default {
     message: '$N$ aba(s) correspondem às suas palavras-chave.',
     placeholders: { n: { content: '$1', example: '3' } },
   },
+  statusMuted: {
+    message: '$N$ aba(s) silenciada(s) no momento.',
+    placeholders: { n: { content: '$1', example: '2' } },
+  },
   statusHiddenZero: { message: 'O modo ocultar está desativado.' },
   statusHidden: {
     message: '$N$ aba(s) atualmente oculta(s).',

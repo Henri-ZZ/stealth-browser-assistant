@@ -86,6 +86,10 @@
       }
     }
   },
+  "statusMuted": {
+    "message": "$N$ tab(s) currently muted.",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
   "statusHiddenZero": {
     "message": "Hide mode is off."
   },

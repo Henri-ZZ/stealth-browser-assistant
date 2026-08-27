@@ -28,6 +28,10 @@ export default {
     message: '$N$개의 탭이 키워드와 일치합니다.',
     placeholders: { n: { content: '$1', example: '3' } },
   },
+  statusMuted: {
+    message: '현재 $N$개의 탭이 음소거되어 있습니다.',
+    placeholders: { n: { content: '$1', example: '2' } },
+  },
   statusHiddenZero: { message: '숨기기 모드가 꺼져 있습니다.' },
   statusHidden: {
     message: '$N$개의 탭이 현재 숨겨져 있습니다.',

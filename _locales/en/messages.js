@@ -35,6 +35,10 @@ export default {
     message: "$N$ tab(s) currently match your keywords.",
     placeholders: { n: { content: "$1", example: "3" } },
   },
+  statusMuted: {
+    message: "$N$ tab(s) currently muted.",
+    placeholders: { n: { content: "$1", example: "2" } },
+  },
   statusHiddenZero: { message: "Hide mode is off." },
   statusHidden: {
     message: "$N$ tab(s) currently hidden.",

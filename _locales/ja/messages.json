@@ -80,6 +80,10 @@
       }
     }
   },
+  "statusMuted": {
+    "message": "現在 $N$ 個のタブがミュートされています。",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
   "statusHiddenZero": {
     "message": "非表示モードはオフです。"
   },

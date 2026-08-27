@@ -33,6 +33,10 @@ export default {
     message: "当前有 $N$ 个标签页匹配你的关键词。",
     placeholders: { n: { content: "$1", example: "3" } },
   },
+  statusMuted: {
+    message: "当前有 $N$ 个标签页已静音。",
+    placeholders: { n: { content: "$1", example: "2" } },
+  },
   statusHiddenZero: { message: "隐藏模式已关闭。" },
   statusHidden: {
     message: "当前有 $N$ 个标签页已隐藏。",

@@ -80,6 +80,10 @@
       }
     }
   },
+  "statusMuted": {
+    "message": "$N$ Tab(s) derzeit stummgeschaltet.",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
   "statusHiddenZero": {
     "message": "Ausblendmodus ist deaktiviert."
   },

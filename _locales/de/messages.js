@@ -28,6 +28,10 @@ export default {
     message: '$N$ Tab(s) stimmen mit deinen Schlüsselwörtern überein.',
     placeholders: { n: { content: '$1', example: '3' } },
   },
+  statusMuted: {
+    message: '$N$ Tab(s) derzeit stummgeschaltet.',
+    placeholders: { n: { content: '$1', example: '2' } },
+  },
   statusHiddenZero: { message: 'Ausblendmodus ist deaktiviert.' },
   statusHidden: {
     message: '$N$ Tab(s) derzeit ausgeblendet.',

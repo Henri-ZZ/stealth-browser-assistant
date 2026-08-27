@@ -35,6 +35,18 @@ chrome.runtime.setUninstallURL(UNINSTALL_URL, () => {
 // In-memory set of window ids we have designated as the minimized "stash" window.
 const STASH_WINDOW_IDS = new Set();
 
+// Mute/Hide operations move tabs and update several storage records. Keep them
+// on one queue so the popup never observes a half-finished transition.
+let modeOperationQueue = Promise.resolve();
+
+function withModeOperationLock(task) {
+  const run = modeOperationQueue.then(task, task);
+  modeOperationQueue = run.catch(() => {});
+  return run;
+}
+
+let coreStateReadyPromise = null;
+
 // ───────────────────────── matching ─────────────────────────
 
 async function findMatchingTabs() {
@@ -628,11 +640,39 @@ function mergeRecords(newRecords) {
   });
 }
 
+async function pruneInvalidHiddenRecords() {
+  const hidden = await getState(STORAGE_KEYS.HIDDEN);
+  const valid = [];
+  for (const record of hidden) {
+    const tab = await chrome.tabs.get(record.tabId).catch(() => null);
+    if (tab && tab.windowId === record.windowId) valid.push(record);
+    else await releaseNativeMuteClaim(record.tabId, 'hide').catch(() => {});
+  }
+  if (valid.length !== hidden.length) {
+    await setState(STORAGE_KEYS.HIDDEN, valid);
+    await updateBadge();
+  }
+  return valid;
+}
+
+async function getStatusSnapshot() {
+  const tabs = await findMatchingTabs();
+  const hidden = await pruneInvalidHiddenRecords();
+  return {
+    ok: true,
+    scriptMute: await getScriptMute(),
+    hideMode: await getHideMode(),
+    matching: tabs.length,
+    muted: tabs.filter((tab) => tab.mutedInfo?.muted).length,
+    hidden: hidden.length,
+  };
+}
+
 // ───────────────────────── tab events ─────────────────────────
 
 chrome.tabs.onCreated.addListener((tab) => {
   newlyCreatedTabs.set(tab.id, Date.now());
-  maybeApplyToTabLater(tab.id);
+  initializeCoreState().then(() => maybeApplyToTabLater(tab.id)).catch(() => {});
   reevaluateSensitiveSession().catch(() => {});
 });
 
@@ -641,8 +681,10 @@ chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
     handleExternalNativeMuteChange(tabId, change.mutedInfo).catch(() => {});
   }
   if ('url' in change || 'title' in change || change.status === 'complete') {
-    enforceNativeMuteOnTab(tab).catch(() => {});
-    enforceHideOnTab(tab).catch(() => {});
+    initializeCoreState().then(() => withModeOperationLock(async () => {
+      await enforceNativeMuteOnTab(tab);
+      await enforceHideOnTab(tab);
+    })).catch(() => {});
     enforceFaviconOnTab(tab).catch(() => {});
     reevaluateSensitiveSession().catch(() => {});
     // Existing-tab navigation (including same-site links and back/forward)
@@ -780,40 +822,49 @@ async function syncFavicons() {
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   newlyCreatedTabs.delete(tabId);
   lastMatchFlashByTab.delete(tabId);
-  forgetNativeMuteTab(tabId).catch(() => {});
   reevaluateSensitiveSession().catch(() => {});
-  const hidden = await getState(STORAGE_KEYS.HIDDEN);
-  if (!hidden.some((r) => r.tabId === tabId)) return;
-  const remaining = hidden.filter((r) => r.tabId !== tabId);
-  await setState(STORAGE_KEYS.HIDDEN, remaining);
-  await updateBadge();
-  await maybeCloseStashWindow();
+  await initializeCoreState();
+  await withModeOperationLock(async () => {
+    await forgetNativeMuteTab(tabId);
+    const hidden = await getState(STORAGE_KEYS.HIDDEN);
+    if (!hidden.some((r) => r.tabId === tabId)) return;
+    const remaining = hidden.filter((r) => r.tabId !== tabId);
+    await setState(STORAGE_KEYS.HIDDEN, remaining);
+    await updateBadge();
+    await maybeCloseStashWindow();
+  });
 });
 
 chrome.tabs.onAttached.addListener(async (tabId, { newWindowId }) => {
-  const hidden = await getState(STORAGE_KEYS.HIDDEN);
-  const rec = hidden.find((r) => r.tabId === tabId);
-  if (!rec) return;
-  if (![...STASH_WINDOW_IDS].includes(newWindowId)) {
-    await setState(STORAGE_KEYS.HIDDEN, hidden.filter((r) => r.tabId !== tabId));
-    await releaseNativeMuteClaim(tabId, 'hide');
-    await updateBadge();
-  }
+  await initializeCoreState();
+  await withModeOperationLock(async () => {
+    const hidden = await getState(STORAGE_KEYS.HIDDEN);
+    const rec = hidden.find((r) => r.tabId === tabId);
+    if (!rec) return;
+    if (![...STASH_WINDOW_IDS].includes(newWindowId)) {
+      await setState(STORAGE_KEYS.HIDDEN, hidden.filter((r) => r.tabId !== tabId));
+      await releaseNativeMuteClaim(tabId, 'hide');
+      await updateBadge();
+    }
+  });
 });
 
 chrome.windows.onRemoved.addListener(async (wid) => {
-  const wasStash = STASH_WINDOW_IDS.delete(wid);
-  // If this was a stash window, drop the hidden-tab records pointing at it.
-  // chrome.tabs.onRemoved may not fire for every tab inside a closed window,
-  // so we can't rely on tab-level cleanup alone.
-  if (wasStash) {
-    const hidden = await getState(STORAGE_KEYS.HIDDEN);
-    const remaining = hidden.filter((r) => r.windowId !== wid);
-    if (remaining.length !== hidden.length) {
-      await setState(STORAGE_KEYS.HIDDEN, remaining);
-      await updateBadge();
+  await initializeCoreState();
+  await withModeOperationLock(async () => {
+    const wasStash = STASH_WINDOW_IDS.delete(wid);
+    // If this was a stash window, drop the hidden-tab records pointing at it.
+    // chrome.tabs.onRemoved may not fire for every tab inside a closed window,
+    // so we can't rely on tab-level cleanup alone.
+    if (wasStash) {
+      const hidden = await getState(STORAGE_KEYS.HIDDEN);
+      const remaining = hidden.filter((r) => r.windowId !== wid);
+      if (remaining.length !== hidden.length) {
+        await setState(STORAGE_KEYS.HIDDEN, remaining);
+        await updateBadge();
+      }
     }
-  }
+  });
 });
 
 async function maybeApplyToTabLater(tabId) {
@@ -821,8 +872,10 @@ async function maybeApplyToTabLater(tabId) {
     try {
       const tab = await chrome.tabs.get(tabId);
       if (tab.url || tab.title) {
-        await enforceNativeMuteOnTab(tab);
-        await enforceHideOnTab(tab);
+        await withModeOperationLock(async () => {
+          await enforceNativeMuteOnTab(tab);
+          await enforceHideOnTab(tab);
+        });
         await enforceFaviconOnTab(tab).catch(() => {});
         return;
       }
@@ -1069,24 +1122,29 @@ async function cleanDownloadsByKeywords(byUrl) {
 }
 
 chrome.commands.onCommand.addListener(async (command) => {
-  if (command === 'toggle-mute') {
-    await setNativeMuteMode(!(await getScriptMute()));
-  } else if (command === 'toggle-hide') {
-    await setHideMode(!(await getHideMode()));
-  } else if (command === 'clean-sensitive-data') {
+  await initializeCoreState();
+  if (command === 'clean-sensitive-data') {
     await runCleanup();
-  } else if (command === 'emergency-mode') {
-    let action = await getEmergencyAction();
-    if (action === 'closeMatchTabs' && !isPremium()) action = 'muteHide';
-    if (action === 'closeMatchTabs') {
-      const matching = await findMatchingTabs();
-      for (const t of matching) {
-        try { await chrome.tabs.remove(t.id); } catch {}
+  } else {
+    await withModeOperationLock(async () => {
+      if (command === 'toggle-mute') {
+        await setNativeMuteMode(!(await getScriptMute()));
+      } else if (command === 'toggle-hide') {
+        await setHideMode(!(await getHideMode()));
+      } else if (command === 'emergency-mode') {
+        let action = await getEmergencyAction();
+        if (action === 'closeMatchTabs' && !isPremium()) action = 'muteHide';
+        if (action === 'closeMatchTabs') {
+          const matching = await findMatchingTabs();
+          for (const t of matching) {
+            try { await chrome.tabs.remove(t.id); } catch {}
+          }
+        } else {
+          await setNativeMuteMode(true);
+          await setHideMode(true);
+        }
       }
-    } else {
-      await setNativeMuteMode(true);
-      await setHideMode(true);
-    }
+    });
   }
   await updateBadge();
 });
@@ -1097,11 +1155,13 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   (async () => {
     switch (msg?.type) {
       case 'set-mute-mode': {
-        await setNativeMuteMode(!!msg.on);
+        await initializeCoreState();
+        await withModeOperationLock(() => setNativeMuteMode(!!msg.on));
         break;
       }
       case 'set-hide-mode': {
-        await setHideMode(!!msg.on);
+        await initializeCoreState();
+        await withModeOperationLock(() => setHideMode(!!msg.on));
         break;
       }
       case 'run-cleanup': {
@@ -1113,15 +1173,8 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         return;
       }
       case 'status': {
-        const tabs = await findMatchingTabs();
-        const hidden = await getState(STORAGE_KEYS.HIDDEN);
-        sendResponse({
-          ok: true,
-          scriptMute: await getScriptMute(),
-          hideMode: await getHideMode(),
-          matching: tabs.length,
-          hidden: hidden.length,
-        });
+        await initializeCoreState();
+        sendResponse(await withModeOperationLock(getStatusSnapshot));
         return;
       }
       default:
@@ -1155,15 +1208,9 @@ async function updateBadge() {
 }
 
 chrome.runtime.onStartup.addListener(async () => {
-  await rehydrateStashWindowIds();
-  await initializeNativeMuteState();
+  await initializeCoreState();
   await initializeLicenseState();
   await syncAllPauseMediaControllers();
-  await updateBadge();
-  if (await getHideMode()) {
-    const tabs = await findMatchingTabs();
-    for (const tab of tabs) await hideTab(tab);
-  }
   syncFavicons().catch(() => {});
   reevaluateSensitiveSession().catch(() => {});
 });
@@ -1231,5 +1278,29 @@ async function rehydrateStashWindowIds() {
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
   hidden.forEach((r) => STASH_WINDOW_IDS.add(r.windowId));
 }
-rehydrateStashWindowIds();
-initializeNativeMuteState().catch(() => {});
+
+function initializeCoreState() {
+  if (coreStateReadyPromise) return coreStateReadyPromise;
+  const restoration = withModeOperationLock(async () => {
+    await rehydrateStashWindowIds();
+    await initializeNativeMuteState();
+    await pruneInvalidHiddenRecords();
+    if (await getHideMode()) {
+      const tabs = await findMatchingTabs();
+      for (const tab of tabs) await hideTab(tab);
+    }
+    await updateBadge();
+  });
+  coreStateReadyPromise = restoration.catch((error) => {
+    // Allow a later popup/event to retry after a transient browser API error.
+    coreStateReadyPromise = null;
+    throw error;
+  });
+  return coreStateReadyPromise;
+}
+
+// A Service Worker module load is the reliable lifecycle hook for browser
+// startup and extension re-enable; runtime.onStartup is not guaranteed then.
+initializeCoreState().catch((error) => {
+  console.warn('Stealth Browser Assistant: core state restoration failed', error);
+});

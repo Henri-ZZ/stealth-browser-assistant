@@ -28,6 +28,10 @@ export default {
     message: '$N$ 件のタブがキーワードに一致しています。',
     placeholders: { n: { content: '$1', example: '3' } },
   },
+  statusMuted: {
+    message: '現在 $N$ 個のタブがミュートされています。',
+    placeholders: { n: { content: '$1', example: '2' } },
+  },
   statusHiddenZero: { message: '非表示モードはオフです。' },
   statusHidden: {
     message: '$N$ 件のタブが非表示になっています。',

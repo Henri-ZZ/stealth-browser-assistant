@@ -28,6 +28,10 @@ export default {
     message: '$N$ pestaña(s) coinciden con tus palabras clave.',
     placeholders: { n: { content: '$1', example: '3' } },
   },
+  statusMuted: {
+    message: '$N$ pestaña(s) silenciada(s) actualmente.',
+    placeholders: { n: { content: '$1', example: '2' } },
+  },
   statusHiddenZero: { message: 'El modo ocultar está desactivado.' },
   statusHidden: {
     message: '$N$ pestaña(s) actualmente ocultas.',

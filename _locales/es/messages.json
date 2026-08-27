@@ -80,6 +80,10 @@
       }
     }
   },
+  "statusMuted": {
+    "message": "$N$ pestaña(s) silenciada(s) actualmente.",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
   "statusHiddenZero": {
     "message": "El modo ocultar está desactivado."
   },

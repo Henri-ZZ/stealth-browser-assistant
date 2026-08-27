@@ -80,6 +80,10 @@
       }
     }
   },
+  "statusMuted": {
+    "message": "$N$ aba(s) silenciada(s) no momento.",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
   "statusHiddenZero": {
     "message": "O modo ocultar está desativado."
   },

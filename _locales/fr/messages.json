@@ -80,6 +80,10 @@
       }
     }
   },
+  "statusMuted": {
+    "message": "$N$ onglet(s) actuellement en sourdine.",
+    "placeholders": { "n": { "content": "$1", "example": "2" } }
+  },
   "statusHiddenZero": {
     "message": "Le mode masquage est désactivé."
   },

@@ -15,8 +15,6 @@ async function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     el.textContent = t(el.getAttribute('data-i18n'));
   });
-  // Re-apply toggle ON/OFF labels once translation is ready.
-  refreshStatus();
 }
 
 function send(msg) {
@@ -48,7 +46,9 @@ async function refreshStatus() {
   setToggleVisuals(document.getElementById('muteToggle'), status.scriptMute);
   setToggleVisuals(document.getElementById('hideToggle'), status.hideMode);
   document.getElementById('matchStatus').textContent =
-    t('statusMatching', [String(status.matching)]);
+    status.scriptMute
+      ? t('statusMuted', [String(status.muted)])
+      : t('statusMatching', [String(status.matching)]);
   document.getElementById('hiddenStatus').textContent =
     status.hideMode || status.hidden > 0
       ? t('statusHidden', [String(status.hidden)])
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.disabled = true;
     await send({ type: 'set-mute-mode', on: !status.scriptMute });
     btn.disabled = false;
-    refreshStatus();
+    await refreshStatus();
   });
   document.getElementById('hideToggle').addEventListener('click', async () => {
     const status = await send({ type: 'status' });
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.disabled = true;
     await send({ type: 'set-hide-mode', on: !status.hideMode });
     btn.disabled = false;
-    refreshStatus();
+    await refreshStatus();
   });
 
   // Clean sensitive data — fires a one-shot cleanup in the background. Greyed
