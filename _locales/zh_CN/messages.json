@@ -162,16 +162,16 @@
     "message": "暂停其中的视频和音频"
   },
   "matchHitSection": {
-    "message": "匹配命中反馈"
+    "message": "关键词命中反馈"
   },
   "matchHitHelp": {
     "message": "让命中关键词的标签页更醒目。"
   },
   "matchHitRedBorder": {
-    "message": "红色边框闪动"
+    "message": "红色边框闪烁"
   },
   "matchTabIconLabel": {
-    "message": "修改 Tab icon"
+    "message": "替换标签页图标"
   },
   "cleanupSection": {
     "message": "清理隐私数据"

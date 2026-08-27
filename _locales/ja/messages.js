@@ -60,7 +60,7 @@ export default {
   popupCleanDone: { message: "クリーンアップしました" },
   popupCleanNothing: { message: "削除対象が選択されていません" },
   popupCleanError: { message: "クリーンアップに失敗しました" },
-  matchHitSection: { message: "一致ヒットのフィードバック" },
+  matchHitSection: { message: "一致時のフィードバック" },
   matchHitHelp: { message: "キーワードに一致するタブを目立たせます。" },
   matchHitRedBorder: { message: "赤枠を点滅させる" },
   matchTabIconLabel: { message: "タブのアイコンを置き換える" },

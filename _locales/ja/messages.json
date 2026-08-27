@@ -174,7 +174,7 @@
     "message": "クリーンアップに失敗しました"
   },
   "matchHitSection": {
-    "message": "一致ヒットのフィードバック"
+    "message": "一致時のフィードバック"
   },
   "matchHitHelp": {
     "message": "キーワードに一致するタブを目立たせます。"

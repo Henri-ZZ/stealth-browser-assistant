@@ -60,7 +60,7 @@ export default {
   popupCleanDone: { message: "정리 완료" },
   popupCleanNothing: { message: "정리할 항목이 선택되지 않았습니다" },
   popupCleanError: { message: "정리 실패" },
-  matchHitSection: { message: "일치 히트 피드백" },
+  matchHitSection: { message: "일치 피드백" },
   matchHitHelp: { message: "키워드와 일치하는 탭을 눈에 띄게 만드세요." },
   matchHitRedBorder: { message: "빨간 테두리 깜빡임" },
   matchTabIconLabel: { message: "탭 아이콘 교체" },
