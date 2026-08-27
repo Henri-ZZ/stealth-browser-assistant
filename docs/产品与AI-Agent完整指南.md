@@ -41,7 +41,7 @@
 Stealth Browser Assistant 是一个以 **Keywords** 为核心的 private tabs 管理扩展。用户添加域名或普通词后，扩展会在标签页的 URL 和标题中进行不区分大小写的子字符串匹配，并对命中的标签页提供：
 
 - Match hit feedback：替换标签页图标，或在当前页面闪烁红色边框。
-- Mute：将匹配标签页中的 `<audio>` 和 `<video>` 元素静音。
+- Mute：使用浏览器原生 Tab mute 将整个匹配标签页静音。
 - Hide：将匹配标签页移入最小化的暂存窗口。
 - Emergency Action：一键开启 Mute + Hide，或直接 Close matching tabs。
 - Pause media：在 Mute 或 Hide 时同时暂停音视频。
@@ -149,23 +149,56 @@ Match hit feedback 有两个独立选项。
 
 ## 6. Mute
 
-Mute 主要使用页面脚本，而不是浏览器原生标签页 Mute API：
+当前 Mute 使用浏览器原生 Tab mute：
 
 ```js
-document.querySelectorAll('audio, video').forEach((element) => {
-  element.muted = true;
-});
+chrome.tabs.update(tabId, { muted: true });
 ```
 
 行为说明：
 
-- 开启 Mute 时，对当前所有匹配标签页执行脚本级 Mute。
+- 开启 Mute 时，对当前所有匹配标签页执行 Tab mute。
 - Mute 开启期间，新建或导航后变为匹配的标签页也会自动应用 Mute。
-- 关闭 Mute 时，对当前所有匹配标签页执行脚本级解除 Mute。
-- 脚本只处理执行当时页面中已经存在的 `<audio>` / `<video>`；没有安装 MutationObserver 持续监听之后动态创建的媒体元素。
-- 浏览器内部页、扩展商店页等禁止脚本注入的页面可能无法 Mute。
+- 标签页不再匹配时，释放该标签页的 Mute 理由。
+- Tab mute 作用于整个标签页，覆盖主页面、iframe、Shadow DOM、动态播放器和 Web Audio，不依赖页面 DOM 结构。
+- 浏览器内部页和扩展商店页不需要页面脚本注入也可执行 Tab mute，但浏览器自身禁止修改的特殊标签页仍可能失败。
 
-Hide 会额外使用浏览器原生的标签页 muted 状态，保证暂存窗口保持安静。这一点与独立的 Mute 实现不同。
+### 6.1 静音归属与恢复
+
+原生 Tab mute 不能采用简单的“开启设为 `true`、关闭统一设为 `false`”实现，否则会解除用户原本设置的静音，或在 Mute 与 Hide 叠加时互相覆盖。当前实现为每个标签页维护独立归属记录：
+
+- `claims`：当前由 `mute`、`hide` 中哪些功能要求该标签页保持静音。
+- `mutedBySba`：当前静音是否确实由 SBA 设置。
+- `muteSuppressed`：用户或外部状态变更是否已经接管本次 Mute。
+
+规则如下：
+
+- 标签页原本已静音时，SBA 不取得解除该静音的权利。
+- 只有 SBA 将未静音标签页改为静音，并且当前 `mutedInfo` 仍归属于本扩展时，SBA 才会在最后一个 claim 释放后解除静音。
+- Mute 与 Hide 同时生效时分别持有 claim；关闭其中一个不会解除另一个仍需要的静音。
+- 用户、其他扩展或 Tab capture 后续改变状态时，普通 Mute 会让出控制权。
+- 用户在 Mute ON 时手动解除某个可见标签页的静音后，该标签页会进入 `muteSuppressed`，页面更新不会立即重新抢回静音；标签页停止匹配或用户重新切换 Mute OFF → ON 后重置。
+- Hide 是安全约束：隐藏标签页必须保持无声，因此隐藏期间的外部解除静音会被重新静音。
+- 标签页关闭后立即删除其归属记录。
+
+归属记录保存在 `chrome.storage.session`。这是有意设计：tab ID 只在一次浏览器会话中唯一，浏览器重启后可能被复用。Service Worker 重启时会清理无效记录，并结合当前 Mute、Hide 和 `mutedInfo` 恢复状态。
+
+### 6.2 Chrome UI 的限制
+
+Chrome 右键菜单中的 `Mute Site` / `Unmute Site` 管理网站级声音权限，与 SBA 使用的 Tab mute 是不同状态。因此：
+
+- SBA 静音后，右键菜单仍可能显示 `Mute Site`。
+- `Mute Site` 不能解除 SBA 设置的 Tab mute。
+- 标签页喇叭图标会显示静音状态，但默认 Chrome 通常不能点击。
+- `chrome://flags/#enable-tab-audio-muting` 可让喇叭图标成为 Tab mute 控件，但这是实验特性，产品不能依赖用户开启。
+- 普通用户应通过 SBA 的 Mute 控件解除 SBA 仍持有的静音。
+
+### 6.3 保留的旧 JS 实现
+
+`background.js` 仍保留 `MUTE_SCRIPT`、`UNMUTE_SCRIPT`、`setScriptMute()` 和 `enforceScriptMuteOnTab()`，用于测试期间快速回退。它们不参与当前 Mute 主流程。
+
+旧方案只修改执行当时可见的 `<audio>` / `<video>` 元素，无法可靠覆盖 iframe、closed Shadow DOM、动态替换的播放器或 Web Audio；关闭时统一设置 `muted = false` 也可能覆盖播放器原始状态。因此在测试完成前保留代码，但不得误认为它仍是当前行为。
+
 
 ## 7. Hide
 
@@ -187,8 +220,9 @@ Chrome 没有向普通扩展开放通用的原地隐藏标签页 API。本产品
 
 - 原窗口仍存在时，尽量恢复到原位置。
 - 原窗口已不存在时，恢复到最近聚焦窗口。
-- 恢复时会统一解除浏览器原生 muted 状态；当前记录没有保存标签页隐藏前是否原本已静音。
-- 用户把标签页手动移出暂存窗口时，该标签页会从隐藏记录中移除并解除静音。
+- 恢复时只释放 Hide claim；如果 Mute claim 仍存在则继续静音。
+- 标签页隐藏前已经由用户或其他来源静音时，恢复后不会被 SBA 解除。
+- 用户把标签页手动移出暂存窗口时，该标签页会从隐藏记录中移除并释放 Hide claim。
 - 用户直接关闭暂存窗口时，其中的标签页会随窗口关闭，相关隐藏记录会被清除。
 
 因此，Hide 是“移动并最小化”，不是加密、锁定、销毁或浏览器原生不可见状态。
@@ -217,13 +251,23 @@ popup 中的 Mute 和 Hide 都会显示 ON。用户将 Hide 切换为 OFF 时，
 
 ## 9. Pause media
 
-Pause media 仅 Premium 可用。开启后，在应用 Mute 或 Hide 时，扩展还会对当前正在播放的 `<audio>` / `<video>` 调用 `pause()`。
+Pause media 仅 Premium 可用。开启后，只要匹配标签页处于 Mute 或 Hide，扩展会安装一个持续的 Pause media 控制器：
+
+- 注入主页面以及当时已存在且可访问的所有 iframe。
+- 立即暂停已有的 `<audio>` / `<video>`。
+- 递归处理开放的 Shadow DOM。
+- 使用 `MutationObserver` 处理动态插入或替换的播放器。
+- 监听 `play` 与 `loadedmetadata`，阻止页面在控制器生效期间重新开始播放。
+- 每秒重新扫描后挂载的开放 Shadow DOM 和同源 iframe。
+- Mute、Hide、Pause media 设置、Keywords 或 Premium 状态改变时同步启用或移除控制器。
 
 这是单向行为：
 
-- Mute 关闭或标签页恢复后不会自动继续播放。
+- 控制器移除后不会自动继续播放。
 - 用户需要自行点击播放。
-- 与 Mute 一样，受保护页面可能无法注入暂停脚本。
+- Mute 与 Hide 中仍有任意一个对匹配标签页生效时，控制器会继续工作。
+- 受保护页面可能无法注入 Pause media 控制器；这不影响 Tab mute 本身。
+- 浏览器安全模型不允许扩展遍历 closed Shadow DOM，也无法保证捕获控制器启用后才创建的跨域 iframe；这些情况仍属于实现边界。
 
 ## 10. Clean private data
 
@@ -355,7 +399,7 @@ Settings 的 Send Feedback 会打开官网 Contact 页面。Leave Review 会识�
 
 ### 13.3 访问范围
 
-为了在任意普通网页中执行 Mute、Pause media、Red border flash 和 Replace tab icon，manifest 声明了 `*://*/*` host permissions，并使用 `scripting` 权限注入代码。
+为了在任意普通网页中执行 Pause media、Red border flash 和 Replace tab icon，manifest 声明了 `*://*/*` host permissions，并使用 `scripting` 权限注入代码。Mute 本身使用 Tabs API，不依赖页面脚本注入。
 
 该权限不代表所有页面都可操作。浏览器内部页、扩展页面、商店页以及其他受保护页面通常会拒绝脚本注入。
 
@@ -416,6 +460,8 @@ License Key 激活成功后，Settings 会短暂显示成功提示，随后隐�
 
 `getState()` 会把默认值和已存储数据合并。新增 storage key 时必须同时更新 `STORAGE_KEYS` 与 `DEFAULTS`。
 
+Mute 归属另存于 `chrome.storage.session` 的 `nativeMuteRecordsV1`，不属于永久产品设置。每条记录包含 `claims`、`mutedBySba` 和 `muteSuppressed`。`nativeMuteMigrationV1` 是一次性迁移标记，用于在切换到原生 Tab mute 时清理由旧 JS 实现遗留的媒体元素状态。不要把按 tab ID 建立的归属记录迁移到永久 `storage.local`。
+
 ### 15.3 事件流
 
 ```text
@@ -428,7 +474,12 @@ tab created / updated
 
 tab removed
   → 清理 hiddenTabs 记录
+  → 清理本次会话的 Mute 归属记录
   → 重新评估 Auto cleanup private session
+
+tab mutedInfo changed
+  → 区分 SBA、用户、其他扩展或 Tab capture
+  → 更新 Mute/Hide claims 与用户接管状态
 
 popup
   → runtime message
@@ -489,7 +540,7 @@ AI Agent 在修改本项目时必须遵守以下约束：
 5. 新增运行时文件时同步加入 `package.sh` 的 `FILES` 白名单，否则发布 ZIP 不会包含该文件。
 6. 新增清理类型时同步考虑 optional permission、Settings 用户手势授权、后台无用户手势限制、Premium gating 和定向清理范围。
 7. 修改 Hide 时不得假设存在公开的 `chrome.tabs.hide`；当前设计依赖暂存窗口和恢复记录。
-8. 修改 Mute 时区分脚本级媒体 muted 与 Hide 使用的浏览器原生标签页 muted。
+8. 修改 Mute 时必须保留静音归属模型，不得用统一 `muted: false` 解除所有标签页；必须分别处理 Mute claim、Hide claim、用户原有静音、外部接管和 `muteSuppressed`。
 9. Emergency Action 的 Mute + Hide 必须同时开启 `scriptMute` 和 `hideMode`，确保 popup 状态与实际隐藏状态一致，并允许用户通过关闭 Hide 恢复标签页。
 10. 任何 destructive 行为都必须在 UI 和文档中明确，例如 Close matching tabs、Cookies & site data 清理。
 11. 不得扩大网络数据范围；License 请求不应携带 Keywords、标签页或浏览历史。
@@ -531,11 +582,11 @@ dist/sba-<version>-firefox.zip
 
 以下不是宣传语，而是维护和排查问题时必须知道的代码事实：
 
-1. 当前 `manifest.json` 是 `1.0.1`，`manifest.firefox.json` 是 `1.0.0`，发布前需要同步。
-2. `background.js` 顶部旧注释曾写“新匹配标签页不会自动 Mute”，但实际事件处理会执行 `enforceScriptMuteOnTab()`；应以实际代码为准。
+1. 当前 `manifest.json` 是 `1.0.4`，`manifest.firefox.json` 是 `1.0.2`，发布前需要同步。
+2. 当前 Mute 主流程使用原生 Tab mute；旧 JS 静音函数仅为测试回退保留，不得同时接入事件流。
 3. Replace tab icon 没有保存原 favicon，也没有在关闭设置时主动恢复。
-4. Hide 恢复时统一解除原生 muted，没有记录隐藏前的原始静音状态。
-5. Mute 和 Pause media 只处理注入时已经存在的媒体元素。
+4. Chrome 的 `Mute Site` 是网站级设置，不反映也不能解除扩展设置的 Tab mute；默认不可点击的标签页喇叭也不能作为可靠的用户解除入口。
+5. Pause media 能持续处理已有 iframe、开放 Shadow DOM 和动态媒体，但 closed Shadow DOM 与之后才创建的跨域 iframe 仍可能无法暂停；Tab mute 仍会阻止其声音输出。
 6. 普通词 Keywords 无法用于 Cookies & site data 的 origin 定向清理。
 7. Settings 启用 Auto cleanup 时会请求所有清理权限，而不只是当前已勾选的类型。
 
@@ -559,6 +610,16 @@ dist/sba-<version>-firefox.zip
 
 - 当前匹配标签页立即处理。
 - 模式开启后新出现的匹配标签页按预期处理。
+- Mute 能静音 iframe、动态播放器和 Web Audio；重点验证 Reddit 等旧 JS 方案失效的页面。
+- 用户原本已手动静音时，SBA Mute OFF 不得解除该静音。
+- SBA Mute ON 后用户手动接管状态时，页面更新不得立即抢回普通 Mute。
+- Mute 与 Hide 同时 ON 时，任意关闭一个都不能解除另一个仍持有的静音。
+- 两者都 OFF 后，只解除仍归属于 SBA 的静音。
+- 其他扩展或 Tab capture 接管后，SBA 不得覆盖其状态。
+- Service Worker 重启后不得丢失当前会话的静音归属。
+- Pause media 能暂停已有 iframe、开放 Shadow DOM 和稍后动态创建的媒体。
+- Mute 或 Hide 仍有一个保持 ON 时，关闭另一个不得移除 Pause media 控制器。
+- 关闭所有相关模式或关闭 Pause media 后只移除控制器，不得自动恢复播放。
 - Hide 关闭后尽量恢复原窗口和位置。
 - 手动移出或关闭暂存窗口后隐藏记录正确清理。
 - Free 下 Close matching tabs 必须回退到 Mute + Hide。

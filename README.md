@@ -1,6 +1,6 @@
 # Stealth Browser Assistant · 隐私浏览助手
 
-> Private browsing assistant for sensitive tabs.
+> Quick controls for private tabs.
 > Instantly mute, hide and manage private browser tabs with keyboard shortcuts.
 
 一个 Chrome (MV3) 浏览器扩展，帮你静音和隐藏那些"不想被人瞥见"的标签页。
@@ -10,7 +10,7 @@
 ## 功能
 
 - **自定义关键词列表** — 添加域名或任意词（如 `bank.com`、`salary`）。标签页的网址或标题中包含任一关键词即视为匹配（不区分大小写）。
-- **静音模式（开/关）** — 开启后，所有匹配的标签页内的 `<audio>` / `<video>` 元素被静音，**之后新开或导航到匹配网址的标签页也会自动静音**；关闭后注入解静音脚本。采用页面内脚本注入方式，不碰 Chrome 原生静音 API，用户仍可随时用右键 `Mute site` / `Unmute site` 操作单个标签页。
+- **静音模式（开/关）** — 使用浏览器原生的 Tab mute 将所有匹配标签页完整静音，覆盖 iframe、Shadow DOM、动态播放器和 Web Audio；之后新开或导航到匹配网址的标签页也会自动静音。关闭时只解除仍由 SBA 持有的静音，不覆盖用户、其他扩展或 Tab capture 后续设置的状态。
 - **隐藏模式（开/关）** — 开启后，所有匹配的标签页被移入一个最小化的"暂存窗口"并静音，**之后新开或导航到匹配网址的标签页也会自动隐藏**；关闭时全部还原到原位置。
 
 ### 紧急模式
@@ -31,7 +31,9 @@ Chrome 没有公开的"原地隐藏标签页" API（`chrome.tabs.hide` 仅对企
 
 ## 关于"静音"
 
-Chrome 扩展 API 中的 `chrome.tabs.update({ muted: true })` 会锁定标签页的静音状态，导致用户之后无法通过右键 `Mute site / Unmute site` 操作该标签页。本扩展的静音实现不碰 Chrome 原生静音 API，而是通过 `chrome.scripting.executeScript` 注入脚本到页面内，直接控制 `<audio>` 和 `<video>` 元素的 `muted` 属性。这样用户可以随时通过 Chrome 右键菜单自由控制每个标签页的静音状态。
+Mute 使用浏览器原生的 `chrome.tabs.update({ muted: true })`，因此能对整个标签页可靠静音。Chrome 右键菜单中的 `Mute Site` 是另一套网站级声音权限，不反映也不能解除 SBA 设置的 Tab mute。默认 Chrome 中标签页喇叭通常只是状态图标；可点击控制属于 `chrome://flags/#enable-tab-audio-muting` 实验特性。因此普通用户应通过 SBA 关闭 Mute。
+
+为避免静音状态混乱，SBA 会记录每个标签页的静音归属，并将 Mute 与 Hide 作为两个独立理由处理：用户原本已静音的标签页不会被 SBA 解除；Mute 与 Hide 叠加时关闭其中一个不会破坏另一个；用户、其他扩展或 Tab capture 后续接管静音状态时，SBA 不会在关闭 Mute 时覆盖该状态。旧的页面内 `<audio>` / `<video>` 静音函数暂时保留在 `background.js`，仅作为测试期间的回退实现，不参与当前 Mute 主流程。
 
 ## 安装（开发模式）
 

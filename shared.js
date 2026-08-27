@@ -4,7 +4,7 @@
 export const STORAGE_KEYS = {
   KEYWORDS: "keywords",
   HIDDEN: "hiddenTabs", // array of HiddenRecord
-  SCRIPT_MUTE: "scriptMute", // boolean: user toggled mute via popup (script-level, not Chrome API)
+  SCRIPT_MUTE: "scriptMute", // legacy key name; boolean: native Tab mute mode is on
   HIDE_MODE: "hideMode", // boolean: auto-hide matching tabs while on
   LANG_PREF: "langPref", // '' | 'en' | 'zh_CN' ('' => follow browser UI language)
   EMERGENCY_ACTION: "emergencyAction", // 'muteHide' | 'closeMatchTabs' — what Alt+Shift+Space does
@@ -164,7 +164,7 @@ export async function getHideMode() {
 
 /**
  * True when the user wants media playback to be paused as a side-effect of
- * script-mute or hide being applied. One-way: unmuting / unhiding does NOT
+ * Mute or Hide being applied. One-way: unmuting / unhiding does NOT
  * auto-resume — the user clicks play themselves.
  */
 export async function getPauseOnMuteHide() {
@@ -224,7 +224,7 @@ export async function setAutoCleanupState(patch) {
 }
 
 /**
- * What the emergency-mode shortcut does: 'muteHide' (script-mute + hide tabs in stash)
+ * What the Emergency Action shortcut does: 'muteHide' (Mute + Hide)
  * or 'closeMatchTabs' (close every matching tab).
  */
 export async function getEmergencyAction() {

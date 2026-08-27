@@ -1,13 +1,9 @@
 // Service worker for Stealth Browser Assistant.
 //
 // hideMode — when ON, every matching tab is moved into a minimized stash window.
-// Mute uses script injection (no Chrome mute API). The popup has a toggle
-// that stores a boolean `scriptMute` in chrome.storage. When toggled ON, we
-// inject a mute script into every matching tab; when toggled OFF, we inject
-// an unmute script. The stored flag is purely for the toggle UI — it does NOT
-// drive continuous enforcement. New matching tabs are NOT auto-muted (the
-// user can toggle off/on to re-apply). Chrome's native mute/unmute keeps
-// working freely.
+// Mute uses the browser's tab-level mute with ownership tracking. The former
+// DOM media-element implementation is kept below as a legacy fallback while
+// the native implementation is being tested.
 //
 // NOTE on "hiding" tabs: Chrome has no public chrome.tabs.hide API (reserved for
 // enterprise-policy extensions). We emulate hiding by moving matching tabs into a
@@ -48,7 +44,7 @@ async function findMatchingTabs() {
   return allTabs.filter((t) => tabMatchesKeywords(t, keywords));
 }
 
-// ───────────────────────── mute (script-level, toggle) ─────────────────────────
+// ───────────────────────── legacy media-element mute (kept for rollback) ─────────────────────────
 
 /**
  * Inject a small script into a tab. Returns false on failure (e.g. protected page).
@@ -62,9 +58,122 @@ async function injectScript(tabId, func, args = []) {
   }
 }
 
+/** Inject into the main document and every currently accessible child frame. */
+async function injectScriptAllFrames(tabId, func, args = []) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId, allFrames: true },
+      func,
+      args,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function MUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { el.muted = true; }); }
 function UNMUTE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { el.muted = false; }); }
 function PAUSE_SCRIPT() { document.querySelectorAll('audio, video').forEach(el => { if (!el.paused) el.pause(); }); }
+
+/**
+ * Persistent Pause media controller, installed independently in every frame.
+ * It pauses existing and newly inserted media, including media inside open
+ * Shadow DOM. Disabling only removes observers/listeners; it never resumes.
+ */
+function PAUSE_MEDIA_CONTROLLER_SCRIPT(enabled) {
+  const KEY = '__sbaPauseMediaControllerV1';
+  const previous = globalThis[KEY];
+  if (previous) {
+    for (const observer of previous.observers) observer.disconnect();
+    for (const [frame, listener] of previous.frameListeners) {
+      frame.removeEventListener('load', listener);
+    }
+    document.removeEventListener('play', previous.pauseEvent, true);
+    document.removeEventListener('loadedmetadata', previous.pauseEvent, true);
+    clearInterval(previous.rescanInterval);
+    delete globalThis[KEY];
+  }
+  if (!enabled) return;
+
+  const controller = {
+    observers: [],
+    frameListeners: [],
+    roots: new WeakSet(),
+    frames: new WeakSet(),
+    pauseEvent: null,
+    rescanInterval: null,
+  };
+
+  const pauseElement = (element) => {
+    if (!(element instanceof HTMLMediaElement)) return;
+    try {
+      if (!element.paused) element.pause();
+    } catch {
+      // A page-controlled media implementation may reject pause().
+    }
+  };
+
+  const watchRoot = (root) => {
+    if (!root || controller.roots.has(root)) return;
+    controller.roots.add(root);
+
+    const scan = (node) => {
+      if (!node) return;
+      pauseElement(node);
+      if (node.querySelectorAll) {
+        for (const media of node.querySelectorAll('audio, video')) pauseElement(media);
+        for (const element of node.querySelectorAll('*')) {
+          if (element.shadowRoot) watchRoot(element.shadowRoot);
+        }
+        for (const frame of node.querySelectorAll('iframe')) watchFrame(frame);
+      }
+      if (node.shadowRoot) watchRoot(node.shadowRoot);
+      if (node instanceof HTMLIFrameElement) watchFrame(node);
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) scan(node);
+      }
+    });
+    observer.observe(root, { childList: true, subtree: true });
+    controller.observers.push(observer);
+    scan(root);
+  };
+
+  function watchFrame(frame) {
+    if (controller.frames.has(frame)) return;
+    controller.frames.add(frame);
+    const scanFrame = () => {
+      try { watchRoot(frame.contentDocument); } catch {}
+    };
+    frame.addEventListener('load', scanFrame);
+    controller.frameListeners.push([frame, scanFrame]);
+    scanFrame();
+  }
+
+  const rescanTree = (root) => {
+    if (!root?.querySelectorAll) return;
+    for (const media of root.querySelectorAll('audio, video')) pauseElement(media);
+    for (const element of root.querySelectorAll('*')) {
+      if (element.shadowRoot) {
+        watchRoot(element.shadowRoot);
+        rescanTree(element.shadowRoot);
+      }
+    }
+    for (const frame of root.querySelectorAll('iframe')) watchFrame(frame);
+  };
+
+  controller.pauseEvent = (event) => pauseElement(event.target);
+  document.addEventListener('play', controller.pauseEvent, true);
+  document.addEventListener('loadedmetadata', controller.pauseEvent, true);
+  globalThis[KEY] = controller;
+  watchRoot(document);
+  // Covers a ShadowRoot attached after its host was inserted, which produces
+  // no child-list mutation on the surrounding document.
+  controller.rescanInterval = setInterval(() => rescanTree(document), 1000);
+}
 
 /**
  * Flash a bold red border around the whole page (match-hit feedback).
@@ -120,6 +229,263 @@ async function enforceScriptMuteOnTab(tab) {
   if (await getPauseOnMuteHide() && isPremium()) await injectScript(tab.id, PAUSE_SCRIPT);
 }
 
+async function setPauseMediaController(tabId, enabled) {
+  return injectScriptAllFrames(tabId, PAUSE_MEDIA_CONTROLLER_SCRIPT, [enabled]);
+}
+
+async function syncPauseMediaControllerOnTab(tab) {
+  const keywords = await getKeywords();
+  const matches = tabMatchesKeywords(tab, keywords);
+  const modeActive = await getScriptMute() || await getHideMode();
+  const enabled = matches
+    && modeActive
+    && isPremium()
+    && await getPauseOnMuteHide();
+  await setPauseMediaController(tab.id, enabled);
+}
+
+async function syncAllPauseMediaControllers() {
+  const tabs = await chrome.tabs.query({});
+  for (const tab of tabs) {
+    await syncPauseMediaControllerOnTab(tab);
+  }
+}
+
+// ───────────────────────── native tab mute (test implementation) ─────────────────────────
+
+// Session storage is intentional: tab ids are only unique within one browser
+// session and may be reused after a restart. Each record tracks independent
+// claims from Mute and Hide so releasing one feature cannot undo the other.
+const NATIVE_MUTE_RECORDS_KEY = 'nativeMuteRecordsV1';
+const NATIVE_MUTE_MIGRATION_KEY = 'nativeMuteMigrationV1';
+let nativeMuteMemoryRecords = {};
+let nativeMuteQueue = Promise.resolve();
+
+function withNativeMuteLock(task) {
+  const run = nativeMuteQueue.then(task, task);
+  nativeMuteQueue = run.catch(() => {});
+  return run;
+}
+
+async function readNativeMuteRecords() {
+  if (!chrome.storage.session) return { ...nativeMuteMemoryRecords };
+  try {
+    const stored = await chrome.storage.session.get(NATIVE_MUTE_RECORDS_KEY);
+    return stored[NATIVE_MUTE_RECORDS_KEY] || {};
+  } catch {
+    return { ...nativeMuteMemoryRecords };
+  }
+}
+
+async function writeNativeMuteRecords(records) {
+  nativeMuteMemoryRecords = records;
+  if (!chrome.storage.session) return;
+  try {
+    await chrome.storage.session.set({ [NATIVE_MUTE_RECORDS_KEY]: records });
+  } catch {
+    // The in-memory copy remains usable if session storage is unavailable.
+  }
+}
+
+function mutedByThisExtension(mutedInfo) {
+  return !!mutedInfo?.muted
+    && mutedInfo.reason === 'extension'
+    && mutedInfo.extensionId === chrome.runtime.id;
+}
+
+async function acquireNativeMuteClaim(tabId, claim) {
+  return withNativeMuteLock(async () => {
+    const tab = await chrome.tabs.get(tabId).catch(() => null);
+    if (!tab) return false;
+
+    const records = await readNativeMuteRecords();
+    const key = String(tabId);
+    const record = records[key] || {
+      claims: [],
+      mutedBySba: false,
+      muteSuppressed: false,
+    };
+
+    // A manual unmute while Mute is ON suppresses re-enforcement until the
+    // tab stops matching or the user explicitly toggles Mute off and on.
+    if (claim === 'mute' && record.muteSuppressed) return false;
+
+    if (!record.claims.includes(claim)) record.claims.push(claim);
+    if (!tab.mutedInfo?.muted) {
+      await chrome.tabs.update(tabId, { muted: true });
+      record.mutedBySba = true;
+    } else if (mutedByThisExtension(tab.mutedInfo)) {
+      record.mutedBySba = true;
+    }
+
+    records[key] = record;
+    await writeNativeMuteRecords(records);
+    return true;
+  });
+}
+
+async function releaseNativeMuteClaim(tabId, claim, { clearSuppression = false } = {}) {
+  return withNativeMuteLock(async () => {
+    const records = await readNativeMuteRecords();
+    const key = String(tabId);
+    const record = records[key];
+    if (!record) return;
+
+    record.claims = record.claims.filter((item) => item !== claim);
+    if (clearSuppression) record.muteSuppressed = false;
+
+    if (record.claims.length === 0) {
+      const tab = await chrome.tabs.get(tabId).catch(() => null);
+      // Only undo a mute that is still attributed to SBA. A later user,
+      // capture, or other-extension action always wins.
+      if (record.mutedBySba && tab && mutedByThisExtension(tab.mutedInfo)) {
+        await chrome.tabs.update(tabId, { muted: false }).catch(() => {});
+      }
+      record.mutedBySba = false;
+      if (record.muteSuppressed) records[key] = record;
+      else delete records[key];
+    } else {
+      records[key] = record;
+    }
+    await writeNativeMuteRecords(records);
+  });
+}
+
+async function clearNativeMuteSuppression(tabId) {
+  return withNativeMuteLock(async () => {
+    const records = await readNativeMuteRecords();
+    const key = String(tabId);
+    const record = records[key];
+    if (!record?.muteSuppressed) return;
+    record.muteSuppressed = false;
+    if (record.claims.length === 0) delete records[key];
+    else records[key] = record;
+    await writeNativeMuteRecords(records);
+  });
+}
+
+async function releaseAllNativeMuteClaims() {
+  const records = await readNativeMuteRecords();
+  for (const tabId of Object.keys(records).map(Number)) {
+    await releaseNativeMuteClaim(tabId, 'mute', { clearSuppression: true });
+  }
+}
+
+async function setNativeMuteMode(on) {
+  await setState(STORAGE_KEYS.SCRIPT_MUTE, on);
+  if (on) {
+    // A fresh ON action is explicit permission to mute again after a previous
+    // manual override.
+    const records = await readNativeMuteRecords();
+    for (const tabId of Object.keys(records).map(Number)) {
+      await clearNativeMuteSuppression(tabId);
+    }
+    const tabs = await findMatchingTabs();
+    for (const tab of tabs) {
+      await acquireNativeMuteClaim(tab.id, 'mute');
+    }
+  } else {
+    await releaseAllNativeMuteClaims();
+  }
+  await syncAllPauseMediaControllers();
+  await updateBadge();
+}
+
+async function enforceNativeMuteOnTab(tab) {
+  const keywords = await getKeywords();
+  const matches = tabMatchesKeywords(tab, keywords);
+  if (await getScriptMute() && matches) {
+    await acquireNativeMuteClaim(tab.id, 'mute');
+  } else {
+    await releaseNativeMuteClaim(tab.id, 'mute', { clearSuppression: !matches });
+  }
+  await syncPauseMediaControllerOnTab(tab);
+}
+
+async function handleExternalNativeMuteChange(tabId, mutedInfo) {
+  if (mutedInfo?.reason === 'extension'
+      && mutedInfo.extensionId === chrome.runtime.id) return;
+
+  await withNativeMuteLock(async () => {
+    const records = await readNativeMuteRecords();
+    const key = String(tabId);
+    const record = records[key];
+    if (!record) return;
+
+    // A user/capture/other-extension change takes ownership away from SBA.
+    // For ordinary Mute, remember a manual override so page updates do not
+    // immediately mute the tab again.
+    if (record.claims.includes('mute')) {
+      record.claims = record.claims.filter((item) => item !== 'mute');
+      record.muteSuppressed = true;
+    }
+    record.mutedBySba = false;
+
+    // Hidden tabs must remain silent. This is the only hard invariant; users
+    // can freely override Mute on visible tabs.
+    if (record.claims.includes('hide') && !mutedInfo?.muted) {
+      await chrome.tabs.update(tabId, { muted: true }).catch(() => {});
+      record.mutedBySba = true;
+    }
+
+    if (record.claims.length === 0 && !record.muteSuppressed) delete records[key];
+    else records[key] = record;
+    await writeNativeMuteRecords(records);
+  });
+}
+
+async function forgetNativeMuteTab(tabId) {
+  return withNativeMuteLock(async () => {
+    const records = await readNativeMuteRecords();
+    delete records[String(tabId)];
+    await writeNativeMuteRecords(records);
+  });
+}
+
+let nativeMuteInitializationPromise = null;
+
+function initializeNativeMuteState() {
+  if (nativeMuteInitializationPromise) return nativeMuteInitializationPromise;
+  nativeMuteInitializationPromise = (async () => {
+    const tabs = await chrome.tabs.query({});
+    const liveTabIds = new Set(tabs.map((tab) => String(tab.id)));
+
+    await withNativeMuteLock(async () => {
+      const records = await readNativeMuteRecords();
+      for (const tabId of Object.keys(records)) {
+        if (!liveTabIds.has(tabId)) delete records[tabId];
+      }
+      await writeNativeMuteRecords(records);
+    });
+
+    const hidden = await getState(STORAGE_KEYS.HIDDEN);
+    const hiddenIds = new Set(hidden.map((record) => record.tabId));
+    for (const tab of tabs) {
+      if (hiddenIds.has(tab.id)) await acquireNativeMuteClaim(tab.id, 'hide');
+    }
+
+    const migration = await chrome.storage.local.get(NATIVE_MUTE_MIGRATION_KEY);
+    const cleanLegacyMediaState = !migration[NATIVE_MUTE_MIGRATION_KEY];
+    if (await getScriptMute()) {
+      const keywords = await getKeywords();
+      for (const tab of tabs) {
+        if (tabMatchesKeywords(tab, keywords)) {
+          // Clean up media-element state left by the previous implementation
+          // before transferring responsibility to native tab mute.
+          if (cleanLegacyMediaState) await injectScript(tab.id, UNMUTE_SCRIPT);
+          await acquireNativeMuteClaim(tab.id, 'mute');
+        }
+      }
+    }
+    if (cleanLegacyMediaState) {
+      await chrome.storage.local.set({ [NATIVE_MUTE_MIGRATION_KEY]: true });
+    }
+  })().finally(() => {
+    nativeMuteInitializationPromise = null;
+  });
+  return nativeMuteInitializationPromise;
+}
+
 // ───────────────────────── hide mode ─────────────────────────
 
 /**
@@ -129,7 +495,7 @@ async function enforceHideOnTab(tab) {
   if (!(await getHideMode())) return;
   const keywords = await getKeywords();
   if (!tabMatchesKeywords(tab, keywords)) return;
-  if (await getPauseOnMuteHide() && isPremium()) await injectScript(tab.id, PAUSE_SCRIPT);
+  await syncPauseMediaControllerOnTab(tab);
   await hideTab(tab);
 }
 
@@ -137,15 +503,13 @@ async function setHideMode(on) {
   await setState(STORAGE_KEYS.HIDE_MODE, on);
   if (on) {
     const tabs = await findMatchingTabs();
-    const shouldPause = await getPauseOnMuteHide() && isPremium();
     for (const tab of tabs) {
-      // Also mute hidden tabs so the stash window stays silent.
-      try { await chrome.tabs.update(tab.id, { muted: true }); } catch {}
-      if (shouldPause) await injectScript(tab.id, PAUSE_SCRIPT);
+      await syncPauseMediaControllerOnTab(tab);
       await hideTab(tab);
     }
   } else {
     await unhideAll();
+    await syncAllPauseMediaControllers();
   }
   await updateBadge();
 }
@@ -154,6 +518,9 @@ async function setHideMode(on) {
  * Move a single tab into the stash window and record it. Skips tabs already hidden.
  */
 async function hideTab(tab) {
+  // Hide has its own native-mute claim. It composes with Mute and remembers
+  // whether the tab was already muted by the user before SBA touched it.
+  await acquireNativeMuteClaim(tab.id, 'hide');
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
   if (hidden.some((r) => r.tabId === tab.id)) return; // already stashed
   if (hidden.some((r) => r.url === tab.url)) {
@@ -175,9 +542,6 @@ async function hideTab(tab) {
   await chrome.windows.update(targetWindowId, { state: STASH_WINDOW_STATE });
   STASH_WINDOW_IDS.add(targetWindowId);
 
-  // Mute so the minimized window stays silent.
-  try { await chrome.tabs.update(tab.id, { muted: true }); } catch {}
-
   const record = {
     tabId: tab.id,
     windowId: targetWindowId,
@@ -191,8 +555,8 @@ async function hideTab(tab) {
 }
 
 /**
- * Restore all hidden tabs to their original windows/positions.
- * Always unmute restored tabs (they were only muted because of hiding).
+ * Restore all hidden tabs to their original windows/positions. Releasing the
+ * Hide claim only unmutes when no Mute claim or external owner remains.
  */
 async function unhideAll() {
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
@@ -214,8 +578,7 @@ async function unhideAll() {
 
       const targetIndex = record.originalIndex ?? -1;
       await chrome.tabs.move(record.tabId, { windowId: destWindowId, index: targetIndex });
-      // Hidden tabs are always muted as a side-effect; unmute on restore.
-      try { await chrome.tabs.update(record.tabId, { muted: false }); } catch {}
+      await releaseNativeMuteClaim(record.tabId, 'hide');
       restored.push(record);
     } catch (err) {
       console.warn('Stealth Browser Assistant: failed to restore tab', record, err);
@@ -274,8 +637,11 @@ chrome.tabs.onCreated.addListener((tab) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
+  if (change.mutedInfo) {
+    handleExternalNativeMuteChange(tabId, change.mutedInfo).catch(() => {});
+  }
   if ('url' in change || 'title' in change || change.status === 'complete') {
-    enforceScriptMuteOnTab(tab).catch(() => {});
+    enforceNativeMuteOnTab(tab).catch(() => {});
     enforceHideOnTab(tab).catch(() => {});
     enforceFaviconOnTab(tab).catch(() => {});
     reevaluateSensitiveSession().catch(() => {});
@@ -414,6 +780,7 @@ async function syncFavicons() {
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   newlyCreatedTabs.delete(tabId);
   lastMatchFlashByTab.delete(tabId);
+  forgetNativeMuteTab(tabId).catch(() => {});
   reevaluateSensitiveSession().catch(() => {});
   const hidden = await getState(STORAGE_KEYS.HIDDEN);
   if (!hidden.some((r) => r.tabId === tabId)) return;
@@ -429,8 +796,7 @@ chrome.tabs.onAttached.addListener(async (tabId, { newWindowId }) => {
   if (!rec) return;
   if (![...STASH_WINDOW_IDS].includes(newWindowId)) {
     await setState(STORAGE_KEYS.HIDDEN, hidden.filter((r) => r.tabId !== tabId));
-    // Unmute since it's no longer in the stash window.
-    try { await chrome.tabs.update(tabId, { muted: false }); } catch {}
+    await releaseNativeMuteClaim(tabId, 'hide');
     await updateBadge();
   }
 });
@@ -455,7 +821,7 @@ async function maybeApplyToTabLater(tabId) {
     try {
       const tab = await chrome.tabs.get(tabId);
       if (tab.url || tab.title) {
-        await enforceScriptMuteOnTab(tab);
+        await enforceNativeMuteOnTab(tab);
         await enforceHideOnTab(tab);
         await enforceFaviconOnTab(tab).catch(() => {});
         return;
@@ -704,7 +1070,7 @@ async function cleanDownloadsByKeywords(byUrl) {
 
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'toggle-mute') {
-    await setScriptMute(!(await getScriptMute()));
+    await setNativeMuteMode(!(await getScriptMute()));
   } else if (command === 'toggle-hide') {
     await setHideMode(!(await getHideMode()));
   } else if (command === 'clean-sensitive-data') {
@@ -718,7 +1084,7 @@ chrome.commands.onCommand.addListener(async (command) => {
         try { await chrome.tabs.remove(t.id); } catch {}
       }
     } else {
-      await setScriptMute(true);
+      await setNativeMuteMode(true);
       await setHideMode(true);
     }
   }
@@ -731,7 +1097,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   (async () => {
     switch (msg?.type) {
       case 'set-mute-mode': {
-        await setScriptMute(!!msg.on);
+        await setNativeMuteMode(!!msg.on);
         break;
       }
       case 'set-hide-mode': {
@@ -790,7 +1156,9 @@ async function updateBadge() {
 
 chrome.runtime.onStartup.addListener(async () => {
   await rehydrateStashWindowIds();
+  await initializeNativeMuteState();
   await initializeLicenseState();
+  await syncAllPauseMediaControllers();
   await updateBadge();
   if (await getHideMode()) {
     const tabs = await findMatchingTabs();
@@ -843,14 +1211,20 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 // Keep the sync premium cache in step with activation from the options page.
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes[STORAGE_KEYS.LICENSE]) {
-    refreshPremiumState();
+  if (area !== 'local') return;
+  if (changes[STORAGE_KEYS.LICENSE]) {
+    refreshPremiumState().then(() => syncAllPauseMediaControllers()).catch(() => {});
+  } else if (changes[STORAGE_KEYS.PAUSE_ON_MUTE_HIDE]
+      || changes[STORAGE_KEYS.KEYWORDS]) {
+    syncAllPauseMediaControllers().catch(() => {});
   }
 });
 
 // Restore and, when necessary, revalidate Premium on every Service Worker
 // start—including extension re-enable, where runtime.onStartup may not fire.
-initializeLicenseState().catch(() => {});
+initializeLicenseState()
+  .then(() => syncAllPauseMediaControllers())
+  .catch(() => {});
 scheduleLicenseCheckIn();
 
 async function rehydrateStashWindowIds() {
@@ -858,3 +1232,4 @@ async function rehydrateStashWindowIds() {
   hidden.forEach((r) => STASH_WINDOW_IDS.add(r.windowId));
 }
 rehydrateStashWindowIds();
+initializeNativeMuteState().catch(() => {});
