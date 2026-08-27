@@ -247,7 +247,7 @@ export function tabMatchesKeywords(tab, keywords) {
 }
 
 /**
- * The user's language preference: '' (follow browser), 'en', or 'zh_CN'.
+ * The user's language preference: '' (follow browser) or a supported locale.
  */
 export async function getLangPref() {
   const v = await getState(STORAGE_KEYS.LANG_PREF);
@@ -261,14 +261,33 @@ export async function getLangPref() {
 export async function resolveLocale() {
   const pref = await getLangPref();
   if (SUPPORTED_LOCALES.includes(pref)) return pref;
-  const ui = chrome.i18n.getUILanguage();
-  // Try exact match first, then fall back to language prefix
-  // (e.g. 'pt-BR' → 'pt_BR', 'zh-CN' → 'zh_CN').
-  if (SUPPORTED_LOCALES.includes(ui)) return ui;
-  const prefix = ui.split("-")[0];
-  const map = { zh: "zh_CN", pt: "pt_BR" }; // map language prefixes to our locale codes
-  const mapped = map[prefix] || prefix;
-  return SUPPORTED_LOCALES.includes(mapped) ? mapped : "en";
+
+  // Browsers do not return this value in one consistent form. Only inspect
+  // the first two letters, so every `zh...` variant maps to Chinese, every
+  // `pt...` variant maps to Brazilian Portuguese, and so on.
+  const candidates = [];
+  try {
+    candidates.push(chrome.i18n.getUILanguage());
+  } catch {
+    // Fall through to navigator language detection.
+  }
+  if (typeof navigator !== "undefined") {
+    candidates.push(...(navigator.languages || []), navigator.language);
+  }
+
+  for (const candidate of candidates) {
+    const language = String(candidate || "").trim().slice(0, 2).toLowerCase();
+    if (!language) continue;
+
+    const mapped = language === "zh"
+      ? "zh_CN"
+      : language === "pt"
+        ? "pt_BR"
+        : language;
+    if (SUPPORTED_LOCALES.includes(mapped)) return mapped;
+  }
+
+  return "en";
 }
 
 /**

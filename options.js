@@ -615,7 +615,14 @@ function setupPremiumCard() {
       await renderKeywords(); // keyword counter → ∞ once premium
       // Let the success message read, then unlock premium features (the
       // is-premium class also hides this card and shows the header badge).
-      setTimeout(() => applyPremiumState(), 1000);
+      // After the layout updates, scroll to the top so the user sees the
+      // larger Premium badge instead of only noticing that the form vanished.
+      setTimeout(() => {
+        applyPremiumState();
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }, 1000);
     } else {
       status.textContent = activateReasonMessage(result.reason);
       status.hidden = false;

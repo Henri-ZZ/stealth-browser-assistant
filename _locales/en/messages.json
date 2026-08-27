@@ -9,7 +9,7 @@
     "message": "Hide, mute, or close private browser tabs instantly with customizable keywords and one-click emergency controls."
   },
   "subtitle": {
-    "message": "Private browsing assistant for sensitive tabs"
+    "message": "Quick controls for private tabs"
   },
   "cmdToggleMute": {
     "message": "Toggle mute for tabs matching keywords"

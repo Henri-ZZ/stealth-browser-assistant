@@ -374,6 +374,8 @@ Settings 当前按以下结构组织：
 9. Support：通过紧凑的两行入口前往 Chrome Web Store 执行 Leave Review，或通过 Contact 页面执行 Send Feedback。
 10. Premium：了解 Premium 或输入 License Key 激活。
 
+License Key 激活成功后，Settings 会短暂显示成功提示，随后隐藏 Premium 激活卡片、显示顶部 Premium badge，并自动滚动到页面顶部，让用户看到状态已经生效。
+
 当前支持语言：English、简体中文、Español、Deutsch、日本語、Français、Português (Brasil)、한국어。
 
 ## 15. 面向 AI Agent 的工程地图
