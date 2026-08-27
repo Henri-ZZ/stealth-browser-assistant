@@ -111,7 +111,7 @@
     "message": "Tastenkombinationen"
   },
   "optionsPageTitle": {
-    "message": "Stealth Browser Assistant — Einstellungen"
+    "message": "Einstellungen"
   },
   "optionsKeywordsHelp": {
     "message": "Jedes Schlüsselwort passt, wenn es in der URL oder im Titel des Tabs vorkommt (Groß-/Kleinschreibung wird ignoriert). Verwende eine Domain (z.B. bank.com) oder ein beliebiges Wort (z.B. Gehaltsabrechnung)."

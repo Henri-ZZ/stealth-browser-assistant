@@ -39,7 +39,7 @@ export default {
   langHelp: { message: '인터페이스 언어를 선택하거나 브라우저를 따릅니다.' },
   langFollowBrowser: { message: '브라우저 따르기' },
   optionsTitle: { message: '단축키' },
-  optionsPageTitle: { message: 'Stealth Browser Assistant — 설정' },
+  optionsPageTitle: { message: '설정' },
   optionsKeywordsHelp: { message: '탭의 URL 또는 제목에 키워드가 포함되어 있으면 일치합니다(대소문자 구분 없음). 도메인(예: bank.com) 또는 임의의 단어(예: 급여명세서)를 사용하세요.' },
   optionsShortcutsHelp: { message: '키보드 단축키는 다음에서 사용자 지정할 수 있습니다: ' },
   openShortcutsPage: { message: "단축키 설정" },

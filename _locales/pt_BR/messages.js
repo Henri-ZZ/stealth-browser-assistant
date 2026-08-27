@@ -39,7 +39,7 @@ export default {
   langHelp: { message: 'Escolha o idioma da interface ou siga o navegador.' },
   langFollowBrowser: { message: 'Seguir navegador' },
   optionsTitle: { message: 'Atalhos' },
-  optionsPageTitle: { message: 'Stealth Browser Assistant — Configurações' },
+  optionsPageTitle: { message: 'Configurações' },
   optionsKeywordsHelp: { message: 'Cada palavra-chave corresponde se aparecer no URL ou título da aba (sem distinção de maiúsculas). Use um domínio (ex. bank.com) ou qualquer palavra (ex. contracheque).' },
   optionsShortcutsHelp: { message: 'Os atalhos de teclado podem ser personalizados em ' },
   openShortcutsPage: { message: "Configurações de atalhos" },

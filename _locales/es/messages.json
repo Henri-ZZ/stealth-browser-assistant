@@ -111,7 +111,7 @@
     "message": "Atajos de teclado"
   },
   "optionsPageTitle": {
-    "message": "Stealth Browser Assistant — Configuración"
+    "message": "Configuración"
   },
   "optionsKeywordsHelp": {
     "message": "Cada palabra clave coincide si aparece en la URL o título de la pestaña (sin distinción de mayúsculas). Usa un dominio (ej. bank.com) o cualquier palabra (ej. nómina)."

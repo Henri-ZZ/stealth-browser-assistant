@@ -39,7 +39,7 @@ export default {
   langHelp: { message: 'Wähle die Sprache der Benutzeroberfläche oder folge dem Browser.' },
   langFollowBrowser: { message: 'Browser folgen' },
   optionsTitle: { message: 'Tastenkombinationen' },
-  optionsPageTitle: { message: 'Stealth Browser Assistant — Einstellungen' },
+  optionsPageTitle: { message: 'Einstellungen' },
   optionsKeywordsHelp: { message: 'Jedes Schlüsselwort passt, wenn es in der URL oder im Titel des Tabs vorkommt (Groß-/Kleinschreibung wird ignoriert). Verwende eine Domain (z.B. bank.com) oder ein beliebiges Wort (z.B. Gehaltsabrechnung).' },
   optionsShortcutsHelp: { message: 'Tastenkombinationen können angepasst werden unter ' },
   openShortcutsPage: { message: "Tastenkürzel-Einstellungen" },

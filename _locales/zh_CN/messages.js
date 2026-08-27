@@ -44,7 +44,7 @@ export default {
   langHelp: { message: "选择界面语言,或跟随浏览器。" },
   langFollowBrowser: { message: "跟随浏览器" },
   optionsTitle: { message: "快捷键" },
-  optionsPageTitle: { message: "隐私浏览助手 — 设置" },
+  optionsPageTitle: { message: "设置" },
   optionsKeywordsHelp: {
     message:
       "只要标签页的网址或标题中包含该关键词即视为匹配(不区分大小写)。可用域名(如 bank.com)或任意词(如 paystub)。",

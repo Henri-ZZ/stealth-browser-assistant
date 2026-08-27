@@ -39,7 +39,7 @@ export default {
   langHelp: { message: 'インターフェースの言語を選択するか、ブラウザに従います。' },
   langFollowBrowser: { message: 'ブラウザに従う' },
   optionsTitle: { message: 'ショートカット' },
-  optionsPageTitle: { message: 'Stealth Browser Assistant — 設定' },
+  optionsPageTitle: { message: '設定' },
   optionsKeywordsHelp: { message: 'タブのURLまたはタイトルにキーワードが含まれている場合に一致します（大文字小文字を区別しません）。ドメイン（例：bank.com）または任意の単語（例：給与明細）を使用してください。' },
   optionsShortcutsHelp: { message: 'キーボードショートカットは以下でカスタマイズできます：' },
   openShortcutsPage: { message: "ショートカット設定" },

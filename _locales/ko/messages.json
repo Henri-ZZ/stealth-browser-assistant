@@ -111,7 +111,7 @@
     "message": "단축키"
   },
   "optionsPageTitle": {
-    "message": "Stealth Browser Assistant — 설정"
+    "message": "설정"
   },
   "optionsKeywordsHelp": {
     "message": "탭의 URL 또는 제목에 키워드가 포함되어 있으면 일치합니다(대소문자 구분 없음). 도메인(예: bank.com) 또는 임의의 단어(예: 급여명세서)를 사용하세요."

@@ -39,7 +39,7 @@ export default {
   langHelp: { message: 'Choisissez la langue de l\'interface ou suivez celle du navigateur.' },
   langFollowBrowser: { message: 'Suivre le navigateur' },
   optionsTitle: { message: 'Raccourcis' },
-  optionsPageTitle: { message: 'Stealth Browser Assistant — Paramètres' },
+  optionsPageTitle: { message: 'Paramètres' },
   optionsKeywordsHelp: { message: 'Un mot-clé correspond s\'il apparaît dans l\'URL ou le titre de l\'onglet (insensible à la casse). Utilisez un domaine (ex. bank.com) ou n\'importe quel mot (ex. fiche de paie).' },
   optionsShortcutsHelp: { message: 'Les raccourcis clavier peuvent être personnalisés dans ' },
   openShortcutsPage: { message: "Paramètres des raccourcis" },

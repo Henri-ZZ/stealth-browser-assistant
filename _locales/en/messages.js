@@ -48,7 +48,7 @@ export default {
   },
   langFollowBrowser: { message: "Follow browser" },
   optionsTitle: { message: "Shortcuts" },
-  optionsPageTitle: { message: "Stealth Browser Assistant — Settings" },
+  optionsPageTitle: { message: "Settings" },
   optionsKeywordsHelp: {
     message:
       "Each keyword matches a tab if it appears anywhere in the tab's URL or title (case-insensitive). Use a domain (e.g. bank.com) or any word (e.g. paystub).",
