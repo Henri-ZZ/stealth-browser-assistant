@@ -2,7 +2,7 @@
 export default {
   extName: { message: 'Stealth Browser Assistant — Hide & Mute Tabs' },
   extShortName: { message: 'Stealth Browser' },
-  extDescription: { message: "맞춤 설정 가능한 키워드와 원클릭 긴급 제어로 비공개 브라우저 탭을 즉시 숨기거나 음소거하거나 닫으세요." },
+  extDescription: { message: "맞춤 키워드와 원클릭 긴급 동작으로 비공개 또는 민감한 탭을 숨기거나 음소거하거나 닫으세요." },
   subtitle: { message: '비공개 탭 빠른 제어' },
   cmdToggleMute: { message: '키워드와 일치하는 탭 음소거 전환' },
   cmdToggleHide: { message: '키워드와 일치하는 탭 숨기기 전환' },

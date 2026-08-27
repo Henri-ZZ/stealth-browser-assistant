@@ -4,7 +4,7 @@
 export default {
   extName: { message: "Stealth Browser Assistant — Hide & Mute Tabs" },
   extShortName: { message: "隐私浏览" },
-  extDescription: { message: "通过可自定义关键词和一键紧急控制，立即隐藏、静音或关闭私密浏览器标签页。" },
+  extDescription: { message: "通过可自定义关键词和一键紧急动作，立即隐藏、静音或关闭私密及敏感标签页。" },
   subtitle: { message: "私密标签页快捷控制" },
   cmdToggleMute: { message: "切换静音匹配关键词的标签页" },
   cmdToggleHide: { message: "切换隐藏匹配关键词的标签页" },
