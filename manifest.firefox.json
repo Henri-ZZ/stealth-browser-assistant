@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "SBA",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "icons": {
@@ -41,9 +41,9 @@
       "suggested_key": { "default": "Alt+Shift+H" },
       "description": "__MSG_cmdToggleHide__"
     },
-    "emergency-mode": {
+    "panic-button": {
       "suggested_key": { "default": "Alt+Shift+E" },
-      "description": "__MSG_cmdToggleEmergency__"
+      "description": "__MSG_cmdPanicButton__"
     },
     "clean-sensitive-data": {
       "suggested_key": { "default": "Alt+Shift+C" },

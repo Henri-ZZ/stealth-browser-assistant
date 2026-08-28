@@ -7,13 +7,25 @@
 
 完整的产品说明、用户指南、实现边界与 AI Agent 修改规则见 [`docs/产品与AI-Agent完整指南.md`](docs/产品与AI-Agent完整指南.md)。
 
+## Store listing 文案
+
+商店文案以仓库内容为唯一来源：Title 和 Summary 来自 `_locales/<locale>/messages.json`，Detailed Description 来自 `store-listing/descriptions/<locale>.txt`。Firefox 因 50 字符标题限制，使用 `store-listing/firefox.json` 中的专用 Title。
+
+```bash
+./store-listing.sh check          # 检查 8 种语言、术语和长度
+./store-listing.sh show zh_CN     # 查看某一种语言的完整 Listing
+./store-listing.sh export         # 生成 Chrome、Edge 和 Firefox 提交文件
+```
+
+生成结果位于 `store-listing/generated/`，不会进入插件发布 ZIP，也不会被 Git 跟踪。该命令只生成文案，不会登录商店或发布版本。
+
 ## 功能
 
 - **自定义关键词列表** — 添加域名或任意词（如 `bank.com`、`salary`）。标签页的网址或标题中包含任一关键词即视为匹配（不区分大小写）。
 - **静音模式（开/关）** — 使用浏览器原生的 Tab mute 将所有匹配标签页完整静音，覆盖 iframe、Shadow DOM、动态播放器和 Web Audio；之后新开或导航到匹配网址的标签页也会自动静音。关闭时只解除仍由 SBA 持有的静音，不覆盖用户、其他扩展或 Tab capture 后续设置的状态。
 - **隐藏模式（开/关）** — 开启后，所有匹配的标签页被移入一个最小化的"暂存窗口"并静音，**之后新开或导航到匹配网址的标签页也会自动隐藏**；关闭时全部还原到原位置。
 
-### 紧急模式
+### Panic Button（紧急按钮）
 
 一键同时开启静音和隐藏，适用于"赶紧遮住"的突发场景：
 
@@ -21,7 +33,7 @@
 | ------------ | ------------- | ---------------- |
 | 切换静音模式 | `Alt+Shift+M` | `toggle-mute`    |
 | 切换隐藏模式 | `Alt+Shift+H` | `toggle-hide`    |
-| 紧急动作     | `Alt+Shift+E` | `emergency-mode` |
+| Panic Button | `Alt+Shift+E` | `panic-button`   |
 
 快捷键可在 `chrome://extensions/shortcuts` 中自定义（扩展设置页也有直达链接）。
 

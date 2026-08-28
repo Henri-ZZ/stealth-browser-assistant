@@ -1,0 +1,10 @@
+{
+  "en": { "edge": "en-US", "firefox": "en-US" },
+  "zh_CN": { "edge": "zh-CN", "firefox": "zh-CN" },
+  "de": { "edge": "de-DE", "firefox": "de" },
+  "es": { "edge": "es-ES", "firefox": "es-ES" },
+  "fr": { "edge": "fr-FR", "firefox": "fr" },
+  "ja": { "edge": "ja-JP", "firefox": "ja" },
+  "ko": { "edge": "ko-KR", "firefox": "ko" },
+  "pt_BR": { "edge": "pt-BR", "firefox": "pt-BR" }
+}

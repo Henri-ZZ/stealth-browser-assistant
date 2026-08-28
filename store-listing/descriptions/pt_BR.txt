@@ -1,0 +1,24 @@
+O Stealth Browser Assistant ajuda você a gerenciar abas privadas com rapidez e discrição no Chrome, Edge e Firefox.
+
+Defina abas privadas com suas próprias palavras-chave ou domínios. O SBA verifica localmente os títulos e URLs e permite controlar todas as correspondências de uma só vez.
+
+Principais recursos
+
+• Silenciar — Silencia instantaneamente as abas correspondentes.
+• Ocultar — Move as abas correspondentes para uma janela minimizada e as restaura depois.
+• Botão de pânico — Silencia e oculta abas correspondentes com um atalho personalizável.
+• Indicadores de correspondência — Identifica correspondências com indicadores visuais opcionais.
+• Atalhos de teclado — Silencie, oculte, use o Botão de pânico ou limpe dados privados sem abrir a extensão.
+
+O Premium oferece palavras-chave ilimitadas, fechamento de abas correspondentes como ação do Botão de pânico, pausa de mídia, limpeza de dados privados e limpeza automática. A limpeza pode remover histórico de navegação e downloads, cookies e dados dos sites correspondentes.
+
+Privacidade desde a concepção
+
+• Palavras-chave e configurações permanecem armazenadas localmente no navegador.
+• Atividades de navegação, URLs, histórico e conteúdo das páginas não são enviados aos nossos servidores.
+• Sem rastreamento, análises ou publicidade.
+• As solicitações de licença contêm apenas a chave de licença e um identificador de dispositivo com hash.
+
+A versão gratuita inclui detecção, silenciamento, ocultação, Botão de pânico e indicadores de correspondência. O Premium adiciona automação e limpeza avançadas.
+
+Disponível para Google Chrome, Microsoft Edge e Mozilla Firefox.

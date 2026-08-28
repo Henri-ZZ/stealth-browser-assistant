@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Private oder sensible Tabs mit anpassbaren Schlüsselwörtern und Notfallaktion per Klick ausblenden, stummschalten oder schließen."
+    "message": "Private oder sensible Tabs mit anpassbaren Schlüsselwörtern und Browser-Panikknopf ausblenden, stummschalten oder schließen."
   },
   "subtitle": {
     "message": "Schnelle Steuerung privater Tabs"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "Ausblenden für Tabs mit passenden Schlüsselwörtern umschalten"
   },
-  "cmdToggleEmergency": {
-    "message": "Notfallaktion — wie oben konfiguriert"
+  "cmdPanicButton": {
+    "message": "Panik-Shortcut — wie unten konfiguriert"
   },
   "cmdCleanSensitive": {
     "message": "Private Daten bereinigen"
@@ -138,16 +138,16 @@
   "shortcutDisabled": {
     "message": "Deaktiviert"
   },
-  "emergencySection": {
-    "message": "Notfallaktion"
+  "panicButtonSection": {
+    "message": "Panikknopf-Aktion"
   },
-  "emergencyHelp": {
-    "message": "Wähle, was beim Drücken des Notfall-Shortcuts passiert."
+  "panicButtonHelp": {
+    "message": "Wähle, was beim Verwenden des Panik-Shortcuts passiert."
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "Passende Tabs stummschalten und ausblenden"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "Passende Tabs schließen"
   },
   "mediaPauseSection": {

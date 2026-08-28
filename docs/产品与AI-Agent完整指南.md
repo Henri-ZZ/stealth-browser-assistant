@@ -15,7 +15,7 @@
 | private tabs | 由用户 Keywords 命中的标签页 | sensitive tabs 等 |
 | Keywords | 用户配置的匹配词 | rules、filters、watch words 等 |
 | Match hit feedback | Keywords 命中后的可视反馈 | alert、warning、detection notice 等 |
-| Emergency Action | 紧急快捷键执行的动作 | panic mode、emergency mode 等面向用户的替代名称 |
+| Panic Button | 通过紧急快捷键执行的操作 | Emergency Action、panic mode、emergency mode 等替代名称 |
 | Mute | 静音匹配标签页 | silence 等 |
 | Hide | 隐藏匹配标签页 | conceal、stash 等面向用户的替代名称 |
 | Close matching tabs | 关闭匹配标签页 | destroy、remove private tabs 等 |
@@ -31,9 +31,9 @@
 术语规则：
 
 1. 英文 UI 中必须使用上表的英文写法与概念边界。
-2. 中文文档可以解释术语，但首次出现时应保留英文，例如“紧急动作（Emergency Action）”。
+2. 中文文档可以解释术语，但首次出现时应保留英文，例如“紧急按钮（Panic Button）”。
 3. 新增本地化语言时可以进行自然翻译，但不得改变产品概念。例如 `private` 不能被翻译成更强烈的“机密”概念。
-4. 内部标识符可以因历史原因使用不同名称，例如 command ID `emergency-mode`、`clean-sensitive-data`。它们只属于代码接口，不代表面向用户的产品术语。
+4. 内部标识符也应使用 Canonical terminology，例如 command ID `panic-button` 和存储键 `panicButtonAction`。仅数据迁移代码可以读取旧存储键。
 5. AI Agent 修改文案前必须先检查本节，不得为了“更自然”“更多样”或 SEO 而自行替换 Canonical terminology。
 
 ## 2. 产品是什么
@@ -43,7 +43,7 @@ Stealth Browser Assistant 是一个以 **Keywords** 为核心的 private tabs �
 - Match hit feedback：替换标签页图标，或在当前页面闪烁红色边框。
 - Mute：使用浏览器原生 Tab mute 将整个匹配标签页静音。
 - Hide：将匹配标签页移入最小化的暂存窗口。
-- Emergency Action：一键开启 Mute + Hide，或直接 Close matching tabs。
+- Panic Button：一键开启 Mute + Hide，或直接 Close matching tabs。
 - Pause media：在 Mute 或 Hide 时同时暂停音视频。
 - Clean private data：按 Keywords 定向清理浏览历史、下载历史、Cookie 与站点数据。
 - Auto cleanup：最后一个匹配标签页关闭后，延迟执行 Clean private data。
@@ -94,7 +94,7 @@ Free 用户最多保存 5 个 Keywords；Premium 用户不限数量。
 | --- | --- | --- |
 | 切换 Mute | `toggle-mute` | `Alt+Shift+M` |
 | 切换 Hide | `toggle-hide` | `Alt+Shift+H` |
-| 执行 Emergency Action | `emergency-mode` | `Alt+Shift+E` |
+| 使用 Panic Button | `panic-button` | `Alt+Shift+E` |
 | 执行 Clean private data | `clean-sensitive-data` | `Alt+Shift+C` |
 
 macOS 的设置页会将 Chrome API 返回的 `Alt` 显示为 `Option`。用户可以在浏览器的扩展快捷键页面修改或清除快捷键。
@@ -227,9 +227,9 @@ Chrome 没有向普通扩展开放通用的原地隐藏标签页 API。本产品
 
 因此，Hide 是“移动并最小化”，不是加密、锁定、销毁或浏览器原生不可见状态。
 
-## 8. Emergency Action
+## 8. Panic Button
 
-用户可以在 Settings 中选择 Emergency Action 的行为。
+用户可以在 Settings 的 **Panic Button action** 中选择 Panic Button 的行为。
 
 ### 8.1 Mute and hide matching tabs
 
@@ -337,8 +337,8 @@ Auto cleanup 实际执行的类型仍以用户勾选的清理类型为准。如�
 | Red border flash | 支持 | 支持 |
 | Mute | 支持 | 支持 |
 | Hide | 支持 | 支持 |
-| Emergency Action：Mute + Hide | 支持 | 支持 |
-| Emergency Action：Close matching tabs | 不支持 | 支持 |
+| Panic Button：Mute + Hide | 支持 | 支持 |
+| Panic Button：Close matching tabs | 不支持 | 支持 |
 | Pause media | 不支持 | 支持 |
 | Clean private data | 不支持 | 支持 |
 | Auto cleanup | 不支持 | 支持 |
@@ -384,7 +384,7 @@ License 服务使用 `https://licentra.henri.ren`。Keywords、标签页列表�
 - Mute 与 Hide 状态。
 - 隐藏标签页恢复记录。
 - 语言偏好。
-- Emergency Action 选项。
+- Panic Button action 选项。
 - Pause media 与 Match hit feedback 选项。
 - Clean private data 类型与 Auto cleanup 状态。
 - 已验证的 License 状态。
@@ -410,7 +410,7 @@ Settings 当前按以下结构组织：
 1. Keywords：添加、查看、删除 Keywords，并显示 Free 上限或 Premium 无限数量。
 2. Shortcuts：显示浏览器实际绑定的四个快捷键，并提供管理入口或 Firefox 手动路径提示。
 3. Match hit feedback：配置 Replace tab icon 和 Red border flash。
-4. Emergency Action：选择 Mute + Hide 或 Close matching tabs。
+4. Panic Button action：选择 Mute + Hide 或 Close matching tabs。
 5. When mute or hide tabs：配置 Pause media。
 6. Clean private data：选择 Browsing history、Downloads history、Cookies & site data。
 7. Auto cleanup：开启自动清理并设置延迟。
@@ -430,7 +430,7 @@ License Key 激活成功后，Settings 会短暂显示成功提示，随后隐�
 | --- | --- |
 | `manifest.json` | Chrome / Edge Manifest V3、权限、入口、快捷键、版本号 |
 | `manifest.firefox.json` | Firefox manifest 变体与 Gecko 配置 |
-| `background.js` | Service Worker；匹配、Mute、Hide、反馈、Emergency Action、清理、alarm、消息桥、工具栏图标 |
+| `background.js` | Service Worker；匹配、Mute、Hide、反馈、Panic Button、清理、alarm、消息桥、工具栏图标 |
 | `shared.js` | storage schema、默认值、匹配函数、权限帮助、本地化、Premium 缓存与 Keywords 上限 |
 | `config.js` | 官网 origin、Settings UTM、商店评价页以及 Premium、Contact、卸载页面等 URL 的唯一代码配置入口 |
 | `license.js` | License Key 标准化、设备 fingerprint、Licentra 请求、签名验证、check-in 与离线宽限 |
@@ -450,7 +450,7 @@ License Key 激活成功后，Settings 会短暂显示成功提示，随后隐�
 | `scriptMute` | `false` | Mute 是否开启 |
 | `hideMode` | `false` | 持续 Hide 是否开启 |
 | `langPref` | `""` | 空值跟随浏览器，否则为 locale code |
-| `emergencyAction` | `"muteHide"` | `muteHide` 或 `closeMatchTabs` |
+| `panicButtonAction` | `"muteHide"` | `muteHide` 或 `closeMatchTabs`；会从旧存储键一次性迁移 |
 | `pauseOnMuteHide` | `false` | 是否启用 Pause media |
 | `redBorderFlash` | `false` | 是否启用红色边框反馈 |
 | `tabIconOverride` | `true` | 是否启用 Replace tab icon |
@@ -534,14 +534,14 @@ _locales/<locale>/messages.js
 AI Agent 在修改本项目时必须遵守以下约束：
 
 1. 先以代码行为为事实来源，再更新文档和文案；不要只依据旧 README 或注释。
-2. 不得改写 Canonical terminology，尤其是 `License Key`、`Emergency Action`、`private`、`Keywords`、`Match hit feedback`、`Clean private data`、`Auto cleanup`、`Premium`、`Support`、`Leave Review` 和 `Send Feedback`。
+2. 不得改写 Canonical terminology，尤其是 `License Key`、`Panic Button`、`private`、`Keywords`、`Match hit feedback`、`Clean private data`、`Auto cleanup`、`Premium`、`Support`、`Leave Review` 和 `Send Feedback`。
 3. 修改本地化文案时同步更新 `.json` 与 `.js`。
 4. 修改版本号时同步更新 `manifest.json` 与 `manifest.firefox.json`。
 5. 新增运行时文件时同步加入 `package.sh` 的 `FILES` 白名单，否则发布 ZIP 不会包含该文件。
 6. 新增清理类型时同步考虑 optional permission、Settings 用户手势授权、后台无用户手势限制、Premium gating 和定向清理范围。
 7. 修改 Hide 时不得假设存在公开的 `chrome.tabs.hide`；当前设计依赖暂存窗口和恢复记录。
 8. 修改 Mute 时必须保留静音归属模型，不得用统一 `muted: false` 解除所有标签页；必须分别处理 Mute claim、Hide claim、用户原有静音、外部接管和 `muteSuppressed`。
-9. Emergency Action 的 Mute + Hide 必须同时开启 `scriptMute` 和 `hideMode`，确保 popup 状态与实际隐藏状态一致，并允许用户通过关闭 Hide 恢复标签页。
+9. Panic Button 的 Mute + Hide 必须同时开启 `scriptMute` 和 `hideMode`，确保 popup 状态与实际隐藏状态一致，并允许用户通过关闭 Hide 恢复标签页。
 10. 任何 destructive 行为都必须在 UI 和文档中明确，例如 Close matching tabs、Cookies & site data 清理。
 11. 不得扩大网络数据范围；License 请求不应携带 Keywords、标签页或浏览历史。
 12. 不得把 Free 限制只放在 Settings；执行逻辑需要防止旧状态或手动写入绕过 Premium gating。
@@ -578,6 +578,27 @@ dist/sba-<version>-firefox.zip
 
 脚本使用白名单打包，并检查 `manifest.json` 是否位于 ZIP 根目录、是否包含白名单路径以及是否混入 `__MACOSX`。
 
+### 17.1 Store listing 文案
+
+Store listing 文案必须以仓库为唯一来源，避免在三个商店和 8 种语言之间反复复制后产生版本偏差：
+
+- Title 和 Summary：`_locales/<locale>/messages.json` 中的 `extName` 与 `extDescription`。
+- Firefox Title：`store-listing/firefox.json`。Firefox 的标题上限为 50 个字符，因此使用平台专用标题；不要用 package Title 覆盖。
+- Detailed Description：`store-listing/descriptions/<locale>.txt`。
+- 平台语言代码映射：`store-listing/locales.json`。
+
+命令：
+
+```bash
+./store-listing.sh check          # 校验语言完整性、长度和 Canonical terminology
+./store-listing.sh show en        # 显示某种语言的完整文案
+./store-listing.sh export         # 生成三个平台的提交文件
+```
+
+导出结果位于被 Git 忽略的 `store-listing/generated/`：Chrome 和 Edge 按语言生成可填写文本，Firefox 生成包含全部翻译的 API payload。导出不等于发布，不会登录商店、修改线上 Listing 或生成插件 ZIP。
+
+Chrome Web Store 与 Edge Partner Center 的 Detailed Description 仍是平台独立 metadata。更新线上内容时应以这里生成的文件为输入，不得直接在 Dashboard 中改出一份未同步回仓库的文案。Firefox API 自动提交接入前，也应使用相同导出结果。
+
 ## 18. 当前实现的已知注意点
 
 以下不是宣传语，而是维护和排查问题时必须知道的代码事实：
@@ -606,7 +627,7 @@ dist/sba-<version>-firefox.zip
 - Red border flash 只在当前活动匹配标签页出现。
 - 受保护页面失败时不影响 Service Worker。
 
-### Mute / Hide / Emergency Action
+### Mute / Hide / Panic Button
 
 - 当前匹配标签页立即处理。
 - 模式开启后新出现的匹配标签页按预期处理。

@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Hide, mute, or close private and sensitive tabs with customizable Keywords and one-click Emergency Action controls."
+    "message": "Hide, mute, or close private and sensitive tabs with customizable Keywords and a one-click browser Panic Button."
   },
   "subtitle": {
     "message": "Quick controls for private tabs"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "Toggle hiding tabs matching keywords"
   },
-  "cmdToggleEmergency": {
-    "message": "Emergency action — as configured below"
+  "cmdPanicButton": {
+    "message": "Panic shortcut — as configured below"
   },
   "cmdCleanSensitive": {
     "message": "Clean private data"
@@ -144,16 +144,16 @@
   "shortcutDisabled": {
     "message": "Disabled"
   },
-  "emergencySection": {
-    "message": "Emergency action"
+  "panicButtonSection": {
+    "message": "Panic Button action"
   },
-  "emergencyHelp": {
-    "message": "Choose what happens when you press the emergency shortcut."
+  "panicButtonHelp": {
+    "message": "Choose what happens when you use the panic shortcut."
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "Mute and hide matching tabs"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "Close matching tabs"
   },
   "mediaPauseSection": {

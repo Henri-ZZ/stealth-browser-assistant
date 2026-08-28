@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Oculta, silencia o cierra pestañas privadas o sensibles con palabras clave personalizables y Acción de emergencia en un clic."
+    "message": "Oculta, silencia o cierra pestañas privadas o sensibles con palabras clave y un Botón de pánico para el navegador."
   },
   "subtitle": {
     "message": "Controles rápidos para pestañas privadas"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "Alternar ocultación para pestañas que coincidan con palabras clave"
   },
-  "cmdToggleEmergency": {
-    "message": "Acción de emergencia — según la configuración de arriba"
+  "cmdPanicButton": {
+    "message": "Atajo de pánico — según la configuración de abajo"
   },
   "cmdCleanSensitive": {
     "message": "Limpiar datos privados"
@@ -138,16 +138,16 @@
   "shortcutDisabled": {
     "message": "Desactivado"
   },
-  "emergencySection": {
-    "message": "Acción de emergencia"
+  "panicButtonSection": {
+    "message": "Acción del Botón de pánico"
   },
-  "emergencyHelp": {
-    "message": "Elige qué ocurre al pulsar el atajo de emergencia."
+  "panicButtonHelp": {
+    "message": "Elige qué ocurre al usar el atajo de pánico."
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "Silenciar y ocultar pestañas coincidentes"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "Cerrar pestañas coincidentes"
   },
   "mediaPauseSection": {

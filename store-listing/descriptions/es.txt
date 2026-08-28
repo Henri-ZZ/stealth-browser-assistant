@@ -1,0 +1,24 @@
+Stealth Browser Assistant te ayuda a gestionar pestañas privadas de forma rápida y discreta en Chrome, Edge y Firefox.
+
+Define las pestañas privadas mediante tus propias palabras clave o dominios. SBA comprueba localmente los títulos y las URL y te permite controlar todas las coincidencias a la vez.
+
+Funciones principales
+
+• Silenciar — Silencia al instante las pestañas coincidentes.
+• Ocultar — Mueve las pestañas coincidentes a una ventana minimizada y las restaura más tarde.
+• Botón de pánico — Silencia y oculta las pestañas coincidentes con un atajo personalizable.
+• Indicadores de coincidencia — Identifica las coincidencias mediante indicadores visuales opcionales.
+• Atajos de teclado — Silencia, oculta, usa el Botón de pánico o limpia datos privados sin abrir la extensión.
+
+Premium añade palabras clave ilimitadas, el cierre de pestañas coincidentes como acción del Botón de pánico, pausa de contenido multimedia, limpieza de datos privados y limpieza automática. Puede eliminar el historial de navegación y descargas, las cookies y los datos de sitios coincidentes.
+
+Privacidad desde el diseño
+
+• Las palabras clave y la configuración permanecen localmente en el navegador.
+• No enviamos a nuestros servidores actividad, URL, historial ni contenido de páginas.
+• Sin seguimiento, analíticas ni publicidad.
+• Las solicitudes de licencia solo contienen la clave de licencia y un identificador de dispositivo con hash.
+
+La versión gratuita incluye detección, silencio, ocultación, Botón de pánico e indicadores de coincidencia. Premium añade automatización y limpieza avanzadas.
+
+Disponible para Google Chrome, Microsoft Edge y Mozilla Firefox.

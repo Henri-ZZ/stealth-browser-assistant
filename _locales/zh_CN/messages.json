@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "隐私浏览"
   },
   "extDescription": {
-    "message": "通过可自定义关键词和一键紧急动作，立即隐藏、静音或关闭私密及敏感标签页。"
+    "message": "通过可自定义关键词和一键紧急按钮，立即隐藏、静音或关闭私密及敏感标签页。"
   },
   "subtitle": {
     "message": "私密标签页快捷控制"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "切换隐藏匹配关键词的标签页"
   },
-  "cmdToggleEmergency": {
-    "message": "紧急动作 — 按下面的配置执行"
+  "cmdPanicButton": {
+    "message": "紧急快捷键 — 按下面的配置执行"
   },
   "cmdCleanSensitive": {
     "message": "清理隐私数据"
@@ -144,16 +144,16 @@
   "shortcutDisabled": {
     "message": "已禁用"
   },
-  "emergencySection": {
-    "message": "紧急动作"
+  "panicButtonSection": {
+    "message": "紧急按钮操作"
   },
-  "emergencyHelp": {
-    "message": "选择按下紧急快捷键时执行的动作。"
+  "panicButtonHelp": {
+    "message": "选择使用紧急快捷键时执行的操作。"
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "静音并隐藏匹配的标签页"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "关闭匹配的标签页"
   },
   "mediaPauseSection": {

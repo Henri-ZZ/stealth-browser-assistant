@@ -1,0 +1,24 @@
+Stealth Browser Assistant vous aide à gérer rapidement et discrètement vos onglets privés sur Chrome, Edge et Firefox.
+
+Définissez les onglets privés avec vos propres mots-clés ou domaines. SBA vérifie localement les titres et les URL, puis contrôle toutes les correspondances à la fois.
+
+Fonctionnalités principales
+
+• Couper le son — Coupe instantanément le son des onglets correspondants.
+• Masquer — Déplace les onglets correspondants dans une fenêtre réduite et les restaure plus tard.
+• Bouton panique — Coupe le son et masque les onglets correspondants avec un raccourci personnalisable.
+• Indicateurs de correspondance — Identifie les correspondances avec des indicateurs visuels facultatifs.
+• Raccourcis clavier — Coupez le son, masquez, utilisez le Bouton panique ou nettoyez les données privées sans ouvrir l’extension.
+
+Premium ajoute des mots-clés illimités, la fermeture des onglets correspondants comme action du Bouton panique, la pause des médias, le nettoyage des données privées et le nettoyage automatique. Le nettoyage peut supprimer les historiques de navigation et de téléchargement, les cookies et les données des sites correspondants.
+
+Confidentialité intégrée
+
+• Les mots-clés et paramètres restent stockés localement dans le navigateur.
+• Aucune activité, URL, historique ou contenu de page n’est envoyé à nos serveurs.
+• Aucun suivi, aucune analyse et aucune publicité.
+• Les requêtes de licence contiennent uniquement la clé de licence et un identifiant d’appareil haché.
+
+La version gratuite comprend la détection, la coupure du son, le masquage, le Bouton panique et les indicateurs de correspondance. Premium ajoute des outils avancés d’automatisation et de nettoyage.
+
+Disponible pour Google Chrome, Microsoft Edge et Mozilla Firefox.

@@ -2,13 +2,13 @@
 // service worker can't import JSON modules directly. The JSON file itself is
 // still required for `__MSG_xxx__` substitution in manifest.json.
 export default {
-  extName: { message: "Stealth Browser Assistant — Hide & Mute Tabs" },
+  extName: { message: "Stealth Browser Assistant — Hide Tabs & Panic Button" },
   extShortName: { message: "隐私浏览" },
-  extDescription: { message: "通过可自定义关键词和一键紧急动作，立即隐藏、静音或关闭私密及敏感标签页。" },
+  extDescription: { message: "通过可自定义关键词和一键紧急按钮，立即隐藏、静音或关闭私密及敏感标签页。" },
   subtitle: { message: "私密标签页快捷控制" },
   cmdToggleMute: { message: "切换静音匹配关键词的标签页" },
   cmdToggleHide: { message: "切换隐藏匹配关键词的标签页" },
-  cmdToggleEmergency: { message: "紧急动作 — 按下面的配置执行" },
+  cmdPanicButton: { message: "紧急快捷键 — 按下面的配置执行" },
   cmdCleanSensitive: { message: "清理隐私数据" },
   popupCleanButton: { message: "清理隐私数据" },
   popupCleanDone: { message: "已清理" },
@@ -59,10 +59,10 @@ export default {
   saved: { message: "已保存" },
   emptyInputWarn: { message: "请先输入一个关键词。" },
   shortcutDisabled: { message: "已禁用" },
-  emergencySection: { message: "紧急动作" },
-  emergencyHelp: { message: "选择按下紧急快捷键时执行的动作。" },
-  emergencyActionMuteHide: { message: "静音并隐藏匹配的标签页" },
-  emergencyActionClose: { message: "关闭匹配的标签页" },
+  panicButtonSection: { message: "紧急按钮操作" },
+  panicButtonHelp: { message: "选择使用紧急快捷键时执行的操作。" },
+  panicButtonActionMuteHide: { message: "静音并隐藏匹配的标签页" },
+  panicButtonActionClose: { message: "关闭匹配的标签页" },
   mediaPauseSection: { message: "静音或隐藏标签页时" },
   mediaPauseHelp: {
     message:

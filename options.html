@@ -67,8 +67,8 @@
             <span data-i18n="cmdToggleHide"></span>
           </li>
           <li>
-            <kbd id="kbdToggleEmergency">Alt+Shift+E</kbd> —
-            <span data-i18n="cmdToggleEmergency"></span>
+            <kbd id="kbdPanicButton">Alt+Shift+E</kbd> —
+            <span data-i18n="cmdPanicButton"></span>
           </li>
           <li>
             <kbd id="kbdCleanSensitive">Alt+Shift+C</kbd> —
@@ -102,20 +102,20 @@
       </section>
 
       <section class="card">
-        <h2 data-i18n="emergencySection">Emergency action</h2>
-        <p class="help" data-i18n="emergencyHelp">
-          Choose what happens when you press the emergency shortcut.
+        <h2 data-i18n="panicButtonSection">Panic Button action</h2>
+        <p class="help" data-i18n="panicButtonHelp">
+          Choose what happens when you use the panic shortcut.
         </p>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="emergencyAction" value="muteHide" />
-            <span data-i18n="emergencyActionMuteHide"
+            <input type="radio" name="panicButtonAction" value="muteHide" />
+            <span data-i18n="panicButtonActionMuteHide"
               >Mute and hide matching tabs</span
             >
           </label>
           <label class="radio-option">
-            <input type="radio" name="emergencyAction" value="closeMatchTabs" />
-            <span data-i18n="emergencyActionClose">Close matching tabs</span>
+            <input type="radio" name="panicButtonAction" value="closeMatchTabs" />
+            <span data-i18n="panicButtonActionClose">Close matching tabs</span>
             <svg
               class="lock-icon lock-icon--closed"
               viewBox="0 0 24 24"

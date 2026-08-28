@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "Oculte, silencie ou feche abas privadas ou sensíveis com palavras-chave personalizáveis e Ação de emergência em um clique."
+    "message": "Oculte, silencie ou feche abas privadas ou sensíveis com palavras-chave e um Botão de pânico para o navegador."
   },
   "subtitle": {
     "message": "Controles rápidos para abas privadas"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "Alternar ocultação para abas que correspondem a palavras-chave"
   },
-  "cmdToggleEmergency": {
-    "message": "Ação de emergência — conforme a configuração acima"
+  "cmdPanicButton": {
+    "message": "Atalho de pânico — conforme a configuração abaixo"
   },
   "cmdCleanSensitive": {
     "message": "Limpar dados privados"
@@ -138,16 +138,16 @@
   "shortcutDisabled": {
     "message": "Desativado"
   },
-  "emergencySection": {
-    "message": "Ação de emergência"
+  "panicButtonSection": {
+    "message": "Ação do Botão de pânico"
   },
-  "emergencyHelp": {
-    "message": "Escolha o que acontece ao pressionar o atalho de emergência."
+  "panicButtonHelp": {
+    "message": "Escolha o que acontece ao usar o atalho de pânico."
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "Silenciar e ocultar abas correspondentes"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "Fechar abas correspondentes"
   },
   "mediaPauseSection": {

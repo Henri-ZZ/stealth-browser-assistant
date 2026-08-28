@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "カスタマイズ可能なキーワードとワンクリックの緊急時の動作で、プライベートまたはセンシティブなタブを非表示、ミュート、閉じます。"
+    "message": "カスタマイズ可能なキーワードとブラウザー用パニックボタンで、プライベートまたはセンシティブなタブを非表示、ミュート、閉じます。"
   },
   "subtitle": {
     "message": "プライベートなタブをすばやく操作"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "キーワードに一致するタブの非表示を切り替え"
   },
-  "cmdToggleEmergency": {
-    "message": "緊急時の動作 — 上の設定に従う"
+  "cmdPanicButton": {
+    "message": "パニックショートカット — 下の設定に従う"
   },
   "cmdCleanSensitive": {
     "message": "プライバシーデータを消去"
@@ -138,16 +138,16 @@
   "shortcutDisabled": {
     "message": "無効"
   },
-  "emergencySection": {
-    "message": "緊急時の動作"
+  "panicButtonSection": {
+    "message": "パニックボタンの動作"
   },
-  "emergencyHelp": {
-    "message": "緊急ショートカットを押したときの動作を選択します。"
+  "panicButtonHelp": {
+    "message": "パニックショートカット使用時の動作を選択します。"
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "一致するタブをミュートして非表示"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "一致するタブを閉じる"
   },
   "mediaPauseSection": {

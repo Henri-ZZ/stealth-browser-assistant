@@ -1,0 +1,24 @@
+Stealth Browser Assistant hilft dir, private Browser-Tabs in Chrome, Edge und Firefox schnell und diskret zu verwalten.
+
+Definiere private Tabs mit eigenen Schlüsselwörtern oder Domains. SBA prüft Titel und URLs lokal und steuert anschließend alle passenden Tabs zugleich.
+
+Hauptfunktionen
+
+• Stummschalten — Schaltet passende Tabs sofort stumm.
+• Ausblenden — Verschiebt passende Tabs in ein minimiertes Ablagefenster und stellt sie später wieder her.
+• Panikknopf — Schaltet passende Tabs mit einem anpassbaren Shortcut stumm und blendet sie aus.
+• Trefferanzeige — Kennzeichnet passende Tabs mit optionalen visuellen Hinweisen.
+• Tastenkombinationen — Stummschalten, Ausblenden, Panikknopf oder Bereinigung ohne Öffnen der Erweiterung.
+
+Premium bietet unbegrenzte Schlüsselwörter, das Schließen passender Tabs als Panikknopf-Aktion, Medienpause, Bereinigung privater Daten und automatische Bereinigung. Dabei können passender Browserverlauf, Downloadverlauf, Cookies und Websitedaten entfernt werden.
+
+Datenschutzorientiert
+
+• Schlüsselwörter und Einstellungen bleiben lokal im Browser.
+• Browseraktivitäten, URLs, Verlauf und Seiteninhalte werden nicht an unsere Server gesendet.
+• Kein Tracking, keine Analysen und keine Werbung.
+• Lizenzanfragen enthalten nur den Lizenzschlüssel und eine gehashte Gerätekennung.
+
+Die kostenlose Version enthält Tab-Erkennung, Stummschalten, Ausblenden, Panikknopf und Trefferanzeige. Premium ergänzt erweiterte Automatisierungs- und Bereinigungsfunktionen.
+
+Verfügbar für Google Chrome, Microsoft Edge und Mozilla Firefox.

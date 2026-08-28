@@ -1,5 +1,5 @@
 import {
-  STORAGE_KEYS, getState, getKeywords, setState, getEmergencyAction, getPauseOnMuteHide,
+  STORAGE_KEYS, getState, getKeywords, setState, getPanicButtonAction, getPauseOnMuteHide,
   getRedBorderFlash, getTabIconOverride, getCleanupTypes, setCleanupType, CLEANUP_TYPE_KEYS,
   requestCleanupPermissions, hasCleanupPermissions,
   getAutoCleanupState, setAutoCleanupState,
@@ -109,7 +109,7 @@ async function applyShortcuts() {
   const map = [
     ['kbdToggleMute', 'toggle-mute'],
     ['kbdToggleHide', 'toggle-hide'],
-    ['kbdToggleEmergency', 'emergency-mode'],
+    ['kbdPanicButton', 'panic-button'],
     ['kbdCleanSensitive', 'clean-sensitive-data'],
   ];
   for (const [id, csName] of map) {
@@ -236,21 +236,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Downgrade stale premium-only settings for free users so the UI matches
   // what the extension will actually do.
-  let emergencyAction = await getEmergencyAction();
-  if (!isPremium() && emergencyAction === 'closeMatchTabs') {
-    await setState(STORAGE_KEYS.EMERGENCY_ACTION, 'muteHide');
-    emergencyAction = 'muteHide';
+  let panicButtonAction = await getPanicButtonAction();
+  if (!isPremium() && panicButtonAction === 'closeMatchTabs') {
+    await setState(STORAGE_KEYS.PANIC_BUTTON_ACTION, 'muteHide');
+    panicButtonAction = 'muteHide';
   }
   if (!isPremium() && await getPauseOnMuteHide()) {
     await setState(STORAGE_KEYS.PAUSE_ON_MUTE_HIDE, false);
   }
 
-  // Emergency action radios
-  document.querySelectorAll('input[name="emergencyAction"]').forEach((input) => {
-    input.checked = input.value === emergencyAction;
+  // Panic Button action radios
+  document.querySelectorAll('input[name="panicButtonAction"]').forEach((input) => {
+    input.checked = input.value === panicButtonAction;
     input.addEventListener('change', async () => {
       if (!input.checked) return;
-      await setState(STORAGE_KEYS.EMERGENCY_ACTION, input.value);
+      await setState(STORAGE_KEYS.PANIC_BUTTON_ACTION, input.value);
     });
   });
 
@@ -526,7 +526,7 @@ async function showGraceExhaustedNotice() {
 function applyPremiumState() {
   const premium = isPremium();
   document.body.classList.toggle('is-premium', premium);
-  document.querySelectorAll('input[name="emergencyAction"]').forEach((input) => {
+  document.querySelectorAll('input[name="panicButtonAction"]').forEach((input) => {
     if (input.value === 'closeMatchTabs') input.disabled = !premium;
   });
   const pauseCheckbox = $('pauseOnMuteHide');

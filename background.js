@@ -12,7 +12,7 @@
 
 import {
   STORAGE_KEYS, getState, setState, getKeywords,
-  getScriptMute, getHideMode, getEmergencyAction, getPauseOnMuteHide,
+  getScriptMute, getHideMode, getPanicButtonAction, getPauseOnMuteHide,
   getRedBorderFlash, getTabIconOverride, getCleanupTypes, CLEANUP_TYPE_KEYS,
   getAutoCleanupState, setAutoCleanupState,
   tabMatchesKeywords, isPremium, refreshPremiumState,
@@ -1131,8 +1131,8 @@ chrome.commands.onCommand.addListener(async (command) => {
         await setNativeMuteMode(!(await getScriptMute()));
       } else if (command === 'toggle-hide') {
         await setHideMode(!(await getHideMode()));
-      } else if (command === 'emergency-mode') {
-        let action = await getEmergencyAction();
+      } else if (command === 'panic-button') {
+        let action = await getPanicButtonAction();
         if (action === 'closeMatchTabs' && !isPremium()) action = 'muteHide';
         if (action === 'closeMatchTabs') {
           const matching = await findMatchingTabs();

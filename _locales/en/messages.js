@@ -2,13 +2,13 @@
 // service worker can't import JSON modules directly. The JSON file itself is
 // still required for `__MSG_xxx__` substitution in manifest.json.
 export default {
-  extName: { message: "Stealth Browser Assistant — Hide & Mute Tabs" },
+  extName: { message: "Stealth Browser Assistant — Hide Tabs & Panic Button" },
   extShortName: { message: "Stealth Browser" },
-  extDescription: { message: "Hide, mute, or close private and sensitive tabs with customizable Keywords and one-click Emergency Action controls." },
+  extDescription: { message: "Hide, mute, or close private and sensitive tabs with customizable Keywords and a one-click browser Panic Button." },
   subtitle: { message: "Quick controls for private tabs" },
   cmdToggleMute: { message: "Toggle mute for tabs matching keywords" },
   cmdToggleHide: { message: "Toggle hiding tabs matching keywords" },
-  cmdToggleEmergency: { message: "Emergency action — as configured below" },
+  cmdPanicButton: { message: "Panic shortcut — as configured below" },
   cmdCleanSensitive: { message: "Clean private data" },
   popupCleanButton: { message: "Clean private data" },
   popupCleanDone: { message: "Cleaned" },
@@ -63,12 +63,12 @@ export default {
   saved: { message: "Saved" },
   emptyInputWarn: { message: "Please enter a keyword first." },
   shortcutDisabled: { message: "Disabled" },
-  emergencySection: { message: "Emergency action" },
-  emergencyHelp: {
-    message: "Choose what happens when you press the emergency shortcut.",
+  panicButtonSection: { message: "Panic Button action" },
+  panicButtonHelp: {
+    message: "Choose what happens when you use the panic shortcut.",
   },
-  emergencyActionMuteHide: { message: "Mute and hide matching tabs" },
-  emergencyActionClose: { message: "Close matching tabs" },
+  panicButtonActionMuteHide: { message: "Mute and hide matching tabs" },
+  panicButtonActionClose: { message: "Close matching tabs" },
   mediaPauseSection: { message: "When mute or hide tabs" },
   mediaPauseHelp: {
     message:

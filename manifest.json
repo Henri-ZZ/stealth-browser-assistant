@@ -41,9 +41,9 @@
       "suggested_key": { "default": "Alt+Shift+H" },
       "description": "__MSG_cmdToggleHide__"
     },
-    "emergency-mode": {
+    "panic-button": {
       "suggested_key": { "default": "Alt+Shift+E" },
-      "description": "__MSG_cmdToggleEmergency__"
+      "description": "__MSG_cmdPanicButton__"
     },
     "clean-sensitive-data": {
       "suggested_key": { "default": "Alt+Shift+C" },

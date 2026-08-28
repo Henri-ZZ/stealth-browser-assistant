@@ -7,7 +7,7 @@ export const STORAGE_KEYS = {
   SCRIPT_MUTE: "scriptMute", // legacy key name; boolean: native Tab mute mode is on
   HIDE_MODE: "hideMode", // boolean: auto-hide matching tabs while on
   LANG_PREF: "langPref", // '' | 'en' | 'zh_CN' ('' => follow browser UI language)
-  EMERGENCY_ACTION: "emergencyAction", // 'muteHide' | 'closeMatchTabs' — what Alt+Shift+Space does
+  PANIC_BUTTON_ACTION: "panicButtonAction", // 'muteHide' | 'closeMatchTabs'
   PAUSE_ON_MUTE_HIDE: "pauseOnMuteHide", // boolean: also pause media when mute/hide is applied
   RED_BORDER_FLASH: "redBorderFlash", // boolean: flash a red border on a matched active tab
   TAB_ICON_OVERRIDE: "tabIconOverride", // boolean: replace matched tabs' favicon with ours
@@ -33,7 +33,7 @@ const DEFAULTS = {
   [STORAGE_KEYS.SCRIPT_MUTE]: false,
   [STORAGE_KEYS.HIDE_MODE]: false,
   [STORAGE_KEYS.LANG_PREF]: "",
-  [STORAGE_KEYS.EMERGENCY_ACTION]: "muteHide",
+  [STORAGE_KEYS.PANIC_BUTTON_ACTION]: "muteHide",
   [STORAGE_KEYS.PAUSE_ON_MUTE_HIDE]: false,
   [STORAGE_KEYS.RED_BORDER_FLASH]: false,
   [STORAGE_KEYS.TAB_ICON_OVERRIDE]: true,
@@ -91,7 +91,7 @@ export async function requestCleanupPermissions(types) {
   }
 }
 
-export const EMERGENCY_ACTIONS = ["muteHide", "closeMatchTabs"];
+export const PANIC_BUTTON_ACTIONS = ["muteHide", "closeMatchTabs"];
 
 // Supported locales. Messages are bundled at build time so the UI can switch
 // language instantly (chrome.i18n.getMessage only ever reads the browser UI
@@ -224,12 +224,23 @@ export async function setAutoCleanupState(patch) {
 }
 
 /**
- * What the Emergency Action shortcut does: 'muteHide' (Mute + Hide)
+ * What the Panic Button shortcut does: 'muteHide' (Mute + Hide)
  * or 'closeMatchTabs' (close every matching tab).
  */
-export async function getEmergencyAction() {
-  const v = await getState(STORAGE_KEYS.EMERGENCY_ACTION);
-  return EMERGENCY_ACTIONS.includes(v) ? v : "muteHide";
+export async function getPanicButtonAction() {
+  const legacyKey = "emergencyAction";
+  const stored = await chrome.storage.local.get([
+    STORAGE_KEYS.PANIC_BUTTON_ACTION,
+    legacyKey,
+  ]);
+  let value = stored[STORAGE_KEYS.PANIC_BUTTON_ACTION];
+  if (!PANIC_BUTTON_ACTIONS.includes(value)
+      && PANIC_BUTTON_ACTIONS.includes(stored[legacyKey])) {
+    value = stored[legacyKey];
+    await chrome.storage.local.set({ [STORAGE_KEYS.PANIC_BUTTON_ACTION]: value });
+    await chrome.storage.local.remove(legacyKey);
+  }
+  return PANIC_BUTTON_ACTIONS.includes(value) ? value : "muteHide";
 }
 
 /**

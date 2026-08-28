@@ -1,12 +1,12 @@
 {
   "extName": {
-    "message": "Stealth Browser Assistant — Hide & Mute Tabs"
+    "message": "Stealth Browser Assistant — Hide Tabs & Panic Button"
   },
   "extShortName": {
     "message": "Stealth Browser"
   },
   "extDescription": {
-    "message": "맞춤 키워드와 원클릭 긴급 동작으로 비공개 또는 민감한 탭을 숨기거나 음소거하거나 닫으세요."
+    "message": "맞춤 키워드와 브라우저 패닉 버튼으로 비공개 또는 민감한 탭을 숨기거나 음소거하거나 닫으세요."
   },
   "subtitle": {
     "message": "비공개 탭 빠른 제어"
@@ -17,8 +17,8 @@
   "cmdToggleHide": {
     "message": "키워드와 일치하는 탭 숨기기 전환"
   },
-  "cmdToggleEmergency": {
-    "message": "긴급 동작 — 위 설정에 따름"
+  "cmdPanicButton": {
+    "message": "패닉 단축키 — 아래 설정에 따름"
   },
   "cmdCleanSensitive": {
     "message": "개인 데이터 정리"
@@ -138,16 +138,16 @@
   "shortcutDisabled": {
     "message": "비활성화됨"
   },
-  "emergencySection": {
-    "message": "긴급 동작"
+  "panicButtonSection": {
+    "message": "패닉 버튼 동작"
   },
-  "emergencyHelp": {
-    "message": "긴급 단축키를 눌렀을 때 수행할 동작을 선택하세요."
+  "panicButtonHelp": {
+    "message": "패닉 단축키 사용 시 실행할 동작을 선택하세요."
   },
-  "emergencyActionMuteHide": {
+  "panicButtonActionMuteHide": {
     "message": "일치하는 탭 음소거 및 숨기기"
   },
-  "emergencyActionClose": {
+  "panicButtonActionClose": {
     "message": "일치하는 탭 닫기"
   },
   "mediaPauseSection": {

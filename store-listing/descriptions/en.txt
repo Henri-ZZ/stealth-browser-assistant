@@ -1,0 +1,26 @@
+Stealth Browser Assistant helps you manage private browser tabs quickly and discreetly on Chrome, Edge, and Firefox.
+
+Define private tabs using your own Keywords or domains. SBA checks tab titles and URLs locally, then lets you control every matching tab at once.
+
+Key features
+
+• Mute — Instantly mute matching tabs.
+• Hide — Move matching tabs into a minimized stash window and restore them later.
+• Panic Button — Mute and hide matching tabs with one customizable shortcut.
+• Match hit feedback — Identify matching tabs through optional visual indicators.
+• Keyboard shortcuts — Mute, Hide, use the Panic Button, or Clean private data without opening the extension.
+
+Premium adds unlimited Keywords, Close matching tabs as a Panic Button action, Pause media, Clean private data, and Auto cleanup. Cleaning can remove matching browsing history, download history, Cookies, and site data. Optional Auto cleanup can run after the last matching tab is closed.
+
+Privacy by design
+
+• Keywords and settings stay locally in your browser.
+• No browsing activity, URLs, history, or page content is sent to our servers.
+• No tracking, analytics, or advertising.
+• License requests contain only your License Key and a hashed device identifier.
+
+The Free version includes tab matching, Mute, Hide, the Panic Button, and Match hit feedback. Upgrade to Premium when you need advanced automation and cleanup tools.
+
+Available for Google Chrome, Microsoft Edge, and Mozilla Firefox.
+
+Your browser. Your rules. Your privacy.
