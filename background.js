@@ -19,7 +19,7 @@ import {
   hasCleanupPermissions,
 } from './shared.js';
 import { maybeCheckIn } from './license.js';
-import { UNINSTALL_URL } from './config.js';
+import { UNINSTALL_URL, getGettingStartedUrl } from './config.js';
 
 const STASH_WINDOW_STATE = 'minimized';
 
@@ -672,6 +672,7 @@ async function getStatusSnapshot() {
 
 chrome.tabs.onCreated.addListener((tab) => {
   newlyCreatedTabs.set(tab.id, Date.now());
+  stableMatchStateByTab.set(tab.id, false);
   initializeCoreState().then(() => maybeApplyToTabLater(tab.id)).catch(() => {});
   reevaluateSensitiveSession().catch(() => {});
 });
@@ -687,10 +688,7 @@ chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
     })).catch(() => {});
     enforceFaviconOnTab(tab).catch(() => {});
     reevaluateSensitiveSession().catch(() => {});
-    // Existing-tab navigation (including same-site links and back/forward)
-    // deliberately does not flash. Only a newly created matching tab gets a
-    // one-time load flash; switching tabs is handled by onActivated below.
-    flashNewTabIfMatched(tab).catch(() => {});
+    updateMatchFeedbackState(tab).catch(() => {});
   }
 });
 
@@ -700,20 +698,50 @@ const MATCH_FLASH_COOLDOWN_MS = 1500;
 const NEW_TAB_FLASH_WINDOW_MS = 15_000;
 const lastMatchFlashByTab = new Map();
 const newlyCreatedTabs = new Map();
+const stableMatchStateByTab = new Map();
 
-/** Flash once when a newly created active tab first resolves to a match. */
-async function flashNewTabIfMatched(tab) {
+/**
+ * Record the match state of a fully loaded document and flash when an active
+ * tab changes from non-matching to matching. This covers address-bar
+ * navigation in an existing tab without re-flashing matching-to-matching URL
+ * changes, reloads, or back/forward navigation.
+ */
+async function updateMatchFeedbackState(tab) {
+  if (tab.status !== 'complete') return;
+
+  const keywords = await getKeywords();
+  const matches = keywords.length > 0 && tabMatchesKeywords(tab, keywords);
+  const previousMatches = stableMatchStateByTab.get(tab.id);
+  stableMatchStateByTab.set(tab.id, matches);
+
   const createdAt = newlyCreatedTabs.get(tab.id);
-  if (createdAt == null) return;
-  if (Date.now() - createdAt > NEW_TAB_FLASH_WINDOW_MS) {
+  if (createdAt != null) {
+    // The first complete document establishes this tab's normal transition
+    // state. A matching active new tab still receives its one-time flash.
     newlyCreatedTabs.delete(tab.id);
+    if (Date.now() - createdAt <= NEW_TAB_FLASH_WINDOW_MS && tab.active && matches) {
+      await flashIfMatched(tab);
+    }
     return;
   }
-  if (!tab.active) return;
+
+  if (tab.active && previousMatches === false && matches) {
+    await flashIfMatched(tab);
+  }
+}
+
+/** Establish transition baselines for tabs that predate this worker. */
+async function initializeMatchFeedbackState() {
   const keywords = await getKeywords();
-  if (!keywords.length || !tabMatchesKeywords(tab, keywords)) return;
-  newlyCreatedTabs.delete(tab.id);
-  await flashIfMatched(tab);
+  const tabs = await chrome.tabs.query({});
+  for (const tab of tabs) {
+    if (tab.status === 'complete') {
+      stableMatchStateByTab.set(
+        tab.id,
+        keywords.length > 0 && tabMatchesKeywords(tab, keywords),
+      );
+    }
+  }
 }
 
 /**
@@ -730,18 +758,22 @@ async function flashIfMatched(tab) {
   // a short window.
   const now = Date.now();
   if (now - (lastMatchFlashByTab.get(tab.id) || 0) < MATCH_FLASH_COOLDOWN_MS) return false;
-  lastMatchFlashByTab.set(tab.id, now);
-
-  return injectScript(tab.id, FLASH_RED_BORDER_SCRIPT);
+  const flashed = await injectScript(tab.id, FLASH_RED_BORDER_SCRIPT);
+  // Failed injections (protected pages or a document between navigations) must
+  // not consume the one-time flash or its cooldown; a later complete event can
+  // then retry against the actual page.
+  if (flashed) lastMatchFlashByTab.set(tab.id, now);
+  return flashed;
 }
 
 // Switching to a matching tab (or a newly opened one that already matches).
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   try {
     const tab = await chrome.tabs.get(tabId);
-    // Keep a brand-new blank tab pending until its URL/title resolves. Once
-    // activation actually flashes a match, prevent a later load event from
-    // flashing it a second time.
+    // Wait for the final document so the overlay is not injected into the
+    // outgoing page. A successful activation flash also consumes a pending
+    // new-tab flash and prevents a duplicate on the complete event.
+    if (tab.status !== 'complete') return;
     if (await flashIfMatched(tab)) newlyCreatedTabs.delete(tabId);
   } catch {
     // tab already gone — nothing to flash
@@ -822,6 +854,7 @@ async function syncFavicons() {
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   newlyCreatedTabs.delete(tabId);
   lastMatchFlashByTab.delete(tabId);
+  stableMatchStateByTab.delete(tabId);
   reevaluateSensitiveSession().catch(() => {});
   await initializeCoreState();
   await withModeOperationLock(async () => {
@@ -980,6 +1013,11 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== 'local') return;
   if (changes[STORAGE_KEYS.KEYWORDS] || changes[STORAGE_KEYS.AUTO_CLEANUP]) {
     reevaluateSensitiveSession().catch(() => {});
+  }
+  // Changing the keywords changes the meaning of the stored per-tab match
+  // state. Rebuild the baseline without presenting old tabs as new hits.
+  if (changes[STORAGE_KEYS.KEYWORDS]) {
+    initializeMatchFeedbackState().catch(() => {});
   }
 });
 
@@ -1215,7 +1253,14 @@ chrome.runtime.onStartup.addListener(async () => {
   reevaluateSensitiveSession().catch(() => {});
 });
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    const userAgent = globalThis.navigator?.userAgent || '';
+    chrome.tabs.create({ url: getGettingStartedUrl(userAgent) }, () => {
+      void chrome.runtime.lastError;
+    });
+  }
+
   updateBadge();
   scheduleLicenseCheckIn();
   syncFavicons().catch(() => {});
@@ -1303,4 +1348,7 @@ function initializeCoreState() {
 // startup and extension re-enable; runtime.onStartup is not guaranteed then.
 initializeCoreState().catch((error) => {
   console.warn('Stealth Browser Assistant: core state restoration failed', error);
+});
+initializeMatchFeedbackState().catch((error) => {
+  console.warn('Stealth Browser Assistant: match feedback state initialization failed', error);
 });

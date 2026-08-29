@@ -395,6 +395,8 @@ License 服务使用 `https://licentra.henri.ren`。Keywords、标签页列表�
 
 扩展还通过浏览器的卸载回调注册了 `https://stealthba.henri.ren/goodbye`。用户卸载扩展后，浏览器会打开该 goodbye 页面；扩展本身不会在卸载后继续运行或向页面主动传递本地数据。
 
+扩展首次安装完成后会打开官网 Getting Started 页面作为欢迎页和使用教程，并通过安装时识别出的浏览器动态填写 `browser=chrome|edge|firefox` 查询参数，同时传递 `installed=1`。该页面只在 `runtime.onInstalled` 的 `install` 原因下打开；扩展升级、重新启用或浏览器重启不会重复打开。Getting Started 基础 URL 由 `config.js` 基于 `WEBSITE_ORIGIN` 生成。
+
 Settings 的 Send Feedback 会打开官网 Contact 页面。Leave Review 会识别当前浏览器并分别打开 Chrome Web Store、Microsoft Edge Add-ons 或 Firefox Add-ons 的对应评价页面。所有从 Settings 发出的官网、Contact 和商店链接都会附加 `utm_source=settings_page`；这些动作只打开新标签页，不会主动附加 Keywords、private tabs 或其他本地数据。
 
 ### 13.3 访问范围

@@ -1,4 +1,4 @@
-Stealth Browser Assistant 帮助你在 Chrome、Edge 和 Firefox 中快速、低调地管理私人浏览器标签页。
+Stealth Browser Assistant 帮助你在 Chrome、Edge 和 Firefox 中快速、低调地管理隐私浏览器标签页。
 
 使用自定义关键词（Keywords）或域名定义私人标签页。SBA 会在本地检查标签页标题和 URL，让你一次控制所有匹配的标签页。
 
