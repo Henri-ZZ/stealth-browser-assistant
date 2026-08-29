@@ -393,7 +393,7 @@ License 服务使用 `https://licentra.henri.ren`。Keywords、标签页列表�
 
 当前代码中明确的外部通信仅用于 License Key 激活和 check-in。页面脚本不会把 Keywords、private tabs 或清理内容上传到 License 服务。
 
-扩展还通过浏览器的卸载回调注册了 `https://stealthba.henri.ren/goodbye`。用户卸载扩展后，浏览器会打开该 goodbye 页面；扩展本身不会在卸载后继续运行或向页面主动传递本地数据。
+扩展还通过浏览器的卸载回调注册了 `https://sba.henriz.dev/goodbye`。用户卸载扩展后，浏览器会打开该 goodbye 页面；扩展本身不会在卸载后继续运行或向页面主动传递本地数据。
 
 扩展首次安装完成后会打开官网 Getting Started 页面作为欢迎页和使用教程，并通过安装时识别出的浏览器动态填写 `browser=chrome|edge|firefox` 查询参数，同时传递 `installed=1`。该页面只在 `runtime.onInstalled` 的 `install` 原因下打开；扩展升级、重新启用或浏览器重启不会重复打开。Getting Started 基础 URL 由 `config.js` 基于 `WEBSITE_ORIGIN` 生成。
 

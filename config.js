@@ -1,6 +1,6 @@
 // Central product URLs. Change WEBSITE_ORIGIN here if the official website
 // moves to another domain; consumers should import the derived URLs below.
-export const WEBSITE_ORIGIN = 'https://stealthba.henri.ren';
+export const WEBSITE_ORIGIN = 'https://sba.henriz.dev';
 const SETTINGS_UTM = 'utm_source=settings_page';
 
 export const PREMIUM_URL = `${WEBSITE_ORIGIN}/?${SETTINGS_UTM}`;
