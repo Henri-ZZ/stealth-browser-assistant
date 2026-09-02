@@ -1,6 +1,7 @@
-// Central product URLs. Change WEBSITE_ORIGIN here if the official website
-// moves to another domain; consumers should import the derived URLs below.
+// Central product service origins. Keep domain migrations here; consumers
+// should import these constants or the derived URLs below.
 export const WEBSITE_ORIGIN = 'https://sba.henriz.dev';
+export const LICENTRA_BASE_URL = 'https://licentra.henriz.dev';
 const SETTINGS_UTM = 'utm_source=settings_page';
 
 export const PREMIUM_URL = `${WEBSITE_ORIGIN}/?${SETTINGS_UTM}`;

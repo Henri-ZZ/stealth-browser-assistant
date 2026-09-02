@@ -14,8 +14,9 @@
 // blob is converted first.
 
 import { STORAGE_KEYS, getState, setState } from './shared.js';
+import { LICENTRA_BASE_URL } from './config.js';
 
-export const LICENTRA_BASE_URL = 'https://licentra.henri.ren';
+export { LICENTRA_BASE_URL };
 export const PRODUCT_SLUG = 'stealth-browser-assistant';
 
 // ───────────────────────── offline grace window ─────────────────────────

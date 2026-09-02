@@ -372,7 +372,7 @@ ABCD-2345-EFGH-6789
 - 撤销、退款、License Key 不存在、订阅到期或设备被移除等明确拒绝不会获得离线宽限。
 - 订阅本身的到期时间不能被离线宽限延长。
 
-License 服务使用 `https://licentra.henri.ren`。Keywords、标签页列表和浏览历史不会发送到该服务。
+License 服务使用 `https://licentra.henriz.dev`。Keywords、标签页列表和浏览历史不会发送到该服务。
 
 ## 13. 数据与隐私边界
 
@@ -547,7 +547,8 @@ AI Agent 在修改本项目时必须遵守以下约束：
 10. 任何 destructive 行为都必须在 UI 和文档中明确，例如 Close matching tabs、Cookies & site data 清理。
 11. 不得扩大网络数据范围；License 请求不应携带 Keywords、标签页或浏览历史。
 12. 不得把 Free 限制只放在 Settings；执行逻辑需要防止旧状态或手动写入绕过 Premium gating。
-13. 官网域名只能在 `config.js` 的 `WEBSITE_ORIGIN` 中维护；其他代码必须导入派生 URL，不得再次硬编码域名。修改域名或页面路径后还要同步更新本文档中的用户可见链接。
+13. 产品域名只能在 `config.js` 中集中维护：官网使用 `WEBSITE_ORIGIN`，License 服务使用 `LICENTRA_BASE_URL`；其他代码必须导入这些常量或派生 URL，不得再次硬编码域名。修改域名或页面路径后还要同步更新本文档中的用户可见链接。
+14. Firefox 的 `browser_specific_settings.gecko.id` 是已发布插件的稳定身份标识，不是可导航的官网或邮箱地址。即使其中保留旧域名 `stealth-browser-assistant@henri.ren`，也不得因官网迁移而修改，否则可能破坏现有用户的升级连续性。
 
 ## 17. 发布与打包
 
